@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D847088D-1484-469F-88A1-327AB0F8D5FB}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>ContentTool</RootNamespace>
+    <AssemblyName>ContentTool</AssemblyName>
+    <StartupObject>ContentTool.MainClass</StartupObject>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Externalconsole>true</Externalconsole>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Externalconsole>true</Externalconsole>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="OpenTK">
+      <HintPath>..\packages\OpenTK.1.1.2225.0\lib\net20\OpenTK.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="frmMain.cs" />
+    <Compile Include="ContentFile.cs" />
+    <Compile Include="ContentFolder.cs" />
+    <Compile Include="ContentProject.cs" />
+    <Compile Include="ContentItem.cs" />
+    <Compile Include="Dialog\frmAddFolder.cs" />
+    <Compile Include="Dialog\frmAddFolder.Designer.cs" />
+    <Compile Include="ObservableList.cs" />
+    <Compile Include="frmMain.Designer.cs" />
+    <Compile Include="PipelineHelper.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <None Include="OpenTK.dll.config" />
+    <None Include="packages.config" />
+    <None Include="Resources\Licenses.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Dialog\" />
+    <Folder Include="Resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\engenious\engenious.csproj">
+      <Project>{E1FF7BDB-D631-4D4D-B5A1-988778AD15B6}</Project>
+      <Name>engenious</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ContentPipeline\engenious.Pipeline.csproj">
+      <Project>{9771E0FC-D752-4D7A-89E4-4F6FA2EC3C1D}</Project>
+      <Name>engenious.Pipeline</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\folder.png">
+      <LogicalName>folder</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\project.png">
+      <LogicalName>project</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+</Project>
