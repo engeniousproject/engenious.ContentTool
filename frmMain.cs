@@ -185,7 +185,8 @@ namespace ContentTool
                 if (!imgList.Images.ContainsKey(ext))
                 {
                     string filePath = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(currentFile), item.getPath());
-                    imgList.Images.Add(ext, System.Drawing.Icon.ExtractAssociatedIcon(filePath));
+                    if (System.IO.File.Exists(filePath))
+                        imgList.Images.Add(ext, System.Drawing.Icon.ExtractAssociatedIcon(filePath));
                 }
                 return ext;
                 //return "file";
