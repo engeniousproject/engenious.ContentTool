@@ -41,7 +41,6 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="frmMain.cs" />
     <Compile Include="ContentFile.cs" />
     <Compile Include="ContentFolder.cs" />
     <Compile Include="ContentProject.cs" />
@@ -51,6 +50,11 @@
     <Compile Include="ObservableList.cs" />
     <Compile Include="frmMain.Designer.cs" />
     <Compile Include="PipelineHelper.cs" />
+    <Compile Include="Arguments.cs" />
+    <Compile Include="Builder\ContentBuilder.cs" />
+    <Compile Include="frmMain.cs" />
+    <Compile Include="Builder\ItemProgressEventArgs.cs" />
+    <Compile Include="Builder\BuildStep.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -61,6 +65,7 @@
   <ItemGroup>
     <Folder Include="Dialog\" />
     <Folder Include="Resources\" />
+    <Folder Include="Builder\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\engenious\engenious.csproj">

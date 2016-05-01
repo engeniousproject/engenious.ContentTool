@@ -42,6 +42,9 @@ namespace ContentTool
 
         public string OutputDir{ get; set; }
 
+        [System.Xml.Serialization.XmlIgnore()]
+        public string File{get;private set;}
+
         public List<string> References{ get; set; }
 
 
@@ -62,6 +65,7 @@ namespace ContentTool
             using (StreamReader fs = new StreamReader(filename, System.Text.Encoding.UTF8))
             {
                 ContentProject proj = (ContentProject)serializer.Deserialize(fs);
+                proj.File = filename;
                 SearchParents(proj);
                 return proj;
             }

@@ -7,7 +7,7 @@ using System.Collections.Specialized;
 using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
-
+using ContentTool.Builder;
 namespace ContentTool
 {
     public partial class frmMain : Form
@@ -16,17 +16,55 @@ namespace ContentTool
         //TODO: architecture
         private string currentFile;
         private ContentProject currentProject;
+        private ContentProject CurrentProject{
+            get{return currentProject;}
+            set{
+                currentProject = value;
+                builder.Project = value;
+            }
+        }
 
-        private List<string> toClean;
-
-
+        private ContentBuilder builder;
 
         public frmMain()
         {
             InitializeComponent();
 
-            toClean = new List<string>();
+            builder = new ContentBuilder(null);
+            builder.BuildStatusChanged += Builder_BuildStatusChanged;
+            builder.ItemProgress += Builder_ItemProgress;
             treeMap = new Dictionary<ContentItem, TreeNode>();
+        }
+
+        void Builder_ItemProgress (object sender, ItemProgressEventArgs e)
+        {
+            string message = e.Item + " " +(e.BuildStep & (BuildStep.Build|BuildStep.Clean)).ToString().ToLower() + "ing ";
+
+            bool error=false;
+            if ((e.BuildStep & Builder.BuildStep.Abort) == Builder.BuildStep.Abort)
+            {
+                message += "failed!";
+                error = true;
+            }else if ((e.BuildStep & Builder.BuildStep.Finished) == Builder.BuildStep.Finished)
+            {
+                message +="finished!";
+            }
+            Log(message,error);
+        }
+
+        void Builder_BuildStatusChanged (object sender, BuildStep buildStep)
+        {
+            string message = (buildStep & (BuildStep.Build|BuildStep.Clean)).ToString() + " ";
+            bool error=false;
+            if ((buildStep & Builder.BuildStep.Abort) == Builder.BuildStep.Abort)
+            {
+                message += "aborted!";
+                error = true;
+            }else if ((buildStep & Builder.BuildStep.Finished) == Builder.BuildStep.Finished)
+            {
+                message +="finished!";
+            }
+            Log(message,error);
         }
 
         void FrmMain_Load(object sender, System.EventArgs e)
@@ -43,17 +81,16 @@ namespace ContentTool
 
         private bool CloseFile(string message = "Do you really want to close?")
         {
-            if (isBuilding)
+            if (builder.IsBuilding)
             {
                 if (MessageBox.Show("Your Project is currently Building." + message, "Close file", MessageBoxButtons.YesNo) == DialogResult.No)
                     return false;
 
-                AbortBuilding();
+                builder.Build();
             }
 
-
             currentFile = null;
-            currentProject = null;
+            CurrentProject = null;
             RecalcTreeView();
             return true;
         }
@@ -61,16 +98,16 @@ namespace ContentTool
         private void SaveFile(string file)
         {
             currentFile = file;
-            currentProject.Name = file;
-            ContentProject.Save(file, currentProject);
+            CurrentProject.Name = file;
+            ContentProject.Save(file, CurrentProject);
         }
 
         private void OpenFile(string file)
         {
             currentFile = file;
-            currentProject = ContentProject.Load(file);
-            currentProject.CollectionChanged += CurrentProject_CollectionChanged;
-            currentProject.PropertyChanged += CurrentProject_PropertyChanged;
+            CurrentProject = ContentProject.Load(file);
+            CurrentProject.CollectionChanged += CurrentProject_CollectionChanged;
+            CurrentProject.PropertyChanged += CurrentProject_PropertyChanged;
             RecalcTreeView();
         }
 
@@ -160,17 +197,17 @@ namespace ContentTool
         {
             treeMap.Clear();
             treeContentFiles.Nodes.Clear();
-            if (currentProject == null)
+            if (CurrentProject == null)
             {
                 buildMainMenuItem.Enabled = false;
                 return;
             }
             buildMainMenuItem.Enabled = true;
 
-            var rootNode = new TreeNode(currentProject.Name){ Tag = currentProject };
+            var rootNode = new TreeNode(CurrentProject.Name){ Tag = CurrentProject };
             treeContentFiles.Nodes.Add(rootNode);
-            treeMap.Add(currentProject, rootNode);
-            AddTreeNode(currentProject, rootNode);
+            treeMap.Add(CurrentProject, rootNode);
+            AddTreeNode(CurrentProject, rootNode);
         }
 
         private string getImageKey(ContentItem item)
@@ -214,7 +251,7 @@ namespace ContentTool
 
         void FileMenuItem_DropDownOpening(object sender, System.EventArgs e)
         {
-            bool fileOpened = !string.IsNullOrEmpty(currentFile) || currentProject != null;
+            bool fileOpened = !string.IsNullOrEmpty(currentFile) || CurrentProject != null;
             this.importMenuItem.Enabled = false;
             this.closeMenuItem.Enabled = this.saveAsMenuItem.Enabled = fileOpened;
             this.saveMenuItem.Enabled = fileOpened;//TODO änderungen?
@@ -270,15 +307,15 @@ namespace ContentTool
         {
             CloseMenuItem_Click(sender, e);
 
-            currentProject = new ContentProject();
-            currentProject.CollectionChanged += CurrentProject_CollectionChanged;
-            currentProject.PropertyChanged += CurrentProject_PropertyChanged;
+            CurrentProject = new ContentProject();
+            CurrentProject.CollectionChanged += CurrentProject_CollectionChanged;
+            CurrentProject.PropertyChanged += CurrentProject_PropertyChanged;
 
 
             RecalcTreeView();
 
             if (!SaveFirst())
-                currentProject = null;
+                CurrentProject = null;
             RecalcTreeView();
         }
 
@@ -290,7 +327,7 @@ namespace ContentTool
 
         void CancelMenuItem_Click(object sender, EventArgs e)
         {
-            AbortBuilding();
+            builder.Abort();
         }
 
         private void Log(string message, bool error = false)
@@ -306,121 +343,12 @@ namespace ContentTool
             txtLog.AppendText(message + "\n");
         }
 
-        private void Clean()
-        {
-            StartBuilding();
-            Log("Cleaning started");
-            buildingThread = new System.Threading.Thread(new System.Threading.ThreadStart(delegate()
-                    {
-                        foreach (string item in toClean)
-                        {
-                            Log("Cleaning " + item);
-                            System.IO.File.Delete(item);
-                        }
-                        Log("Cleaning complete");
-                        EndBuilding();
-                    }));
-            buildingThread.Start();
-        }
-
-
-
-        private void Build()
-        {
-            StartBuilding();
-            Log("Building started");
-            buildingThread = new System.Threading.Thread(new System.Threading.ThreadStart(delegate()
-                    {
-                        string relOut = string.Format(currentProject.OutputDir.Replace("{Configuration}", "{0}"), currentProject.Configuration.ToString());
-                        string outputDir = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(currentFile), relOut);
-                        CreateFolderIfNeeded(outputDir);
-                        PipelineHelper.PreBuilt(currentProject);
-                        using (engenious.Content.Pipeline.ContentImporterContext importerContext = new engenious.Content.Pipeline.ContentImporterContext())
-                        using (engenious.Content.Pipeline.ContentProcessorContext processorContext = new engenious.Content.Pipeline.ContentProcessorContext())
-                        {
-                            foreach (var item in treeMap.Keys)
-                            {
-                                if (item is ContentFile)
-                                {
-                                    ContentFile contentFile = item as ContentFile;
-                                    string importFile = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(currentFile), item.getPath());
-                                    string destFile = System.IO.Path.Combine(outputDir, System.IO.Path.GetDirectoryName(item.getPath()), System.IO.Path.GetFileNameWithoutExtension(item.Name) + ".ego");
-                                    CreateFolderIfNeeded(destFile);
-
-                                    var importer = PipelineHelper.CreateImporter(System.IO.Path.GetExtension(item.Name));
-                                    if (importer == null)
-                                        continue;
-
-                                    object importerOutput = importer.Import(importFile, importerContext);
-                                    if (importerOutput == null)
-                                        continue;
-
-                                    engenious.Content.Pipeline.IContentProcessor processor = PipelineHelper.CreateProcessor(importer.GetType(), contentFile.Processor);
-                                    if (processor == null)
-                                        continue;
-
-                                    object processedData = processor.Process(importerOutput, processorContext);
-
-                                    if (processedData == null)
-                                        continue;
-
-                                    engenious.Content.Serialization.IContentTypeWriter typeWriter = engenious.Content.Serialization.SerializationManager.Instance.GetWriter(processedData.GetType());
-                                    engenious.Content.ContentFile outputFileWriter = new engenious.Content.ContentFile(typeWriter.RuntimeReaderName);
-
-                                    BinaryFormatter formatter = new BinaryFormatter();
-                                    using (FileStream fs = new FileStream(destFile, FileMode.Create, FileAccess.Write))
-                                    {
-                                        formatter.Serialize(fs, outputFileWriter);
-                                        engenious.Content.Serialization.ContentWriter writer = new engenious.Content.Serialization.ContentWriter(fs);
-                                        writer.WriteObject(processedData, typeWriter);
-                                    }
-
-                                    toClean.Add(destFile);
-                                    Log("Built " + item.getPath());
-                                }
-                            }
-                        }
-                        //System.Threading.Thread.Sleep(8000);
-
-
-                        Log("Building complete");
-
-
-
-                        EndBuilding();
-                    }));
-            buildingThread.Start();
-        }
-
-        public static void CreateFolderIfNeeded(string filename)
-        {
-            string folder = System.IO.Path.GetDirectoryName(filename);
-            if (!System.IO.Directory.Exists(folder))
-            {
-                CreateFolderIfNeeded(folder);
-                System.IO.Directory.CreateDirectory(folder);
-            }
-        }
-
-        private bool isBuilding = false;
-        private System.Threading.Thread buildingThread;
-
         private void StartBuilding()
         {
-            isBuilding = true;
             this.buildMenuItem.Enabled = false;
             this.rebuildMenuItem.Enabled = false;
             this.cleanMenuItem.Enabled = false;
             this.cancelMenuItem.Enabled = true;
-        }
-
-        private void AbortBuilding()
-        {
-            if (!isBuilding)
-                return;
-            buildingThread.Abort();//TODO: better solution?
-            Log("Aborted", true);
-            EndBuilding();
         }
 
         private void EndBuilding()
@@ -434,7 +362,6 @@ namespace ContentTool
                         }));
                 return;
             }
-            isBuilding = false;
             this.buildMenuItem.Enabled = true;
             this.rebuildMenuItem.Enabled = true;
             this.cleanMenuItem.Enabled = true;
@@ -445,14 +372,13 @@ namespace ContentTool
         {
             txtLog.Text = "";
 
-            Clean();
+            builder.Clean();
         }
 
         void RebuildMenuItem_Click(object sender, EventArgs e)
         {
             txtLog.Text = "";
-            Clean();
-            Build();
+            builder.Rebuild();
         }
 
         void BuildMenuItem_Click(object sender, EventArgs e)
@@ -460,7 +386,7 @@ namespace ContentTool
             if (!SaveFirst())
                 return;
             txtLog.Text = "";
-            Build();
+            builder.Build();
         }
 
         private bool SaveFirst()
@@ -474,7 +400,7 @@ namespace ContentTool
 
         void BuildMainMenuItem_DropDownOpening(object sender, System.EventArgs e)
         {
-            cleanMenuItem.Enabled = toClean.Count > 0;
+            cleanMenuItem.Enabled = builder.CanClean;
             rebuildMenuItem.Enabled = System.IO.File.Exists(currentFile) && cleanMenuItem.Enabled;
         }
 
@@ -624,7 +550,7 @@ namespace ContentTool
 
         void EditMenuItem_DropDownOpening(object sender, System.EventArgs e)
         {
-            bool fileOpened = !string.IsNullOrEmpty(currentFile) || currentProject != null;
+            bool fileOpened = !string.IsNullOrEmpty(currentFile) || CurrentProject != null;
             addMenuItem.Enabled = fileOpened;
             renameMenuItem.Enabled = deleteMenuItem.Enabled = fileOpened && treeContentFiles.SelectedNode != null && treeContentFiles.SelectedNode != treeContentFiles.Nodes[0];
         }

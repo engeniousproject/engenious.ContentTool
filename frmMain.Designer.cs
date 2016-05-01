@@ -658,7 +658,7 @@ namespace ContentTool
             this.Load += FrmMain_Load;
 
         }
-
+        //private System.Windows.Forms.PropertyGrid prpItem;
         private System.Windows.Forms.ImageList imgList;
         private System.Windows.Forms.SplitContainer splitContainer;
         private System.Windows.Forms.TreeView treeContentFiles;
