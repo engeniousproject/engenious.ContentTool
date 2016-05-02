@@ -46,6 +46,7 @@ namespace ContentTool
         [System.ComponentModel.Browsable(false)]
         public string File{get;private set;}
 
+        [System.ComponentModel.Editor(typeof(Dialog.ReferenceCollectionEditor), typeof(System.Drawing.Design.UITypeEditor))]
         public List<string> References{ get; set; }
 
 

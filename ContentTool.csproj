@@ -34,11 +34,19 @@
     <Reference Include="OpenTK">
       <HintPath>..\packages\OpenTK.1.1.2225.0\lib\net20\OpenTK.dll</HintPath>
     </Reference>
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Dialog\frmEditReferences.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialog\frmEditReferences.Designer.cs">
+      <DependentUpon>frmEditReferences.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dialog\ReferenceCollectionEditor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ContentFile.cs" />
@@ -87,6 +95,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Dialog\frmEditReferences.resx">
+      <DependentUpon>frmEditReferences.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
     </EmbeddedResource>
