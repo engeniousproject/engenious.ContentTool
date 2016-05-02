@@ -10,13 +10,13 @@ namespace ContentTool.Builder
 
         private const string DESTINATION_EXT = ".ego";
 
-        public delegate void ItemProgressDel(object sender,ItemProgressEventArgs e);
-        public delegate void BuildStatusChangedDel(object sender,BuildStep buildStep);
+        public delegate void ItemProgressDel(object sender, ItemProgressEventArgs e);
+        public delegate void BuildStatusChangedDel(object sender, BuildStep buildStep);
 
         public event ItemProgressDel ItemProgress;
         public event BuildStatusChangedDel BuildStatusChanged;
         private List<ContentFile> toClean;
-        private BuildStep currentBuild=BuildStep.Finished;
+        private BuildStep currentBuild = BuildStep.Finished;
 
         private System.Threading.Thread buildingThread;
 
@@ -34,15 +34,19 @@ namespace ContentTool.Builder
                 System.IO.Directory.CreateDirectory(folder);
             }
         }
-        public ContentProject Project{get;internal set;}
-        public bool IsBuilding{get;private set;}
-        public bool CanClean{
-            get{
+        public ContentProject Project { get; internal set; }
+        public bool IsBuilding { get; private set; }
+        public bool CanClean
+        {
+            get
+            {
                 return toClean.Count > 0;
             }
         }
-        public bool CanBuild{
-            get{
+        public bool CanBuild
+        {
+            get
+            {
                 return true;//TODO:
             }
         }
@@ -51,7 +55,7 @@ namespace ContentTool.Builder
         {
 
             //string importFile = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Project.File), contentFile.getPath());
-            return System.IO.Path.Combine(getOutputDir(), System.IO.Path.GetDirectoryName(contentFile.getPath()), System.IO.Path.GetFileNameWithoutExtension(contentFile.Name) + DESTINATION_EXT );   
+            return System.IO.Path.Combine(getOutputDir(), System.IO.Path.GetDirectoryName(contentFile.getPath()), System.IO.Path.GetFileNameWithoutExtension(contentFile.Name) + DESTINATION_EXT);
         }
         private string getOutputDir()
         {
@@ -62,7 +66,8 @@ namespace ContentTool.Builder
         {
             if (Project == null)
                 return;
-            var thread = new System.Threading.Thread(new System.Threading.ThreadStart(delegate() {
+            var thread = new System.Threading.Thread(new System.Threading.ThreadStart(delegate ()
+            {
                 Clean();
                 buildingThread.Join();
                 Build();
@@ -74,8 +79,9 @@ namespace ContentTool.Builder
             if (Project == null)
                 return;
             currentBuild = BuildStep.Build;
-            BuildStatusChanged?.BeginInvoke(this,BuildStep.Build,null,null);
-            buildingThread = new System.Threading.Thread(new System.Threading.ThreadStart(delegate()
+            BuildStatusChanged?.BeginInvoke(this, BuildStep.Build, null, null);
+
+            buildingThread = new System.Threading.Thread(new System.Threading.ThreadStart(delegate ()
                 {
 
                     IsBuilding = true;
@@ -123,7 +129,7 @@ namespace ContentTool.Builder
                                 }
 
                                 toClean.Add(contentFile);
-                                ItemProgress?.BeginInvoke(this,new ItemProgressEventArgs(BuildStep.Build,item),null,null);
+                                ItemProgress?.BeginInvoke(this, new ItemProgressEventArgs(BuildStep.Build, item), null, null);
                             }
                         }
                     }
@@ -131,7 +137,7 @@ namespace ContentTool.Builder
 
                     IsBuilding = false;
 
-                    BuildStatusChanged?.BeginInvoke(this,BuildStep.Build | BuildStep.Finished,null,null);
+                    BuildStatusChanged?.BeginInvoke(this, BuildStep.Build | BuildStep.Finished, null, null);
                 }));
             buildingThread.Start();
         }
@@ -140,18 +146,18 @@ namespace ContentTool.Builder
             if (Project == null)
                 return;
             currentBuild = BuildStep.Clean;
-            BuildStatusChanged?.BeginInvoke(this,BuildStep.Clean,null,null);
-            buildingThread = new System.Threading.Thread(new System.Threading.ThreadStart(delegate()
+            BuildStatusChanged?.BeginInvoke(this, BuildStep.Clean, null, null);
+            buildingThread = new System.Threading.Thread(new System.Threading.ThreadStart(delegate ()
             {
                 IsBuilding = true;
                 foreach (var item in toClean)
                 {
-                    ItemProgress?.BeginInvoke(this,new ItemProgressEventArgs(BuildStep.Clean,item),null,null);
+                    ItemProgress?.BeginInvoke(this, new ItemProgressEventArgs(BuildStep.Clean, item), null, null);
                     if (System.IO.File.Exists(getDestinationFile(item)))
                         System.IO.File.Delete(getDestinationFile(item));
                 }
-                    IsBuilding = false;
-                BuildStatusChanged?.Invoke(this,BuildStep.Clean | BuildStep.Finished);
+                IsBuilding = false;
+                BuildStatusChanged?.Invoke(this, BuildStep.Clean | BuildStep.Finished);
             }));
             buildingThread.Start();
 
@@ -162,7 +168,7 @@ namespace ContentTool.Builder
                 return;
             buildingThread.Abort();//TODO: better solution?
             IsBuilding = false;
-            BuildStatusChanged?.Invoke(this,currentBuild | BuildStep.Abort);
+            BuildStatusChanged?.Invoke(this, currentBuild | BuildStep.Abort);
         }
 
         public void Join()

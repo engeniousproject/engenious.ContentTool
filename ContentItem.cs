@@ -28,6 +28,7 @@ namespace ContentTool
         }
 
         [System.Xml.Serialization.XmlIgnore]
+        [System.ComponentModel.Browsable(false)]
         public virtual ContentItem Parent{ get; internal set; }
 
         public string getPath()

@@ -550,9 +550,7 @@ namespace ContentTool
 
         void EditMenuItem_DropDownOpening(object sender, System.EventArgs e)
         {
-            bool fileOpened = !string.IsNullOrEmpty(currentFile) || CurrentProject != null;
-            addMenuItem.Enabled = fileOpened;
-            renameMenuItem.Enabled = deleteMenuItem.Enabled = fileOpened && treeContentFiles.SelectedNode != null && treeContentFiles.SelectedNode != treeContentFiles.Nodes[0];
+
         }
 
         void RedoMenuItem_Click(object sender, EventArgs e)
@@ -570,6 +568,11 @@ namespace ContentTool
         {
             e.Cancel = !CloseFile();
 
+        }
+
+        private void treeContentFiles_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            prpItem.SelectedObject = e.Node.Tag;
         }
     }
 }

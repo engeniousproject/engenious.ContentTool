@@ -28,7 +28,7 @@ namespace ContentTool
 
 
         private string name;
-
+        [System.ComponentModel.DefaultValue("Content")]
         public override string Name
         { 
             get{ return name; }
@@ -37,12 +37,13 @@ namespace ContentTool
                 name = System.IO.Path.GetFileNameWithoutExtension(value);
             }
         }
-
+        [System.ComponentModel.DefaultValue(Configuration.Debug)]
         public Configuration Configuration{ get; set; }
-
+        [System.ComponentModel.DefaultValue("bin/{Configuration}/")]
         public string OutputDir{ get; set; }
 
         [System.Xml.Serialization.XmlIgnore()]
+        [System.ComponentModel.Browsable(false)]
         public string File{get;private set;}
 
         public List<string> References{ get; set; }

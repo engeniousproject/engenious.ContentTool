@@ -12,6 +12,7 @@ namespace ContentTool
 {
     class MainClass
     {
+        [STAThread()]
         public static void Main(string[] args)
         {
 

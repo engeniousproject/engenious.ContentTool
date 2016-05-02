@@ -32,6 +32,7 @@ namespace ContentTool
             InvokeCollectionChange(sender, e);
         }
 
+        [System.ComponentModel.Browsable(false)]
         public ObservableList<ContentItem> Contents{ get; set; }
 
         public override string ToString()

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -45,16 +45,29 @@
     <Compile Include="ContentFolder.cs" />
     <Compile Include="ContentProject.cs" />
     <Compile Include="ContentItem.cs" />
-    <Compile Include="Dialog\frmAddFolder.cs" />
-    <Compile Include="Dialog\frmAddFolder.Designer.cs" />
+    <Compile Include="Dialog\frmAddFolder.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialog\frmAddFolder.Designer.cs">
+      <DependentUpon>Dialog\frmAddFolder.cs</DependentUpon>
+    </Compile>
     <Compile Include="ObservableList.cs" />
-    <Compile Include="frmMain.Designer.cs" />
+    <Compile Include="frmMain.Designer.cs">
+      <DependentUpon>frmMain.cs</DependentUpon>
+    </Compile>
     <Compile Include="PipelineHelper.cs" />
     <Compile Include="Arguments.cs" />
     <Compile Include="Builder\ContentBuilder.cs" />
-    <Compile Include="frmMain.cs" />
+    <Compile Include="frmMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Builder\ItemProgressEventArgs.cs" />
     <Compile Include="Builder\BuildStep.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -62,27 +75,30 @@
     <None Include="packages.config" />
     <None Include="Resources\Licenses.txt" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Dialog\" />
-    <Folder Include="Resources\" />
-    <Folder Include="Builder\" />
-  </ItemGroup>
-  <ItemGroup>
+    <ProjectReference Include="..\ContentPipeline\engenious.Pipeline.csproj">
+      <Project>{9771e0fc-d752-4d7a-89e4-4f6fa2ec3c1d}</Project>
+      <Name>engenious.Pipeline</Name>
+    </ProjectReference>
     <ProjectReference Include="..\engenious\engenious.csproj">
       <Project>{E1FF7BDB-D631-4D4D-B5A1-988778AD15B6}</Project>
       <Name>engenious</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ContentPipeline\engenious.Pipeline.csproj">
-      <Project>{9771E0FC-D752-4D7A-89E4-4F6FA2EC3C1D}</Project>
-      <Name>engenious.Pipeline</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\folder.png">
+    <EmbeddedResource Include="frmMain.resx">
+      <DependentUpon>frmMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="Resources\folder.png">
       <LogicalName>folder</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\project.png">
+    </None>
+    <None Include="Resources\project.png">
       <LogicalName>project</LogicalName>
-    </EmbeddedResource>
+    </None>
   </ItemGroup>
 </Project>
