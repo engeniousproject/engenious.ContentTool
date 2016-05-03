@@ -362,7 +362,6 @@ namespace ContentTool
             // 
             // editMenuItem
             // 
-            this.editMenuItem.BackColor = System.Drawing.SystemColors.Control;
             this.editMenuItem.DropDownDirection = System.Windows.Forms.ToolStripDropDownDirection.AboveLeft;
             this.editMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.undoMenuItem,
@@ -371,11 +370,9 @@ namespace ContentTool
             this.renameMenuItem,
             this.deleteMenuItem});
             this.editMenuItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.editMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.editMenuItem.Name = "editMenuItem";
             this.editMenuItem.Size = new System.Drawing.Size(37, 20);
             this.editMenuItem.Text = "Edit";
-            this.editMenuItem.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal;
             // 
             // buildMenuItem
             // 
@@ -443,7 +440,6 @@ namespace ContentTool
             this.buildMainMenuItem.Name = "buildMainMenuItem";
             this.buildMainMenuItem.Size = new System.Drawing.Size(42, 20);
             this.buildMainMenuItem.Text = "Build";
-            this.buildMainMenuItem.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal;
             this.buildMainMenuItem.DropDownOpening += new System.EventHandler(this.BuildMainMenuItem_DropDownOpening);
             // 
             // mainMenu
@@ -453,7 +449,6 @@ namespace ContentTool
             this.fileMenuItem,
             this.editMenuItem,
             this.buildMainMenuItem});
-            this.mainMenu.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.mainMenu.Location = new System.Drawing.Point(0, 0);
             this.mainMenu.Name = "mainMenu";
             this.mainMenu.Size = new System.Drawing.Size(681, 24);

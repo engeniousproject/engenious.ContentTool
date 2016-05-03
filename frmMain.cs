@@ -21,6 +21,7 @@ namespace ContentTool
             set{
                 currentProject = value;
                 builder.Project = value;
+                PipelineHelper.PreBuilt(currentProject);
             }
         }
 
@@ -29,6 +30,8 @@ namespace ContentTool
         public frmMain()
         {
             InitializeComponent();
+
+            PipelineHelper.DefaultInit();
 
             builder = new ContentBuilder(null);
             builder.BuildStatusChanged += Builder_BuildStatusChanged;

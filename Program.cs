@@ -66,6 +66,7 @@ namespace ContentTool
                 builder.Join();
             }
             else{
+                System.Windows.Forms.Application.EnableVisualStyles();
                 using (frmMain mainForm = new frmMain()){
                     
                     System.Windows.Forms.Application.Run(mainForm);

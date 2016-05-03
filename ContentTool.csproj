@@ -46,6 +46,7 @@
     <Compile Include="Dialog\frmEditReferences.Designer.cs">
       <DependentUpon>frmEditReferences.cs</DependentUpon>
     </Compile>
+    <Compile Include="Dialog\ProcessorEditor.cs" />
     <Compile Include="Dialog\ReferenceCollectionEditor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
