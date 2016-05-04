@@ -139,7 +139,6 @@ namespace ContentTool
             // newMenuItem
             // 
             this.newMenuItem.BackColor = System.Drawing.SystemColors.Control;
-            this.newMenuItem.DropDownDirection = System.Windows.Forms.ToolStripDropDownDirection.AboveLeft;
             this.newMenuItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.newMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.newMenuItem.Name = "newMenuItem";
@@ -152,7 +151,6 @@ namespace ContentTool
             // openMenuItem
             // 
             this.openMenuItem.BackColor = System.Drawing.SystemColors.Control;
-            this.openMenuItem.DropDownDirection = System.Windows.Forms.ToolStripDropDownDirection.AboveLeft;
             this.openMenuItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.openMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.openMenuItem.Name = "openMenuItem";
@@ -165,7 +163,6 @@ namespace ContentTool
             // closeMenuItem
             // 
             this.closeMenuItem.BackColor = System.Drawing.SystemColors.Control;
-            this.closeMenuItem.DropDownDirection = System.Windows.Forms.ToolStripDropDownDirection.AboveLeft;
             this.closeMenuItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.closeMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.closeMenuItem.Name = "closeMenuItem";
@@ -177,7 +174,6 @@ namespace ContentTool
             // importMenuItem
             // 
             this.importMenuItem.BackColor = System.Drawing.SystemColors.Control;
-            this.importMenuItem.DropDownDirection = System.Windows.Forms.ToolStripDropDownDirection.AboveLeft;
             this.importMenuItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.importMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.importMenuItem.Name = "importMenuItem";
@@ -189,7 +185,6 @@ namespace ContentTool
             // saveMenuItem
             // 
             this.saveMenuItem.BackColor = System.Drawing.SystemColors.Control;
-            this.saveMenuItem.DropDownDirection = System.Windows.Forms.ToolStripDropDownDirection.AboveLeft;
             this.saveMenuItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.saveMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.saveMenuItem.Name = "saveMenuItem";
@@ -202,7 +197,6 @@ namespace ContentTool
             // saveAsMenuItem
             // 
             this.saveAsMenuItem.BackColor = System.Drawing.SystemColors.Control;
-            this.saveAsMenuItem.DropDownDirection = System.Windows.Forms.ToolStripDropDownDirection.AboveLeft;
             this.saveAsMenuItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.saveAsMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.saveAsMenuItem.Name = "saveAsMenuItem";
@@ -216,7 +210,6 @@ namespace ContentTool
             // exitMenuItem
             // 
             this.exitMenuItem.BackColor = System.Drawing.SystemColors.Control;
-            this.exitMenuItem.DropDownDirection = System.Windows.Forms.ToolStripDropDownDirection.AboveLeft;
             this.exitMenuItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.exitMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.exitMenuItem.Name = "exitMenuItem";
@@ -228,7 +221,6 @@ namespace ContentTool
             // fileMenuItem
             // 
             this.fileMenuItem.BackColor = System.Drawing.SystemColors.Control;
-            this.fileMenuItem.DropDownDirection = System.Windows.Forms.ToolStripDropDownDirection.AboveLeft;
             this.fileMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newMenuItem,
             this.openMenuItem,
@@ -248,7 +240,6 @@ namespace ContentTool
             // undoMenuItem
             // 
             this.undoMenuItem.BackColor = System.Drawing.SystemColors.Control;
-            this.undoMenuItem.DropDownDirection = System.Windows.Forms.ToolStripDropDownDirection.AboveLeft;
             this.undoMenuItem.Enabled = false;
             this.undoMenuItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.undoMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
@@ -261,7 +252,6 @@ namespace ContentTool
             // redoMenuItem
             // 
             this.redoMenuItem.BackColor = System.Drawing.SystemColors.Control;
-            this.redoMenuItem.DropDownDirection = System.Windows.Forms.ToolStripDropDownDirection.AboveLeft;
             this.redoMenuItem.Enabled = false;
             this.redoMenuItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.redoMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
@@ -274,7 +264,6 @@ namespace ContentTool
             // newItemMenuItem
             // 
             this.newItemMenuItem.BackColor = System.Drawing.SystemColors.Control;
-            this.newItemMenuItem.DropDownDirection = System.Windows.Forms.ToolStripDropDownDirection.AboveLeft;
             this.newItemMenuItem.Enabled = false;
             this.newItemMenuItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.newItemMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
@@ -286,7 +275,6 @@ namespace ContentTool
             // newFolderMenuItem
             // 
             this.newFolderMenuItem.BackColor = System.Drawing.SystemColors.Control;
-            this.newFolderMenuItem.DropDownDirection = System.Windows.Forms.ToolStripDropDownDirection.AboveLeft;
             this.newFolderMenuItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.newFolderMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.newFolderMenuItem.Name = "newFolderMenuItem";
@@ -297,7 +285,6 @@ namespace ContentTool
             // existingItemMenuItem
             // 
             this.existingItemMenuItem.BackColor = System.Drawing.SystemColors.Control;
-            this.existingItemMenuItem.DropDownDirection = System.Windows.Forms.ToolStripDropDownDirection.AboveLeft;
             this.existingItemMenuItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.existingItemMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.existingItemMenuItem.Name = "existingItemMenuItem";
@@ -309,7 +296,6 @@ namespace ContentTool
             // existingFolderMenuItem
             // 
             this.existingFolderMenuItem.BackColor = System.Drawing.SystemColors.Control;
-            this.existingFolderMenuItem.DropDownDirection = System.Windows.Forms.ToolStripDropDownDirection.AboveLeft;
             this.existingFolderMenuItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.existingFolderMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.existingFolderMenuItem.Name = "existingFolderMenuItem";
@@ -321,7 +307,6 @@ namespace ContentTool
             // addMenuItem
             // 
             this.addMenuItem.BackColor = System.Drawing.SystemColors.Control;
-            this.addMenuItem.DropDownDirection = System.Windows.Forms.ToolStripDropDownDirection.AboveLeft;
             this.addMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newItemMenuItem,
             this.newFolderMenuItem,
@@ -337,7 +322,6 @@ namespace ContentTool
             // renameMenuItem
             // 
             this.renameMenuItem.BackColor = System.Drawing.SystemColors.Control;
-            this.renameMenuItem.DropDownDirection = System.Windows.Forms.ToolStripDropDownDirection.AboveLeft;
             this.renameMenuItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.renameMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.renameMenuItem.Name = "renameMenuItem";
@@ -350,7 +334,6 @@ namespace ContentTool
             // deleteMenuItem
             // 
             this.deleteMenuItem.BackColor = System.Drawing.SystemColors.Control;
-            this.deleteMenuItem.DropDownDirection = System.Windows.Forms.ToolStripDropDownDirection.AboveLeft;
             this.deleteMenuItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.deleteMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.deleteMenuItem.Name = "deleteMenuItem";
@@ -362,7 +345,6 @@ namespace ContentTool
             // 
             // editMenuItem
             // 
-            this.editMenuItem.DropDownDirection = System.Windows.Forms.ToolStripDropDownDirection.AboveLeft;
             this.editMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.undoMenuItem,
             this.redoMenuItem,
@@ -377,7 +359,6 @@ namespace ContentTool
             // buildMenuItem
             // 
             this.buildMenuItem.BackColor = System.Drawing.SystemColors.Control;
-            this.buildMenuItem.DropDownDirection = System.Windows.Forms.ToolStripDropDownDirection.AboveLeft;
             this.buildMenuItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.buildMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.buildMenuItem.Name = "buildMenuItem";
@@ -390,7 +371,6 @@ namespace ContentTool
             // rebuildMenuItem
             // 
             this.rebuildMenuItem.BackColor = System.Drawing.SystemColors.Control;
-            this.rebuildMenuItem.DropDownDirection = System.Windows.Forms.ToolStripDropDownDirection.AboveLeft;
             this.rebuildMenuItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.rebuildMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.rebuildMenuItem.Name = "rebuildMenuItem";
@@ -403,7 +383,6 @@ namespace ContentTool
             // cleanMenuItem
             // 
             this.cleanMenuItem.BackColor = System.Drawing.SystemColors.Control;
-            this.cleanMenuItem.DropDownDirection = System.Windows.Forms.ToolStripDropDownDirection.AboveLeft;
             this.cleanMenuItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.cleanMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.cleanMenuItem.Name = "cleanMenuItem";
@@ -415,7 +394,6 @@ namespace ContentTool
             // cancelMenuItem
             // 
             this.cancelMenuItem.BackColor = System.Drawing.SystemColors.Control;
-            this.cancelMenuItem.DropDownDirection = System.Windows.Forms.ToolStripDropDownDirection.AboveLeft;
             this.cancelMenuItem.Enabled = false;
             this.cancelMenuItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.cancelMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
@@ -428,7 +406,6 @@ namespace ContentTool
             // buildMainMenuItem
             // 
             this.buildMainMenuItem.BackColor = System.Drawing.SystemColors.Control;
-            this.buildMainMenuItem.DropDownDirection = System.Windows.Forms.ToolStripDropDownDirection.AboveLeft;
             this.buildMainMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.buildMenuItem,
             this.rebuildMenuItem,

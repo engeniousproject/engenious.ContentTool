@@ -30,11 +30,11 @@ namespace ContentTool
                 builder.BuildStatusChanged += (sender, buildStep) => {
                     string message = (buildStep & (BuildStep.Build|BuildStep.Clean)).ToString() + " ";
                     bool error=false;
-                    if ((buildStep & Builder.BuildStep.Abort) == Builder.BuildStep.Abort)
+                    if (buildStep.HasFlag(Builder.BuildStep.Abort))
                     {
                         message += "aborted!";
                         error = true;
-                    }else if ((buildStep & Builder.BuildStep.Finished) == Builder.BuildStep.Finished)
+                    }else if (buildStep.HasFlag(Builder.BuildStep.Finished))
                     {
                         message +="finished!";
                     }
@@ -47,11 +47,11 @@ namespace ContentTool
                     string message = e.Item + " " +(e.BuildStep & (BuildStep.Build|BuildStep.Clean)).ToString().ToLower() + "ing ";
 
                     bool error=false;
-                    if ((e.BuildStep & Builder.BuildStep.Abort) == Builder.BuildStep.Abort)
+                    if (e.BuildStep.HasFlag(Builder.BuildStep.Abort))
                     {
                         message += "failed!";
                         error = true;
-                    }else if ((e.BuildStep & Builder.BuildStep.Finished) == Builder.BuildStep.Finished)
+                    }else if (e.BuildStep.HasFlag(Builder.BuildStep.Finished))
                     {
                         message +="finished!";
                     }
@@ -68,7 +68,6 @@ namespace ContentTool
             else{
                 System.Windows.Forms.Application.EnableVisualStyles();
                 using (frmMain mainForm = new frmMain()){
-                    
                     System.Windows.Forms.Application.Run(mainForm);
                 }
             }
