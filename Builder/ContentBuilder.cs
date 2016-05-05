@@ -13,6 +13,7 @@ namespace ContentTool.Builder
         public delegate void ItemProgressDel(object sender, ItemProgressEventArgs e);
         public delegate void BuildStatusChangedDel(object sender, BuildStep buildStep);
 
+        public event engenious.Content.Pipeline.BuildMessageDel BuildMessage;
         public event ItemProgressDel ItemProgress;
         public event BuildStatusChangedDel BuildStatusChanged;
         private List<ContentFile> toClean;
@@ -50,6 +51,7 @@ namespace ContentTool.Builder
                 return true;//TODO:
             }
         }
+        public int FailedBuilds { get; private set; }
 
         private string getDestinationFile(ContentFile contentFile)
         {
@@ -74,6 +76,12 @@ namespace ContentTool.Builder
             }));
             thread.Start();
         }
+        private void RaiseBuildMessage(object sender,engenious.Content.Pipeline.BuildMessageEventArgs e)
+        {
+            if (e.MessageType == engenious.Content.Pipeline.BuildMessageEventArgs.BuildMessageType.Error)
+                FailedBuilds++;
+            BuildMessage?.Invoke(sender, e);
+        }
         public void Build()
         {
             if (Project == null)
@@ -83,6 +91,7 @@ namespace ContentTool.Builder
 
             buildingThread = new System.Threading.Thread(new System.Threading.ThreadStart(delegate ()
                 {
+                    FailedBuilds = 0;
 
                     IsBuilding = true;
                     string outputDir = getOutputDir();
@@ -91,6 +100,9 @@ namespace ContentTool.Builder
                     using (engenious.Content.Pipeline.ContentImporterContext importerContext = new engenious.Content.Pipeline.ContentImporterContext())
                     using (engenious.Content.Pipeline.ContentProcessorContext processorContext = new engenious.Content.Pipeline.ContentProcessorContext())
                     {
+                        importerContext.BuildMessage += RaiseBuildMessage;
+                        processorContext.BuildMessage += RaiseBuildMessage;
+
                         foreach (var item in Project.Contents)
                         {
                             if (item is ContentFile)
@@ -112,7 +124,7 @@ namespace ContentTool.Builder
                                 if (processor == null)
                                     continue;
 
-                                object processedData = processor.Process(importerOutput, processorContext);
+                                object processedData = processor.Process(importerOutput,importFile, processorContext);
 
                                 if (processedData == null)
                                     continue;

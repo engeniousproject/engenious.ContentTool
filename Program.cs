@@ -10,50 +10,79 @@ using ContentTool.Builder;
 
 namespace ContentTool
 {
-    class MainClass
+    class Program
     {
+        internal static string MakePathRelative(string filename)
+        {
+            try
+            {
+                Uri root = new Uri(System.IO.Path.GetFullPath(Arguments.ProjectDir), UriKind.Absolute);
+                Uri uri = new Uri(System.IO.Path.GetFullPath(filename), UriKind.Absolute);
+                return root.MakeRelativeUri(uri).ToString();
+            }
+            catch
+            {
+                return filename;
+            }
+        }
+        public static Arguments Arguments { get; private set; }
         [STAThread()]
-        public static void Main(string[] args)
+        public static int Main(string[] args)
         {
 
-            Arguments arguments = new Arguments();
-            arguments.ParseArguments(args);
+            Arguments = new Arguments();
+            Arguments.ParseArguments(args);
 
-            if (arguments.Hidden)
+            if (Arguments.Hidden)
             {
-                ContentBuilder builder = new ContentBuilder(ContentProject.Load(arguments.ContentProject));
-                if(arguments.Configuration.HasValue)
-                    builder.Project.Configuration = arguments.Configuration.Value;
-                if (arguments.OutputDirectory != null)
-                    builder.Project.OutputDir = arguments.OutputDirectory;
-
-                builder.BuildStatusChanged += (sender, buildStep) => {
-                    string message = (buildStep & (BuildStep.Build|BuildStep.Clean)).ToString() + " ";
-                    bool error=false;
+                ContentBuilder builder = new ContentBuilder(ContentProject.Load(Arguments.ContentProject));
+                if (Arguments.Configuration.HasValue)
+                    builder.Project.Configuration = Arguments.Configuration.Value;
+                if (Arguments.OutputDirectory != null)
+                    builder.Project.OutputDir = Arguments.OutputDirectory;
+                builder.BuildMessage += (sender, e) =>
+                {
+                    if (e.MessageType == engenious.Content.Pipeline.BuildMessageEventArgs.BuildMessageType.Error)
+                        Console.Error.WriteLine(Program.MakePathRelative(e.FileName) + e.Message);
+                    else
+                        Console.WriteLine(Program.MakePathRelative(e.FileName) + e.Message);
+                };
+                builder.BuildStatusChanged += (sender, buildStep) =>
+                {
+                    string message = (buildStep & (BuildStep.Build | BuildStep.Clean)).ToString() + " ";
+                    bool error = false;
                     if (buildStep.HasFlag(Builder.BuildStep.Abort))
                     {
                         message += "aborted!";
                         error = true;
-                    }else if (buildStep.HasFlag(Builder.BuildStep.Finished))
+                    }
+                    else if (buildStep.HasFlag(Builder.BuildStep.Finished))
                     {
-                        message +="finished!";
+                        message += "finished!";
+                        if (builder.FailedBuilds != 0)
+                        {
+                            message += " " + builder.FailedBuilds.ToString() + " files failed to build!";
+                            error = true;
+                        }
                     }
                     if (error)
                         Console.Error.WriteLine(message);
                     else
                         Console.WriteLine(message);
                 };
-                builder.ItemProgress += (sender, e) => {
-                    string message = e.Item + " " +(e.BuildStep & (BuildStep.Build|BuildStep.Clean)).ToString().ToLower() + "ing ";
+                builder.ItemProgress += (sender, e) =>
+                {
+                    string message = e.Item + " " + (e.BuildStep & (BuildStep.Build | BuildStep.Clean)).ToString().ToLower() + "ing ";
 
-                    bool error=false;
+                    bool error = false;
                     if (e.BuildStep.HasFlag(Builder.BuildStep.Abort))
                     {
                         message += "failed!";
                         error = true;
-                    }else if (e.BuildStep.HasFlag(Builder.BuildStep.Finished))
+                    }
+                    else if (e.BuildStep.HasFlag(Builder.BuildStep.Finished))
                     {
-                        message +="finished!";
+                        message += "finished!";
                     }
                     if (error)
                         Console.Error.WriteLine(message);
@@ -64,13 +93,18 @@ namespace ContentTool
                 builder.Build();
 
                 builder.Join();
+
+                if (builder.FailedBuilds != 0)
+                    return -1;
             }
-            else{
+            else {
                 System.Windows.Forms.Application.EnableVisualStyles();
-                using (frmMain mainForm = new frmMain()){
+                using (frmMain mainForm = new frmMain())
+                {
                     System.Windows.Forms.Application.Run(mainForm);
                 }
             }
+            return 0;
         }
     }
 }

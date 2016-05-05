@@ -36,7 +36,14 @@ namespace ContentTool
             builder = new ContentBuilder(null);
             builder.BuildStatusChanged += Builder_BuildStatusChanged;
             builder.ItemProgress += Builder_ItemProgress;
+            builder.BuildMessage += Builder_BuildMessage;
             treeMap = new Dictionary<ContentItem, TreeNode>();
+        }
+
+        private void Builder_BuildMessage(object sender, engenious.Content.Pipeline.BuildMessageEventArgs e)
+        {
+            
+            Log(Program.MakePathRelative(e.FileName) + e.Message, e.MessageType == engenious.Content.Pipeline.BuildMessageEventArgs.BuildMessageType.Error);
         }
 
         void Builder_ItemProgress (object sender, ItemProgressEventArgs e)
@@ -66,6 +73,11 @@ namespace ContentTool
             }else if ((buildStep & Builder.BuildStep.Finished) == Builder.BuildStep.Finished)
             {
                 message +="finished!";
+                if (builder.FailedBuilds != 0)
+                {
+                    message += " " + builder.FailedBuilds.ToString() + " files failed to build!";
+                    error = true;
+                }
             }
             Log(message,error);
         }
@@ -343,7 +355,16 @@ namespace ContentTool
                         }));
                 return;
             }
+            if (error)
+            {
+                txtLog.SelectionColor = System.Drawing.Color.Red;
+            }
             txtLog.AppendText(message + "\n");
+            txtLog.ScrollToCaret();
+            if (error)
+            {
+                txtLog.SelectionColor = System.Drawing.Color.Black;
+            }
         }
 
         private void StartBuilding()

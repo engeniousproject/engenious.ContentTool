@@ -6,12 +6,14 @@ namespace ContentTool
     {
         public string OutputDirectory{get;private set;}
         public string ContentProject{get;private set;}
+        public string ProjectDir { get; private set; }
         public bool Hidden{get;private set;}
         public Configuration? Configuration{ get; set; }
         public Arguments()
         {
             Configuration = null;
             OutputDirectory = null;
+            ProjectDir = Environment.CurrentDirectory;
         }
         private static string parsePath(string dir)
         {
@@ -42,6 +44,11 @@ namespace ContentTool
                 {
                     string dir = arg.Substring("/@:".Length).Trim();
                     ContentProject = parsePath(dir);
+                }
+                else if (arg.StartsWith("/projectDir:"))
+                {
+                    string dir = arg.Substring("/projectDir:".Length).Trim();
+                    ProjectDir = parsePath(dir);
                 }
                 else if(arg.StartsWith("/configuration:"))
                 {

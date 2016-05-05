@@ -7,7 +7,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>ContentTool</RootNamespace>
     <AssemblyName>ContentTool</AssemblyName>
-    <StartupObject>ContentTool.MainClass</StartupObject>
+    <StartupObject>ContentTool.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
