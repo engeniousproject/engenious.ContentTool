@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml;
+using System.Linq;
 
 namespace ContentTool
 {
@@ -41,6 +43,55 @@ namespace ContentTool
         }
 
 
+        #region implemented abstract members of ContentItem
+
+        public override void ReadItem(XmlElement node)
+        {
+            switch (node.Name)
+            {
+                case "Name":
+                    Name = node.ChildNodes.OfType<XmlText>().FirstOrDefault()?.InnerText;
+                    break;
+                case "Contents":
+                    foreach(var child in node.ChildNodes.OfType<XmlElement>())
+                    {
+                        ContentItem item;
+                        switch(child.Name)
+                        {
+                            case "ContentFolder":
+                                item = new ContentFolder("",this);
+                                break;
+                            case "ContentFile":
+                                item = new ContentFile("",this);
+                                break;
+                            default:
+                                continue;
+                        }
+                        foreach(var inner in child.ChildNodes.OfType<XmlElement>())
+                            item.ReadItem(inner);
+                        Contents.Add(item);
+                    }
+                    break;
+            }
+        }
+
+        public override void WriteItems(System.Xml.XmlWriter writer)
+        {
+            writer.WriteElementString("Name", Name);
+
+            writer.WriteStartElement("Contents");
+            {
+                foreach (var item in Contents)
+                {
+                    writer.WriteStartElement(item.GetType().Name);
+                    item.WriteItems(writer);
+                    writer.WriteEndElement();
+                }
+            }
+            writer.WriteEndElement();
+        }
+
+        #endregion
     }
 }
 

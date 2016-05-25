@@ -281,6 +281,7 @@ namespace ContentTool
             this.newFolderMenuItem.Size = new System.Drawing.Size(151, 22);
             this.newFolderMenuItem.Text = "New Folder...";
             this.newFolderMenuItem.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal;
+            this.newFolderMenuItem.Click += NewFolderMenuItem_Click;
             // 
             // existingItemMenuItem
             // 
@@ -454,6 +455,7 @@ namespace ContentTool
             this.PerformLayout();
 
         }
+
         private System.Windows.Forms.ImageList imgList;
         private System.Windows.Forms.SplitContainer splitContainer;
         private System.Windows.Forms.RichTextBox txtLog;

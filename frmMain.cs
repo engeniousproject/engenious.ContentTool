@@ -597,6 +597,7 @@ namespace ContentTool
         private void treeContentFiles_AfterSelect(object sender, TreeViewEventArgs e)
         {
             prpItem.SelectedObject = e.Node.Tag;
+
         }
     }
 }

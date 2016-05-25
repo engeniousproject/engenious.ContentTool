@@ -17,8 +17,8 @@
     <DefineConstants>DEBUG;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Externalconsole>true</Externalconsole>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>full</DebugType>
@@ -38,6 +38,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Runtime.Serialization" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dialog\frmEditReferences.cs">
@@ -87,7 +88,7 @@
   <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\ContentPipeline\engenious.Pipeline.csproj">
-      <Project>{9771e0fc-d752-4d7a-89e4-4f6fa2ec3c1d}</Project>
+      <Project>{9771E0FC-D752-4D7A-89E4-4F6FA2EC3C1D}</Project>
       <Name>engenious.Pipeline</Name>
     </ProjectReference>
     <ProjectReference Include="..\engenious\engenious.csproj">

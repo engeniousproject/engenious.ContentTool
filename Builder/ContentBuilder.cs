@@ -28,7 +28,11 @@ namespace ContentTool.Builder
         }
         private static void CreateFolderIfNeeded(string filename)
         {
+            if (string.IsNullOrEmpty(filename))
+                return;
             string folder = System.IO.Path.GetDirectoryName(filename);
+            if (string.IsNullOrEmpty(folder))
+                return;
             if (!System.IO.Directory.Exists(folder))
             {
                 CreateFolderIfNeeded(folder);
@@ -82,6 +86,57 @@ namespace ContentTool.Builder
                 FailedBuilds++;
             BuildMessage?.Invoke(sender, e);
         }
+        private void buildFile(ContentFile contentFile,engenious.Content.Pipeline.ContentImporterContext importerContext,engenious.Content.Pipeline.ContentProcessorContext processorContext)
+        {
+            string importFile = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Project.File), contentFile.getPath());
+            string destFile = getDestinationFile(contentFile);
+            CreateFolderIfNeeded(destFile);
+
+            var importer = contentFile.Importer;
+            if (importer == null)
+                return;
+
+            object importerOutput = importer.Import(importFile, importerContext);
+            if (importerOutput == null)
+                return;
+
+            engenious.Content.Pipeline.IContentProcessor processor = contentFile.Processor;
+            if (processor == null)
+                return;
+
+            object processedData = processor.Process(importerOutput,importFile, processorContext);
+
+            if (processedData == null)
+                return;
+
+            engenious.Content.Serialization.IContentTypeWriter typeWriter = engenious.Content.Serialization.SerializationManager.Instance.GetWriter(processedData.GetType());
+            engenious.Content.ContentFile outputFileWriter = new engenious.Content.ContentFile(typeWriter.RuntimeReaderName);
+
+            BinaryFormatter formatter = new BinaryFormatter();
+            using (FileStream fs = new FileStream(destFile, FileMode.Create, FileAccess.Write))
+            {
+                formatter.Serialize(fs, outputFileWriter);
+                engenious.Content.Serialization.ContentWriter writer = new engenious.Content.Serialization.ContentWriter(fs);
+                writer.WriteObject(processedData, typeWriter);
+            }
+
+            toClean.Add(contentFile);
+            ItemProgress?.BeginInvoke(this, new ItemProgressEventArgs(BuildStep.Build, contentFile), null, null);
+        }
+        private void buildDir(ContentFolder folder,engenious.Content.Pipeline.ContentImporterContext importerContext,engenious.Content.Pipeline.ContentProcessorContext processorContext)
+        {
+            foreach (var item in folder.Contents)
+            {
+                if (item is ContentFile)
+                {
+                    buildFile(item as ContentFile,importerContext,processorContext);
+                }
+                else if (item is ContentFolder)
+                {
+                    buildDir(item as ContentFolder,importerContext,processorContext);
+                }
+            }
+        }
         public void Build()
         {
             if (Project == null)
@@ -103,47 +158,7 @@ namespace ContentTool.Builder
                         importerContext.BuildMessage += RaiseBuildMessage;
                         processorContext.BuildMessage += RaiseBuildMessage;
 
-                        foreach (var item in Project.Contents)
-                        {
-                            if (item is ContentFile)
-                            {
-                                ContentFile contentFile = item as ContentFile;
-                                string importFile = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Project.File), item.getPath());
-                                string destFile = getDestinationFile(contentFile);
-                                CreateFolderIfNeeded(destFile);
-
-                                var importer = PipelineHelper.CreateImporter(System.IO.Path.GetExtension(item.Name));
-                                if (importer == null)
-                                    continue;
-
-                                object importerOutput = importer.Import(importFile, importerContext);
-                                if (importerOutput == null)
-                                    continue;
-
-                                engenious.Content.Pipeline.IContentProcessor processor = PipelineHelper.CreateProcessor(importer.GetType(), contentFile.Processor);
-                                if (processor == null)
-                                    continue;
-
-                                object processedData = processor.Process(importerOutput,importFile, processorContext);
-
-                                if (processedData == null)
-                                    continue;
-
-                                engenious.Content.Serialization.IContentTypeWriter typeWriter = engenious.Content.Serialization.SerializationManager.Instance.GetWriter(processedData.GetType());
-                                engenious.Content.ContentFile outputFileWriter = new engenious.Content.ContentFile(typeWriter.RuntimeReaderName);
-
-                                BinaryFormatter formatter = new BinaryFormatter();
-                                using (FileStream fs = new FileStream(destFile, FileMode.Create, FileAccess.Write))
-                                {
-                                    formatter.Serialize(fs, outputFileWriter);
-                                    engenious.Content.Serialization.ContentWriter writer = new engenious.Content.Serialization.ContentWriter(fs);
-                                    writer.WriteObject(processedData, typeWriter);
-                                }
-
-                                toClean.Add(contentFile);
-                                ItemProgress?.BeginInvoke(this, new ItemProgressEventArgs(BuildStep.Build, item), null, null);
-                            }
-                        }
+                        buildDir (Project,importerContext,processorContext);
                     }
                     //System.Threading.Thread.Sleep(8000);
 
