@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
+using System.Linq;
 
 namespace ContentTool.Builder
 {
@@ -16,17 +17,18 @@ namespace ContentTool.Builder
         public event engenious.Content.Pipeline.BuildMessageDel BuildMessage;
         public event ItemProgressDel ItemProgress;
         public event BuildStatusChangedDel BuildStatusChanged;
-        private List<ContentFile> toClean;
+        private Dictionary<string,ContentFile> builtFiles;
         private BuildStep currentBuild = BuildStep.Finished;
 
         private System.Threading.Thread buildingThread;
+        private BuildCache cache;
 
         public ContentBuilder(ContentProject project)
         {
             Project = project;
-            toClean = new List<ContentFile>();
+            builtFiles = new Dictionary<string, ContentFile>();
         }
-        private static void CreateFolderIfNeeded(string filename)
+        internal static void CreateFolderIfNeeded(string filename)
         {
             if (string.IsNullOrEmpty(filename))
                 return;
@@ -39,13 +41,23 @@ namespace ContentTool.Builder
                 System.IO.Directory.CreateDirectory(folder);
             }
         }
-        public ContentProject Project { get; internal set; }
+        private ContentProject project;
+        public ContentProject Project {
+            get{return project;}
+            private set{
+                project = value;
+                if (project == null)
+                    cache = null;
+                else
+                    cache = BuildCache.Load(getCacheFile());
+            }
+        }
         public bool IsBuilding { get; private set; }
         public bool CanClean
         {
             get
             {
-                return toClean.Count > 0;
+                return cache.CanClean(getOutputDir());
             }
         }
         public bool CanBuild
@@ -59,14 +71,26 @@ namespace ContentTool.Builder
 
         private string getDestinationFile(ContentFile contentFile)
         {
+            return System.IO.Path.Combine(System.IO.Path.GetDirectoryName(contentFile.getPath()), System.IO.Path.GetFileNameWithoutExtension(contentFile.Name) + DESTINATION_EXT);
+        }
+        private string getDestinationFileAbsolute(ContentFile contentFile)
+        {
 
             //string importFile = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Project.File), contentFile.getPath());
-            return System.IO.Path.Combine(getOutputDir(), System.IO.Path.GetDirectoryName(contentFile.getPath()), System.IO.Path.GetFileNameWithoutExtension(contentFile.Name) + DESTINATION_EXT);
+            return System.IO.Path.Combine(getOutputDir(),getDestinationFile(contentFile));
         }
         private string getOutputDir()
         {
             string relOut = string.Format(Project.OutputDir.Replace("{Configuration}", "{0}"), Project.Configuration.ToString());
             return System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Project.File), relOut);
+        }
+        private string getObjectDir()
+        {
+            return System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Project.File), "obj");
+        }
+        private string getCacheFile()
+        {
+            return Path.Combine(getObjectDir(),"obj",Path.GetFileNameWithoutExtension(Project.File)+".dat");
         }
         public void Rebuild()
         {
@@ -88,17 +112,27 @@ namespace ContentTool.Builder
         }
         private void buildFile(ContentFile contentFile,engenious.Content.Pipeline.ContentImporterContext importerContext,engenious.Content.Pipeline.ContentProcessorContext processorContext)
         {
-            string importFile = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Project.File), contentFile.getPath());
-            string destFile = getDestinationFile(contentFile);
+            string importDir = System.IO.Path.GetDirectoryName(Project.File);
+            string importFile = System.IO.Path.Combine(importDir, contentFile.getPath());
+            string destFile = getDestinationFileAbsolute(contentFile);
+            string outputPath = getOutputDir();
             CreateFolderIfNeeded(destFile);
-
+            if (!cache.NeedsRebuild(importDir,outputPath,contentFile.getPath())){
+                importerContext.RaiseBuildMessage(contentFile.getPath()," skipped(cached)",engenious.Content.Pipeline.BuildMessageEventArgs.BuildMessageType.Information);
+                //ItemProgress?.BeginInvoke(this, new ItemProgressEventArgs(BuildStep.Build, contentFile), null, null);
+                return;
+            }
+            BuildInfo cacheInfo = new BuildInfo(importDir,contentFile.getPath(),getDestinationFile(contentFile));
             var importer = contentFile.Importer;
             if (importer == null)
                 return;
-
+            
             object importerOutput = importer.Import(importFile, importerContext);
             if (importerOutput == null)
                 return;
+            
+            cacheInfo.Dependencies.AddRange(importerContext.Dependencies);
+            cache.AddDependencies(importDir,importerContext.Dependencies);
 
             engenious.Content.Pipeline.IContentProcessor processor = contentFile.Processor;
             if (processor == null)
@@ -108,6 +142,8 @@ namespace ContentTool.Builder
 
             if (processedData == null)
                 return;
+            cacheInfo.Dependencies.AddRange(processorContext.Dependencies);
+            cache.AddDependencies(importDir,processorContext.Dependencies);
 
             engenious.Content.Serialization.IContentTypeWriter typeWriter = engenious.Content.Serialization.SerializationManager.Instance.GetWriter(processedData.GetType());
             engenious.Content.ContentFile outputFileWriter = new engenious.Content.ContentFile(typeWriter.RuntimeReaderName);
@@ -119,8 +155,9 @@ namespace ContentTool.Builder
                 engenious.Content.Serialization.ContentWriter writer = new engenious.Content.Serialization.ContentWriter(fs);
                 writer.WriteObject(processedData, typeWriter);
             }
-
-            toClean.Add(contentFile);
+            cacheInfo.BuildDone(outputPath);
+            cache.AddBuildInfo(cacheInfo);
+            builtFiles[contentFile.getPath()]=contentFile;
             ItemProgress?.BeginInvoke(this, new ItemProgressEventArgs(BuildStep.Build, contentFile), null, null);
         }
         private void buildDir(ContentFolder folder,engenious.Content.Pipeline.ContentImporterContext importerContext,engenious.Content.Pipeline.ContentProcessorContext processorContext)
@@ -161,7 +198,7 @@ namespace ContentTool.Builder
                         buildDir (Project,importerContext,processorContext);
                     }
                     //System.Threading.Thread.Sleep(8000);
-
+                    cache.Save(getCacheFile());
                     IsBuilding = false;
 
                     BuildStatusChanged?.BeginInvoke(this, BuildStep.Build | BuildStep.Finished, null, null);
@@ -172,16 +209,21 @@ namespace ContentTool.Builder
         {
             if (Project == null)
                 return;
+            
             currentBuild = BuildStep.Clean;
             BuildStatusChanged?.BeginInvoke(this, BuildStep.Clean, null, null);
             buildingThread = new System.Threading.Thread(new System.Threading.ThreadStart(delegate ()
             {
+                string outputDir = getOutputDir();
                 IsBuilding = true;
-                foreach (var item in toClean)
+                foreach (var file in cache.Files.Where(x=>x.Value.IsBuilt(outputDir)).Select(x=>x.Value.InputFile))
                 {
-                    ItemProgress?.BeginInvoke(this, new ItemProgressEventArgs(BuildStep.Clean, item), null, null);
-                    if (System.IO.File.Exists(getDestinationFile(item)))
-                        System.IO.File.Delete(getDestinationFile(item));
+                    ContentFile item;
+                    if(builtFiles.TryGetValue(file,out item)){
+                        ItemProgress?.BeginInvoke(this, new ItemProgressEventArgs(BuildStep.Clean, item), null, null);
+                        if (System.IO.File.Exists(getDestinationFileAbsolute(item)))
+                            System.IO.File.Delete(getDestinationFileAbsolute(item));
+                    }
                 }
                 IsBuilding = false;
                 BuildStatusChanged?.Invoke(this, BuildStep.Clean | BuildStep.Finished);

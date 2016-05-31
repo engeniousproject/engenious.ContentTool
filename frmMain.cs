@@ -20,7 +20,16 @@ namespace ContentTool
             get{return currentProject;}
             set{
                 currentProject = value;
-                builder.Project = value;
+                if (builder != null)
+                {
+                    builder.BuildStatusChanged -= Builder_BuildStatusChanged;
+                    builder.ItemProgress -= Builder_ItemProgress;
+                    builder.BuildMessage -= Builder_BuildMessage;
+                }
+                builder = new ContentBuilder(value);
+                builder.BuildStatusChanged += Builder_BuildStatusChanged;
+                builder.ItemProgress += Builder_ItemProgress;
+                builder.BuildMessage += Builder_BuildMessage;
                 PipelineHelper.PreBuilt(currentProject);
             }
         }
