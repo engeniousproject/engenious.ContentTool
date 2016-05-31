@@ -46,8 +46,10 @@ namespace  ContentTool.Builder
 
         internal bool NeedsRebuild(string importPath,string outputPath)
         {
-            string inputFile = Path.Combine(importPath,InputFile),outputFile=Path.Combine(outputPath,OutputFile);
-            if (!File.Exists(inputFile)||InputTime != new FileInfo(inputFile).LastWriteTimeUtc || !File.Exists(outputFile) || OutputTime != new FileInfo(outputFile).LastWriteTimeUtc)
+            string inputFile = Path.Combine(importPath,InputFile),outputFile=null;
+            if (OutputFile != null)
+                outputFile=Path.Combine(outputPath,OutputFile);
+            if (!File.Exists(inputFile)||InputTime != new FileInfo(inputFile).LastWriteTimeUtc || (outputFile != null && (!File.Exists(outputFile) || OutputTime != new FileInfo(outputFile).LastWriteTimeUtc)))
                 return true;
 
             return false;
