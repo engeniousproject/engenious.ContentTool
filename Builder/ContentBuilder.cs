@@ -118,7 +118,7 @@ namespace ContentTool.Builder
             string outputPath = getOutputDir();
             CreateFolderIfNeeded(destFile);
             if (!cache.NeedsRebuild(importDir,outputPath,contentFile.getPath())){
-                importerContext.RaiseBuildMessage(contentFile.getPath()," skipped(cached)",engenious.Content.Pipeline.BuildMessageEventArgs.BuildMessageType.Information);
+                //importerContext.RaiseBuildMessage(contentFile.getPath()," skipped(cached)",engenious.Content.Pipeline.BuildMessageEventArgs.BuildMessageType.Information);
                 //ItemProgress?.BeginInvoke(this, new ItemProgressEventArgs(BuildStep.Build, contentFile), null, null);
                 return;
             }
