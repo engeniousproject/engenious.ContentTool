@@ -177,7 +177,6 @@ namespace ContentTool
                     }
                 }
             }
-
             yield break;
         }
     }
