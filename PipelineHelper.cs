@@ -118,10 +118,12 @@ namespace ContentTool
         }
         public static IContentImporter CreateImporter(string extension)
         {
+            if (importers == null)
+                DefaultInit();
             foreach (var type in importers)
             {
                 var attribute = (ContentImporterAttribute)type.GetCustomAttributes(typeof(ContentImporterAttribute), true).First();
-                if (attribute.FileExtensions.Contains(extension))
+                if (attribute.FileExtensions != null && attribute.FileExtensions.Contains(extension))
                     return (IContentImporter)Activator.CreateInstance(type);
             }
             return null;
