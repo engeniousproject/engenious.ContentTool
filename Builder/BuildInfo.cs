@@ -38,6 +38,8 @@ namespace  ContentTool.Builder
 
         public bool IsBuilt(string outputPath)
         {
+            if (string.IsNullOrEmpty(OutputFile))
+                return false;
             string outputFile = Path.Combine(outputPath,OutputFile);
             if (File.Exists(outputFile))
                 return true;
