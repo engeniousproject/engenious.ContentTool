@@ -8,7 +8,8 @@ namespace ContentTool.Builder
         Clean=1,
         Build=2,
         Abort=4,
-        Finished=8
+        Finished=8,
+        Built=16
     }
 }
 

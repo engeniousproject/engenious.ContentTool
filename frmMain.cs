@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using engenious.Graphics;
 using System.Linq;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
@@ -15,7 +16,9 @@ namespace ContentTool
 
         //TODO: architecture
         private string currentFile;
+
         private ContentProject currentProject;
+
         private ContentProject CurrentProject{
             get{return currentProject;}
             set{
@@ -36,6 +39,8 @@ namespace ContentTool
 
         private ContentBuilder builder;
 
+        private Dictionary<ContentItem, TreeNode> treeMap;
+
         public frmMain()
         {
             InitializeComponent();
@@ -47,12 +52,33 @@ namespace ContentTool
             builder.ItemProgress += Builder_ItemProgress;
             builder.BuildMessage += Builder_BuildMessage;
             treeMap = new Dictionary<ContentItem, TreeNode>();
+
+            treeContentFiles.NodeMouseClick += TreeContentFilesOnNodeMouseClick;
         }
+
+        private void TreeContentFilesOnNodeMouseClick(object sender, TreeNodeMouseClickEventArgs treeNodeMouseClickEventArgs)
+        {
+            if(treeNodeMouseClickEventArgs.Button == MouseButtons.Right)
+                treeContentFiles.SelectedNode = treeNodeMouseClickEventArgs.Node;
+        }
+
+        private void FrmMain_Load(object sender, System.EventArgs e)
+        {
+            foreach (string file in System.Environment.GetCommandLineArgs().Skip(1))
+            {
+                if (System.IO.Path.GetExtension(file) == ".ecp" && System.IO.File.Exists(file))
+                {
+                    OpenFile(file);
+                    return;
+                }
+            }
+        }
+
+        #region Build Events
 
         private void Builder_BuildMessage(object sender, engenious.Content.Pipeline.BuildMessageEventArgs e)
         {
-            
-            Log(Program.MakePathRelative(e.FileName) + e.Message, e.MessageType == engenious.Content.Pipeline.BuildMessageEventArgs.BuildMessageType.Error);
+            Log(Program.MakePathRelative(e.FileName) + " " + e.Message, e.MessageType == engenious.Content.Pipeline.BuildMessageEventArgs.BuildMessageType.Error);
         }
 
         void Builder_ItemProgress (object sender, ItemProgressEventArgs e)
@@ -60,6 +86,7 @@ namespace ContentTool
             string message = e.Item + " " +(e.BuildStep & (BuildStep.Build|BuildStep.Clean)).ToString().ToLower() + "ing ";
 
             bool error=false;
+
             if ((e.BuildStep & Builder.BuildStep.Abort) == Builder.BuildStep.Abort)
             {
                 message += "failed!";
@@ -91,51 +118,9 @@ namespace ContentTool
             Log(message,error);
         }
 
-        void FrmMain_Load(object sender, System.EventArgs e)
-        {
-            foreach (string file in System.Environment.GetCommandLineArgs().Skip(1))
-            {
-                if (System.IO.Path.GetExtension(file) == ".ecp" && System.IO.File.Exists(file))
-                {
-                    OpenFile(file);
-                    return;
-                }
-            }
-        }
+        #endregion
 
-        private bool CloseFile(string message = "Do you really want to close?")
-        {
-            if (builder.IsBuilding)
-            {
-                if (MessageBox.Show("Your Project is currently Building." + message, "Close file", MessageBoxButtons.YesNo) == DialogResult.No)
-                    return false;
-
-                builder.Build();
-            }
-
-            currentFile = null;
-            CurrentProject = null;
-            RecalcTreeView();
-            return true;
-        }
-
-        private void SaveFile(string file)
-        {
-            currentFile = file;
-            CurrentProject.Name = file;
-            ContentProject.Save(file, CurrentProject);
-        }
-
-        private void OpenFile(string file)
-        {
-            currentFile = file;
-            CurrentProject = ContentProject.Load(file);
-            CurrentProject.CollectionChanged += CurrentProject_CollectionChanged;
-            CurrentProject.PropertyChanged += CurrentProject_PropertyChanged;
-            RecalcTreeView();
-        }
-
-        private Dictionary<ContentItem,TreeNode> treeMap;
+        #region Project Events
 
         void CurrentProject_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
@@ -165,7 +150,21 @@ namespace ContentTool
                 case NotifyCollectionChangedAction.Add:
                     {
                         var node = new TreeNode(item.Name){ Tag = item };
-                        node.SelectedImageKey = node.ImageKey = getImageKey(item);
+                        if (
+                            item.Parent?.Contents?.FirstOrDefault(
+                                x =>
+                                    x != item &&
+                                    Path.GetFileNameWithoutExtension(item.Name) ==
+                                    Path.GetFileNameWithoutExtension(x.Name)) != null)
+                        {
+                            item.Parent?.Contents.Remove(item);
+                            MessageBox.Show("There is already an item with that name in this folder!", "Error",
+                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+                        node.SelectedImageKey = node.ImageKey = GetImageKey(item);
+                        AddContextMenu(node);
+
                         treeMap.Add(item, node);
                         if (parentNode == null)
                             treeContentFiles.Nodes.Add(node);
@@ -179,11 +178,13 @@ namespace ContentTool
                 case NotifyCollectionChangedAction.Remove:
                     {
                         TreeNode node = null;
-                        treeMap.TryGetValue(item, out node);
-                        if (parentNode == null)
-                            treeContentFiles.Nodes.Remove(node);
-                        else
-                            parentNode.Nodes.Remove(node);
+                        if (treeMap.TryGetValue(item, out node))
+                        {
+                            if (parentNode == null)
+                                treeContentFiles.Nodes.Remove(node);
+                            else
+                                parentNode.Nodes.Remove(node);
+                        }
                         break;
                     }
                 case NotifyCollectionChangedAction.Replace:
@@ -197,7 +198,7 @@ namespace ContentTool
                             parentNode.Nodes.Remove(node);
 
                         node = new TreeNode(item.Name){ Tag = item };
-                        node.SelectedImageKey = node.ImageKey = getImageKey(item);
+                        node.SelectedImageKey = node.ImageKey = GetImageKey(item);
                         treeMap.Add(item, node);
                         if (parentNode == null)
                             treeContentFiles.Nodes.Add(node);
@@ -217,244 +218,13 @@ namespace ContentTool
             }
         }
 
-        private void RecalcTreeView()
+        #endregion
+
+        #region Tree Events
+
+        private void treeContentFiles_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            treeMap.Clear();
-            treeContentFiles.Nodes.Clear();
-            if (CurrentProject == null)
-            {
-                buildMainMenuItem.Enabled = false;
-                return;
-            }
-            buildMainMenuItem.Enabled = true;
-
-            var rootNode = new TreeNode(CurrentProject.Name){ Tag = CurrentProject };
-            treeContentFiles.Nodes.Add(rootNode);
-            treeMap.Add(CurrentProject, rootNode);
-            AddTreeNode(CurrentProject, rootNode);
-        }
-
-        private string getImageKey(ContentItem item)
-        {
-            if (item is ContentProject)
-                return "project";
-            if (item is ContentFolder)
-                return "folder";
-            if (item is ContentFile)
-            {
-                string ext = System.IO.Path.GetExtension(item.Name);
-                if (!imgList.Images.ContainsKey(ext))
-                {
-                    string filePath = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(currentFile), item.getPath());
-                    if (System.IO.File.Exists(filePath))
-                        imgList.Images.Add(ext, System.Drawing.Icon.ExtractAssociatedIcon(filePath));
-                }
-                return ext;
-                //return "file";
-            }
-            
-            return "error";
-        }
-
-        private void AddTreeNode(ContentFolder content, TreeNode node)
-        {
-            if (content == null)
-                return;
-            node.Expand();
-
-            foreach (var item in content.Contents)
-            {
-                var treeNode = new TreeNode(item.Name){ Tag = item };
-                treeNode.SelectedImageKey = treeNode.ImageKey = getImageKey(item);
-                node.Nodes.Add(treeNode);
-                treeMap.Add(item, treeNode);
-                AddTreeNode(item as ContentFolder, treeNode);
-            }
-        }
-
-
-        void FileMenuItem_DropDownOpening(object sender, System.EventArgs e)
-        {
-            bool fileOpened = !string.IsNullOrEmpty(currentFile) || CurrentProject != null;
-            this.importMenuItem.Enabled = false;
-            this.closeMenuItem.Enabled = this.saveAsMenuItem.Enabled = fileOpened;
-            this.saveMenuItem.Enabled = fileOpened;//TODO änderungen?
-            
-        }
-
-
-        void SaveAsMenuItem_Click(object sender, EventArgs e)
-        {
-            SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Filter = "Engenious Content Project(.ecp)|*.ecp";
-            sfd.FileName = currentFile;
-            sfd.OverwritePrompt = true;
-            if (sfd.ShowDialog() == DialogResult.OK)
-            {
-                SaveFile(sfd.FileName);
-            }
-        }
-
-        void SaveMenuItem_Click(object sender, EventArgs e)
-        {
-            if (string.IsNullOrEmpty(currentFile) || !System.IO.File.Exists(currentFile))
-            {
-                SaveAsMenuItem_Click(sender, e);
-                return;
-            }
-            SaveFile(currentFile);
-        }
-
-        void ImportMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        void CloseMenuItem_Click(object sender, EventArgs e)
-        {
-            currentFile = "";
-            CloseFile();
-
-        }
-
-        void OpenMenuItem_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "Engenious Content Project(.ecp)|*.ecp";
-            if (ofd.ShowDialog() == DialogResult.OK)
-            {
-                OpenFile(ofd.FileName);
-            }
-        }
-
-        void NewMenuItem_Click(object sender, EventArgs e)
-        {
-            CloseMenuItem_Click(sender, e);
-
-            CurrentProject = new ContentProject();
-            CurrentProject.CollectionChanged += CurrentProject_CollectionChanged;
-            CurrentProject.PropertyChanged += CurrentProject_PropertyChanged;
-
-
-            RecalcTreeView();
-
-            if (!SaveFirst())
-                CurrentProject = null;
-            RecalcTreeView();
-        }
-
-        private void ExitMenuItem_Click(object sender, EventArgs args)
-        {
-            Close();
-        }
-
-
-        void CancelMenuItem_Click(object sender, EventArgs e)
-        {
-            builder.Abort();
-        }
-
-        private void Log(string message, bool error = false)
-        {
-            if (this.InvokeRequired)
-            {
-                this.BeginInvoke(new MethodInvoker(delegate()
-                        {
-                            Log(message, error);
-                        }));
-                return;
-            }
-            if (error)
-            {
-                txtLog.SelectionColor = System.Drawing.Color.Red;
-            }
-            txtLog.AppendText(message + "\n");
-            txtLog.ScrollToCaret();
-            if (error)
-            {
-                txtLog.SelectionColor = System.Drawing.Color.Black;
-            }
-        }
-
-        private void StartBuilding()
-        {
-            this.buildMenuItem.Enabled = false;
-            this.rebuildMenuItem.Enabled = false;
-            this.cleanMenuItem.Enabled = false;
-            this.cancelMenuItem.Enabled = true;
-        }
-
-        private void EndBuilding()
-        {
-            
-            if (this.InvokeRequired)
-            {
-                this.Invoke(new MethodInvoker(delegate()
-                        {
-                            EndBuilding();
-                        }));
-                return;
-            }
-            this.buildMenuItem.Enabled = true;
-            this.rebuildMenuItem.Enabled = true;
-            this.cleanMenuItem.Enabled = true;
-            this.cancelMenuItem.Enabled = false;
-        }
-
-        void CleanMenuItem_Click(object sender, EventArgs e)
-        {
-            txtLog.Text = "";
-
-            builder.Clean();
-        }
-
-        void RebuildMenuItem_Click(object sender, EventArgs e)
-        {
-            txtLog.Text = "";
-            builder.Rebuild();
-        }
-
-        void BuildMenuItem_Click(object sender, EventArgs e)
-        {
-            if (!SaveFirst())
-                return;
-            txtLog.Text = "";
-            builder.Build();
-        }
-
-        private bool SaveFirst()
-        {
-            if (string.IsNullOrEmpty(currentFile))
-            {
-                SaveMenuItem_Click(saveMenuItem, new EventArgs());
-            }
-            return System.IO.File.Exists(currentFile);
-        }
-
-        void BuildMainMenuItem_DropDownOpening(object sender, System.EventArgs e)
-        {
-            cleanMenuItem.Enabled = builder.CanClean;
-            rebuildMenuItem.Enabled = System.IO.File.Exists(currentFile) && cleanMenuItem.Enabled;
-        }
-
-        void DeleteMenuItem_Click(object sender, EventArgs e)
-        {
-            ContentItem item = getSelectedItem();
-            var parent = item.Parent as ContentFolder;
-            parent.Contents.Remove(item);
-        }
-
-        void RenameMenuItem_Click(object sender, EventArgs e)
-        {
-            ContentItem item = getSelectedItem();
-            if (item is ContentProject)
-                return;
-            TreeNode node = null;
-            if (treeMap.TryGetValue(item, out node))
-            {
-                
-                node.BeginEdit();
-            }
+            prpItem.SelectedObject = e.Node.Tag;
         }
 
         void TreeContentFiles_BeforeLabelEdit(object sender, System.Windows.Forms.NodeLabelEditEventArgs e)
@@ -505,19 +275,137 @@ namespace ContentTool
 
         }
 
-        void ExistingFolderMenuItem_Click(object sender, EventArgs e)
+        #endregion
+
+        #region File Menu
+
+        void FileMenuItem_DropDownOpening(object sender, System.EventArgs e)
         {
+            bool fileOpened = !string.IsNullOrEmpty(currentFile) || CurrentProject != null;
+            this.importMenuItem.Enabled = false;
+            this.closeMenuItem.Enabled = this.saveAsMenuItem.Enabled = fileOpened;
+            this.saveMenuItem.Enabled = fileOpened;//TODO änderungen?
+            
+        }
+
+
+        void SaveAsMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveAs();
+        }
+
+        void SaveMenuItem_Click(object sender, EventArgs e)
+        {
+            Save();
+        }
+
+        void CloseMenuItem_Click(object sender, EventArgs e)
+        {
+            currentFile = "";
+            CloseFile();
 
         }
 
-        private void makeDirectory(string relativePath, string directoryName)
+        void OpenMenuItem_Click(object sender, EventArgs e)
         {
-            string[] splt = directoryName.Split(new char[]{ System.IO.Path.DirectorySeparatorChar }, 2);
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Engenious Content Project(.ecp)|*.ecp";
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                OpenFile(ofd.FileName);
+            }
+        }
 
-            string curPath = System.IO.Path.Combine(relativePath, splt[0]);
-            System.IO.Directory.CreateDirectory(curPath);
-            if (splt.Length > 1)
-                makeDirectory(curPath, splt[1]);
+        void NewMenuItem_Click(object sender, EventArgs e)
+        {
+            CloseMenuItem_Click(sender, e);
+
+            CreateProject();
+        }
+
+        private void ExitMenuItem_Click(object sender, EventArgs args)
+        {
+            Close();
+        }
+
+        #endregion
+
+        #region Build Menu
+
+        void CleanMenuItem_Click(object sender, EventArgs e)
+        {
+            txtLog.Text = "";
+
+            builder.Clean();
+        }
+
+        void RebuildMenuItem_Click(object sender, EventArgs e)
+        {
+            txtLog.Text = "";
+            builder.Rebuild();
+        }
+
+        void BuildMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!SaveFirst())
+                return;
+            txtLog.Text = "";
+            builder.Build();
+        }
+
+        void CancelMenuItem_Click(object sender, EventArgs e)
+        {
+            builder.Abort();
+        }
+
+
+        void BuildMainMenuItem_DropDownOpening(object sender, System.EventArgs e)
+        {
+            cleanMenuItem.Enabled = builder.CanClean;
+            rebuildMenuItem.Enabled = System.IO.File.Exists(currentFile) && cleanMenuItem.Enabled;
+        }
+
+        #endregion
+
+        #region Edit Menu
+
+        void DeleteMenuItem_Click(object sender, EventArgs e)
+        {
+            ContentItem item = GetSelectedItem();
+            DeleteItem(item);
+        }
+
+        void RenameMenuItem_Click(object sender, EventArgs e)
+        {
+            ContentItem item = GetSelectedItem();
+            RenameItem(item);
+        }
+
+        private void RenameItem(ContentItem item)
+        {
+            if (item is ContentProject)
+                return;
+            TreeNode node = null;
+            if (treeMap.TryGetValue(item, out node))
+            {
+
+                node.BeginEdit();
+            }
+        }
+
+        void RedoMenuItem_Click(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        void UndoMenuItem_Click(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        void ExistingFolderMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
 
         void ExistingItemMenuItem_Click(object sender, EventArgs e)
@@ -527,14 +415,14 @@ namespace ContentTool
             ofd.Filter = "All files|*.*|Image files(.png;.bmp;.jpg)|*.png;*.bmp;*.jpg";
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                ContentItem item = getSelectedItem();
+                ContentItem item = GetSelectedItem();
                 ContentFolder curFolder = item as ContentFolder;
                 if (curFolder == null)
                     curFolder = item.Parent as ContentFolder;
                 if (curFolder == null)
                     return;
                 string absolutePath = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(currentFile), curFolder.getPath());
-                makeDirectory(System.IO.Path.GetDirectoryName(currentFile), curFolder.getPath());
+                MakeDirectory(System.IO.Path.GetDirectoryName(currentFile), curFolder.getPath());
                 foreach (string file in ofd.FileNames)
                 {
                     string destination = System.IO.Path.Combine(absolutePath, System.IO.Path.GetFileName(file));
@@ -544,70 +432,378 @@ namespace ContentTool
                     }
                     curFolder.Contents.Add(new ContentFile(System.IO.Path.GetFileName(file), curFolder));
                 }
+                
             }
         }
 
-        private ContentItem getSelectedItem()
+        void NewFolderMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        #endregion
+
+        #region Context Events
+
+        private void AddContextMenu(TreeNode node)
+        {
+            var item = node.Tag;
+            if (item is ContentProject)
+                node.ContextMenuStrip = contextMenuStrip_project;
+            else if (item is ContentFolder)
+                node.ContextMenuStrip = contextMenuStrip_folder;
+            else if (item is ContentFile)
+                node.ContextMenuStrip = contextMenuStrip_file;
+        }
+        private void ContextMenu_ShowInExplorer(object sender, EventArgs e)
+        {
+            var ContentItem = GetSelectedItem();
+            
+            Process.Start(Path.Combine(Path.GetDirectoryName(currentProject.File)), ContentItem.getPath());
+        }
+
+        private void ContextMenu_Close(object sender, EventArgs e)
+        {
+            currentFile = "";
+            CloseFile();
+        }
+
+        private void ContextMenu_Rename(object sender, EventArgs e)
+        {
+            var item = GetSelectedItem();
+            RenameItem(item);
+        }
+
+        private void ContextMenu_Delete(object sender, EventArgs e)
+        {
+            DeleteItem(GetSelectedItem());
+        }
+
+
+        #endregion
+
+
+        #region Tree
+
+        /// <summary>
+        /// Recalculates the TreeView
+        /// </summary>
+        private void RecalcTreeView()
+        {
+            treeMap.Clear();
+            treeContentFiles.Nodes.Clear();
+
+            if (CurrentProject == null)
+            {
+                buildMainMenuItem.Enabled = false;
+                return;
+            }
+            buildMainMenuItem.Enabled = true;
+
+            var rootNode = new TreeNode(CurrentProject.Name) { Tag = CurrentProject };
+            AddContextMenu(rootNode);
+            treeContentFiles.Nodes.Add(rootNode);
+            treeMap.Add(CurrentProject, rootNode);
+            AddTreeNode(CurrentProject, rootNode);
+        }
+
+        /// <summary>
+        /// Returns the ImageKey for the given ContentItem
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        private string GetImageKey(ContentItem item)
+        {
+            if (item is ContentProject)
+                return "project";
+            if (item is ContentFolder)
+                return "folder";
+            if (item is ContentFile)
+            {
+                string ext = System.IO.Path.GetExtension(item.Name);
+                if (!imgList.Images.ContainsKey(ext))
+                {
+                    string filePath = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(currentFile), item.getPath());
+                    if (System.IO.File.Exists(filePath))
+                        imgList.Images.Add(ext, System.Drawing.Icon.ExtractAssociatedIcon(filePath));
+                }
+                return ext;
+                //return "file";
+            }
+
+            return "error";
+        }
+
+
+        /// <summary>
+        /// Adds a new Node to the given TreeNode
+        /// </summary>
+        /// <param name="content"></param>
+        /// <param name="parent"></param>
+        private void AddTreeNode(ContentFolder content, TreeNode parent)
+        {
+            parent.Expand();
+
+            foreach (var item in content.Contents)
+            {
+                var treeNode = new TreeNode(item.Name) { Tag = item };
+
+                treeNode.SelectedImageKey = treeNode.ImageKey = GetImageKey(item);
+
+                parent.Nodes.Add(treeNode);
+                treeMap.Add(item, treeNode);
+
+                AddContextMenu(treeNode);
+
+                if (item is ContentFolder)
+                {
+                    AddTreeNode((ContentFolder)item, treeNode);
+                }
+
+            }
+        }
+
+        /// <summary>
+        /// Returns the ContentItem of a given TreeNode
+        /// </summary>
+        /// <param name="node">TreeNode</param>
+        /// <returns>ContentItem</returns>
+        private ContentItem GetItemFromNode(TreeNode node)
+        {
+            return node?.Tag as ContentItem;
+        }
+
+        /// <summary>
+        /// Adds a new Folder to the selected Node
+        /// </summary>
+        /// <param name="name">Name of Folder</param>
+        private void AddFolder(string name)
+        {
+            ContentItem selectedItem = GetSelectedItem();
+            ContentFolder selectedFolder = selectedItem as ContentFolder;
+
+            if (selectedFolder == null)
+                selectedFolder = selectedItem.Parent as ContentFolder;
+
+            selectedFolder?.Contents.Add(new ContentFolder(name, selectedFolder));
+        }
+
+        /// <summary>
+        /// Returns the selected Node as a ContentItem
+        /// </summary>
+        /// <returns>ContentItem</returns>
+        private ContentItem GetSelectedItem()
         {
             var node = treeContentFiles.SelectedNode;
+
             if (node == null)
             {
                 if (treeContentFiles.Nodes.Count == 0)
                     return null;
                 node = treeContentFiles.Nodes[0];
             }
-            if (node.Tag == null)
-                return null;
-            return node.Tag as ContentItem;
+
+            return GetItemFromNode(node);
         }
 
-        void NewFolderMenuItem_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Deletes an Item
+        /// </summary>
+        /// <param name="item"></param>
+        private void DeleteItem(ContentItem item)
         {
-            frmAddFolder folder = new frmAddFolder();
-            if (folder.ShowDialog() == DialogResult.OK)
+            var parent = item.Parent as ContentFolder;
+            parent.Contents.Remove(item);
+        }
+
+        #endregion
+
+        #region File Operations
+
+        /// <summary>
+        /// Closes a File
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        private bool CloseFile(string message = "Do you really want to close?")
+        {
+            if (builder.IsBuilding)
             {
-                ContentItem selectedItem = getSelectedItem();
-                ContentFolder currentFolder = selectedItem as ContentFolder;
-                if (currentFolder == null)
-                    currentFolder = selectedItem.Parent as ContentFolder;
-                if (currentFolder == null)
-                    return;
-                currentFolder.Contents.Add(new ContentFolder(folder.FolderName, currentFolder));
+                if (MessageBox.Show("Your Project is currently Building." + message, "Close file", MessageBoxButtons.YesNo) == DialogResult.No)
+                    return false;
+
+                builder.Build();
+            }
+
+            prpItem.SelectedObject = null;
+            currentFile = null;
+            CurrentProject = null;
+            RecalcTreeView();
+            return true;
+        }
+
+        /// <summary>
+        /// Saves a file with the given filename
+        /// </summary>
+        /// <param name="file"></param>
+        private void SaveFile(string file)
+        {
+            currentFile = file;
+            CurrentProject.Name = file;
+            ContentProject.Save(file, CurrentProject);
+        }
+
+        /// <summary>
+        /// Opens a file with the given filename
+        /// </summary>
+        /// <param name="file"></param>
+        private void OpenFile(string file)
+        {
+            currentFile = file;
+            CurrentProject = ContentProject.Load(file);
+            CurrentProject.CollectionChanged += CurrentProject_CollectionChanged;
+            CurrentProject.PropertyChanged += CurrentProject_PropertyChanged;
+            RecalcTreeView();
+        }
+
+        /// <summary>
+        /// Creates one Directory at a time
+        /// </summary>
+        /// <param name="relativePath"></param>
+        /// <param name="directoryName"></param>
+        private void MakeDirectory(string relativePath, string directoryName)
+        {
+            string[] splt = directoryName.Split(new char[] { System.IO.Path.DirectorySeparatorChar }, 2);
+
+            string curPath = System.IO.Path.Combine(relativePath, splt[0]);
+            System.IO.Directory.CreateDirectory(curPath);
+            if (splt.Length > 1)
+                MakeDirectory(curPath, splt[1]);
+        }
+
+        /// <summary>
+        /// Saves the current file
+        /// </summary>
+        private void Save()
+        {
+            if (string.IsNullOrEmpty(currentFile) || !System.IO.File.Exists(currentFile))
+            {
+                SaveAs();
+                return;
+            }
+            SaveFile(currentFile);
+        }
+
+        /// <summary>
+        /// Shows the SaveDialog and saves the Project
+        /// </summary>
+        private void SaveAs()
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "Engenious Content Project(.ecp)|*.ecp";
+            sfd.FileName = currentFile;
+            sfd.OverwritePrompt = true;
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                SaveFile(sfd.FileName);
             }
         }
 
-        void NewItemMenuItem_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Checks if an the Project is saved and does so if not
+        /// </summary>
+        /// <returns></returns>
+        private bool SaveFirst()
         {
-
-        }
-
-        void EditMenuItem_DropDownOpening(object sender, System.EventArgs e)
-        {
-
-        }
-
-        void RedoMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        void UndoMenuItem_Click(object sender, EventArgs e)
-        {
-
+            if (string.IsNullOrEmpty(currentFile))
+            {
+                SaveMenuItem_Click(saveMenuItem, new EventArgs());
+            }
+            return System.IO.File.Exists(currentFile);
         }
 
 
-        void FrmMain_FormClosing(object sender, System.Windows.Forms.FormClosingEventArgs e)
+        /// <summary>
+        /// Creates a new Project
+        /// </summary>
+        private void CreateProject()
         {
-            e.Cancel = !CloseFile();
+            CurrentProject = new ContentProject();
+            CurrentProject.CollectionChanged += CurrentProject_CollectionChanged;
+            CurrentProject.PropertyChanged += CurrentProject_PropertyChanged;
 
+
+            RecalcTreeView();
+
+            if (!SaveFirst())
+                CurrentProject = null;
+            RecalcTreeView();
         }
 
-        private void treeContentFiles_AfterSelect(object sender, TreeViewEventArgs e)
-        {
-            prpItem.SelectedObject = e.Node.Tag;
+        #endregion
 
+        #region Build Process
+
+        /// <summary>
+        /// Starts Building
+        /// </summary>
+        private void StartBuilding()
+        {
+            this.buildMenuItem.Enabled = false;
+            this.rebuildMenuItem.Enabled = false;
+            this.cleanMenuItem.Enabled = false;
+            this.cancelMenuItem.Enabled = true;
         }
+
+        /// <summary>
+        /// Ends Building
+        /// </summary>
+        private void EndBuilding()
+        {
+
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new MethodInvoker(delegate ()
+                {
+                    EndBuilding();
+                }));
+                return;
+            }
+            this.buildMenuItem.Enabled = true;
+            this.rebuildMenuItem.Enabled = true;
+            this.cleanMenuItem.Enabled = true;
+            this.cancelMenuItem.Enabled = false;
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Logs a message to the console
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="error"></param>
+        private void Log(string message, bool error = false)
+        {
+            if (this.InvokeRequired)
+            {
+                this.BeginInvoke(new MethodInvoker(delegate ()
+                {
+                    Log(message, error);
+                }));
+                return;
+            }
+            if (error)
+            {
+                txtLog.SelectionColor = System.Drawing.Color.Red;
+            }
+            txtLog.AppendText(message + "\n");
+            txtLog.ScrollToCaret();
+            if (error)
+            {
+                txtLog.SelectionColor = System.Drawing.Color.Black;
+            }
+        }
+
     }
 }
 

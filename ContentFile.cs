@@ -10,17 +10,17 @@ namespace ContentTool
     [Serializable()]
     public class ContentFile : ContentItem
     {
-        public ContentFile()
-            : base()
-        {
-
-        }
-
-        public ContentFile(string name, ContentItem parent = null)
+        public ContentFile(ContentFolder parent = null)
             : base(parent)
         {
-            this.Name = name;
+            
+        }
 
+        public ContentFile(string name, ContentFolder parent = null)
+            : this(parent)
+        {
+            this.Name = name;
+            ProcessorName = null;
         }
 
         #region implemented abstract members of ContentItem

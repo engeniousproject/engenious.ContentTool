@@ -15,7 +15,7 @@ namespace ContentTool
             this.Contents.PropertyChanged += Contents_PropertyChanged;
         }
 
-        public ContentFolder(string name, ContentItem parent = null)
+        public ContentFolder(string name, ContentFolder parent = null)
             : base(parent)
         {
             this.Name = name;

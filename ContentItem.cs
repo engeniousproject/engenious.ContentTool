@@ -76,7 +76,7 @@ namespace ContentTool
 
 
 
-        public ContentItem(ContentItem parent = null)
+        public ContentItem(ContentFolder parent = null)
         {
             this.Parent = parent;
         }
@@ -98,7 +98,7 @@ namespace ContentTool
 
         [System.Xml.Serialization.XmlIgnore]
         [System.ComponentModel.Browsable(false)]
-        public virtual ContentItem Parent{ get; internal set; }
+        public virtual ContentFolder Parent{ get; internal set; }
 
         public string getPath()
         {
