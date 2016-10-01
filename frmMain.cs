@@ -458,8 +458,11 @@ namespace ContentTool
         private void ContextMenu_ShowInExplorer(object sender, EventArgs e)
         {
             var ContentItem = GetSelectedItem();
-            
-            Process.Start(Path.Combine(Path.GetDirectoryName(currentProject.File)), ContentItem.getPath());
+            string path = Path.Combine(Path.GetDirectoryName(currentProject.File), ContentItem.getPath());
+            if (System.IO.Directory.Exists(path))
+                Process.Start(path);
+            else
+                Process.Start(Path.GetDirectoryName(path));
         }
 
         private void ContextMenu_Close(object sender, EventArgs e)
