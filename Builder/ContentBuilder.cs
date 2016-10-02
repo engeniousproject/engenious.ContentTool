@@ -216,11 +216,11 @@ namespace ContentTool.Builder
             {
                 string outputDir = getOutputDir();
                 IsBuilding = true;
-                foreach (var file in cache.Files.Where(x=>x.Value.IsBuilt(outputDir)).Select(x=>x.Value.InputFile))
+                foreach (var cachedItem in cache.Files.Where(x=>x.Value.IsBuilt(outputDir)))
                 {
-                    ContentFile item;
-                    if(builtFiles.TryGetValue(file,out item)){
-                        ItemProgress?.BeginInvoke(this, new ItemProgressEventArgs(BuildStep.Clean, item), null, null);
+                    var item = Project.getElement(cachedItem.Value.InputFile) as ContentFile;
+                    if (item != null){
+                        ItemProgress?.BeginInvoke(this, new ItemProgressEventArgs(BuildStep.Clean,item), null, null);
                         if (System.IO.File.Exists(getDestinationFileAbsolute(item)))
                             System.IO.File.Delete(getDestinationFileAbsolute(item));
                     }
