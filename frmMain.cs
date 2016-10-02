@@ -101,6 +101,14 @@ namespace ContentTool
                     return;
                 }
             }
+
+            if (File.Exists(lastFile))
+            {
+                var last = File.ReadAllText(lastFile);
+                if(File.Exists(last))
+                    OpenFile(last);
+
+            }
         }
 
         private bool CloseFile(string message = "Do you really want to close?")
@@ -126,6 +134,8 @@ namespace ContentTool
             ContentProject.Save(file, CurrentProject);
         }
 
+        static readonly string lastFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), ".engenious");
+
         private void OpenFile(string file)
         {
             currentFile = file;
@@ -133,6 +143,8 @@ namespace ContentTool
             CurrentProject.CollectionChanged += CurrentProject_CollectionChanged;
             CurrentProject.PropertyChanged += CurrentProject_PropertyChanged;
             RecalcTreeView();
+
+            File.WriteAllText(lastFile, file);
         }
 
         private Dictionary<ContentItem,TreeNode> treeMap;
@@ -232,6 +244,7 @@ namespace ContentTool
             treeContentFiles.Nodes.Add(rootNode);
             treeMap.Add(CurrentProject, rootNode);
             AddTreeNode(CurrentProject, rootNode);
+            rootNode.Expand();
         }
 
         private string getImageKey(ContentItem item)
