@@ -8,20 +8,18 @@ namespace ContentTool
     [Serializable()]
     public class ContentFolder : ContentItem
     {
-        public ContentFolder()
+        public ContentFolder(ContentFolder parent = null)
+            :base(parent)
         {
-            this.Contents = new ObservableList<ContentItem>();
+            this.Contents = new ContentItemCollection();
             this.Contents.CollectionChanged += Contents_CollectionChanged;
             this.Contents.PropertyChanged += Contents_PropertyChanged;
         }
 
         public ContentFolder(string name, ContentFolder parent = null)
-            : base(parent)
+            :this(parent)
         {
             this.Name = name;
-            this.Contents = new ObservableList<ContentItem>();
-            this.Contents.CollectionChanged += Contents_CollectionChanged;
-            this.Contents.PropertyChanged += Contents_PropertyChanged;
         }
 
         void Contents_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -34,10 +32,10 @@ namespace ContentTool
             InvokeCollectionChange(sender, e);
         }
 
-        public ContentItem getElement(string path)
+        public ContentItem GetElement(string path)
         {
             string trailingPath=null;
-            int ind = path.IndexOf("/");
+            int ind = path.IndexOf("/", StringComparison.Ordinal);
             if (ind != -1)
             {
                 trailingPath = path.Substring(ind+1);
@@ -48,7 +46,7 @@ namespace ContentTool
                 if (c.Name == path)
                 {
                     if (c is ContentFolder && trailingPath != null)
-                        return ((ContentFolder)c).getElement(trailingPath);
+                        return ((ContentFolder)c).GetElement(trailingPath);
                     else
                         return c;
                 }
@@ -57,7 +55,7 @@ namespace ContentTool
         }
 
         [System.ComponentModel.Browsable(false)]
-        public ObservableList<ContentItem> Contents{ get; set; }
+        public ContentItemCollection Contents{ get; set; }
 
         public override string ToString()
         {
