@@ -75,6 +75,10 @@ namespace ContentTool
             this.contextMenuStrip_project.SuspendLayout();
             this.contextMenuStrip_file.SuspendLayout();
             this.contextMenuStrip_folder.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer_right)).BeginInit();
+            this.splitContainer_right.Panel1.SuspendLayout();
+            this.splitContainer_right.Panel2.SuspendLayout();
+            this.splitContainer_right.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer_main
@@ -155,26 +159,26 @@ namespace ContentTool
             this.prpItem.TabIndex = 0;
             // 
             // splitContainer_right
-            // 
+            //
             this.splitContainer_right.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer_right.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
             this.splitContainer_right.Location = new System.Drawing.Point(0, 0);
             this.splitContainer_right.Name = "splitContainer_right";
             this.splitContainer_right.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
+            //
             // splitContainer_right.Panel1
-            // 
+            //
             this.splitContainer_right.Panel1.Controls.Add(this.panel_editor);
-            // 
+            //
             // splitContainer_right.Panel2
-            // 
+            //
             this.splitContainer_right.Panel2.Controls.Add(this.txtLog);
             this.splitContainer_right.Size = new System.Drawing.Size(486, 468);
             this.splitContainer_right.SplitterDistance = 284;
             this.splitContainer_right.TabIndex = 1;
-            // 
+            //
             // panel_editor
-            // 
+            //
             this.panel_editor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.panel_editor.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel_editor.Location = new System.Drawing.Point(0, 0);
@@ -182,7 +186,7 @@ namespace ContentTool
             this.panel_editor.Padding = new System.Windows.Forms.Padding(10);
             this.panel_editor.Size = new System.Drawing.Size(486, 284);
             this.panel_editor.TabIndex = 0;
-            // 
+            //
             // txtLog
             // 
             this.txtLog.BackColor = System.Drawing.SystemColors.Window;
@@ -505,11 +509,11 @@ namespace ContentTool
             this.showInExplorerToolStripMenuItem.Click += new System.EventHandler(this.ContextMenu_ShowInExplorer);
             // 
             // addToolStripMenuItem1
-            // 
+            //
             this.addToolStripMenuItem1.Name = "addToolStripMenuItem1";
             this.addToolStripMenuItem1.Size = new System.Drawing.Size(161, 22);
             this.addToolStripMenuItem1.Text = "Add";
-            // 
+            //
             // closeToolStripMenuItem
             // 
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
@@ -534,26 +538,26 @@ namespace ContentTool
             this.showInExplorerToolStripMenuItem1.Size = new System.Drawing.Size(161, 22);
             this.showInExplorerToolStripMenuItem1.Text = "Show in Explorer";
             this.showInExplorerToolStripMenuItem1.Click += new System.EventHandler(this.ContextMenu_ShowInExplorer);
-            // 
+            //
             // renameToolStripMenuItem1
-            // 
+            //
             this.renameToolStripMenuItem1.Name = "renameToolStripMenuItem1";
             this.renameToolStripMenuItem1.Size = new System.Drawing.Size(161, 22);
             this.renameToolStripMenuItem1.Text = "Rename";
-            // 
+            //
             // deleteToolStripMenuItem
             // 
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
             this.deleteToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
             this.deleteToolStripMenuItem.Text = "Delete";
-            // 
+            //
             // toolStripMenuItem2
-            // 
+            //
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
             this.toolStripMenuItem2.Size = new System.Drawing.Size(158, 6);
-            // 
+            //
             // buildToolStripMenuItem
-            // 
+            //
             this.buildToolStripMenuItem.Name = "buildToolStripMenuItem";
             this.buildToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
             this.buildToolStripMenuItem.Text = "Build";
@@ -582,7 +586,7 @@ namespace ContentTool
             this.addToolStripMenuItem.Name = "addToolStripMenuItem";
             this.addToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
             this.addToolStripMenuItem.Text = "Add";
-            // 
+            //
             // renameToolStripMenuItem
             // 
             this.renameToolStripMenuItem.Name = "renameToolStripMenuItem";
@@ -594,29 +598,58 @@ namespace ContentTool
             this.deleteToolStripMenuItem1.Name = "deleteToolStripMenuItem1";
             this.deleteToolStripMenuItem1.Size = new System.Drawing.Size(161, 22);
             this.deleteToolStripMenuItem1.Text = "Delete";
+            this.deleteToolStripMenuItem1.Click += new System.EventHandler(this.ContextMenu_Delete);
+            this.deleteToolStripMenuItem1.Name = "deleteToolStripMenuItem1";
+            this.deleteToolStripMenuItem1.Size = new System.Drawing.Size(161, 22);
+            this.deleteToolStripMenuItem1.Text = "Delete";
+            //
+            // splitContainer_right
             // 
-            // toolStripMenuItem1
-            // 
+            this.splitContainer_right.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer_right.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+            this.splitContainer_right.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer_right.Name = "splitContainer_right";
+            this.splitContainer_right.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            //
+            // splitContainer_right.Panel1
+            //
+            this.splitContainer_right.Panel1.Controls.Add(this.panel_editor);
+            //
+            // splitContainer_right.Panel2
+            //
+            this.splitContainer_right.Panel2.Controls.Add(this.txtLog);
+            this.splitContainer_right.Size = new System.Drawing.Size(486, 468);
+            this.splitContainer_right.SplitterDistance = 284;
+            this.splitContainer_right.TabIndex = 1;
+            //
+            // panel_editor
+            //
+            this.panel_editor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel_editor.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel_editor.Location = new System.Drawing.Point(0, 0);
+            this.panel_editor.Name = "panel_editor";
+            this.panel_editor.Size = new System.Drawing.Size(486, 284);
+            this.panel_editor.TabIndex = 0;
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.Size = new System.Drawing.Size(158, 6);
-            // 
+            //
             // buildToolStripMenuItem1
-            // 
+            //
             this.buildToolStripMenuItem1.Name = "buildToolStripMenuItem1";
             this.buildToolStripMenuItem1.Size = new System.Drawing.Size(161, 22);
             this.buildToolStripMenuItem1.Text = "Build";
-            // 
+            //
             // toolStripMenuItem3
-            // 
+            //
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
             this.toolStripMenuItem3.Size = new System.Drawing.Size(158, 6);
-            // 
+            //
             // buildToolStripMenuItem2
-            // 
+            //
             this.buildToolStripMenuItem2.Name = "buildToolStripMenuItem2";
             this.buildToolStripMenuItem2.Size = new System.Drawing.Size(161, 22);
             this.buildToolStripMenuItem2.Text = "Build";
-            // 
+            //
             // frmMain
             // 
             this.ClientSize = new System.Drawing.Size(681, 492);
@@ -625,23 +658,23 @@ namespace ContentTool
             this.Name = "frmMain";
             this.Text = "Content Pipeline";
             this.Load += new System.EventHandler(this.FrmMain_Load);
-            this.splitContainer_main.Panel1.ResumeLayout(false);
-            this.splitContainer_main.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer_main)).EndInit();
-            this.splitContainer_main.ResumeLayout(false);
-            this.splitContainer_left.Panel1.ResumeLayout(false);
-            this.splitContainer_left.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer_left)).EndInit();
-            this.splitContainer_left.ResumeLayout(false);
-            this.splitContainer_right.Panel1.ResumeLayout(false);
-            this.splitContainer_right.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer_right)).EndInit();
-            this.splitContainer_right.ResumeLayout(false);
+            this.splitContainer.Panel1.ResumeLayout(false);
+            this.splitContainer.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).EndInit();
+            this.splitContainer.ResumeLayout(false);
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
             this.mainMenu.ResumeLayout(false);
             this.mainMenu.PerformLayout();
             this.contextMenuStrip_project.ResumeLayout(false);
             this.contextMenuStrip_file.ResumeLayout(false);
             this.contextMenuStrip_folder.ResumeLayout(false);
+            this.splitContainer_right.Panel1.ResumeLayout(false);
+            this.splitContainer_right.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer_right)).EndInit();
+            this.splitContainer_right.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
