@@ -49,7 +49,7 @@ namespace ContentTool
 
         private static void ListImporters()
         {
-            importers = enumerateImporters().ToList();
+            importers = EnumerateImporters().ToList();
         }
         public static List<string> GetProcessors(Type tp)
         {
@@ -63,6 +63,20 @@ namespace ContentTool
             }
             return fitting;
         }
+
+        public static List<string> GetImporters(string extension)
+        {
+            List<string> fitting = new List<string>();
+            foreach (var type in importers)
+            {
+                var attribute =
+                    (ContentImporterAttribute) type.GetCustomAttributes(typeof (ContentImporterAttribute), true).First();
+                if (attribute.FileExtensions != null && attribute.FileExtensions.Contains(extension))
+                    fitting.Add(attribute.DisplayName);
+            }
+            return fitting;
+        }
+
         private static void ListProcessors()
         {
             processors.Clear();
@@ -83,9 +97,9 @@ namespace ContentTool
                 }
             }
         }
-        public static Type GetImporterOutputType(string extension)
+        public static Type GetImporterOutputType(string extension,string importerName)
         {
-            var tp = GetImporterType(extension);
+            var tp = GetImporterType(extension,importerName);
             var prop = tp.GetProperty("ExportType", BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy);
             if (prop == null)
                 return typeof(object);
@@ -106,27 +120,38 @@ namespace ContentTool
             var func = lambda.Compile();
             return func();
         }
-        public static Type GetImporterType(string extension)
+        public static Type GetImporterType(string extension,string importerName)
         {
             foreach (var type in importers)
             {
                 var attribute = (ContentImporterAttribute)type.GetCustomAttributes(typeof(ContentImporterAttribute), true).First();
-                if (attribute.FileExtensions.Contains(extension))
+                if (attribute.FileExtensions.Contains(extension) && (importerName == null || attribute.DisplayName == importerName))
                     return type;
             }
             return null;
         }
-        public static IContentImporter CreateImporter(string extension)
+
+        public static IContentImporter CreateImporter(string extension,ref string importerName)
         {
             if (importers == null)
                 DefaultInit();
             foreach (var type in importers)
             {
                 var attribute = (ContentImporterAttribute)type.GetCustomAttributes(typeof(ContentImporterAttribute), true).First();
-                if (attribute.FileExtensions != null && attribute.FileExtensions.Contains(extension))
+                if (attribute.FileExtensions != null && attribute.FileExtensions.Contains(extension) &&
+                    (importerName == null || attribute.DisplayName == importerName))
+                {
+                    importerName = attribute.DisplayName;
                     return (IContentImporter)Activator.CreateInstance(type);
+                }
             }
+            importerName = null;
             return null;
+        }
+        public static IContentImporter CreateImporter(string extension,string importerName=null)
+        {
+            string dummy=importerName;
+            return CreateImporter(extension, ref importerName);
         }
 
         public static IContentProcessor CreateProcessor(Type importerType, string processorName)
@@ -158,7 +183,7 @@ namespace ContentTool
             return default(TValue);
         }
 
-        private static IEnumerable<Type> enumerateImporters()
+        private static IEnumerable<Type> EnumerateImporters()
         {
             foreach (Assembly assembly in assemblies)
             {

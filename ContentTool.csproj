@@ -48,12 +48,14 @@
     <Compile Include="..\SolutionInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ContentItemCollection.cs" />
     <Compile Include="Dialog\frmEditReferences.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Dialog\frmEditReferences.Designer.cs">
       <DependentUpon>frmEditReferences.cs</DependentUpon>
     </Compile>
+    <Compile Include="Dialog\ImporterEditor.cs" />
     <Compile Include="Dialog\ProcessorEditor.cs" />
     <Compile Include="Dialog\ReferenceCollectionEditor.cs" />
     <Compile Include="Program.cs" />

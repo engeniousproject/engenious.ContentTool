@@ -51,9 +51,9 @@ namespace ContentTool
                 Importer = PipelineHelper.CreateImporter(System.IO.Path.GetExtension(value));
             }
         }
-        private static string getProcessor(string name)
+        private static string GetProcessor(string name,string importerName)
         {
-            var tp = PipelineHelper.GetImporterType(System.IO.Path.GetExtension(name));
+            var tp = PipelineHelper.GetImporterType(System.IO.Path.GetExtension(name),importerName);
             if (tp != null)
             {
                 foreach (var attr in tp.GetCustomAttributes(true).Select(x => x as engenious.Content.Pipeline.ContentImporterAttribute))
@@ -94,12 +94,30 @@ namespace ContentTool
                 processorName = value;
                 if (string.IsNullOrWhiteSpace(processorName))
                 {
-                    processorName = getProcessor(Name);
+                    processorName = GetProcessor(Name,importerName);
                 }
                 if (processorName != old && !string.IsNullOrWhiteSpace(processorName))
                 {
                     Processor = PipelineHelper.CreateProcessor(Importer.GetType(), ProcessorName);
                 }
+            }
+        }
+        [XmlIgnore()]
+        private string importerName;
+        [XmlElement(IsNullable = true)]
+        [System.ComponentModel.Editor(typeof(Dialog.ImporterEditor), typeof(System.Drawing.Design.UITypeEditor))]
+        public string ImporterName
+        {
+            get
+            {
+                return importerName;
+            }
+            set
+            {
+                string old = importerName;
+                importerName = value;
+                Importer = PipelineHelper.CreateImporter(System.IO.Path.GetExtension(Name),ref importerName);
+                
             }
         }
         [Browsable(false)]
@@ -129,6 +147,9 @@ namespace ContentTool
                 case "Processor":
                     ProcessorName = node.ChildNodes.OfType<XmlText>().FirstOrDefault()?.InnerText;
                     break;
+                case "Importer":
+                    ImporterName = node.ChildNodes.OfType<XmlText>().FirstOrDefault()?.InnerText;
+                    break;
                 case "Settings":
                     if (Settings != null)
                     {
@@ -142,6 +163,7 @@ namespace ContentTool
         {
             writer.WriteElementString("Name",Name);
             writer.WriteElementString("Processor",ProcessorName);
+            writer.WriteElementString("Importer", ImporterName);
 
             if (Settings != null)
             {

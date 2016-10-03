@@ -9,6 +9,8 @@ using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using ContentTool.Builder;
+using engenious.Content.Pipeline;
+
 namespace ContentTool
 {
     public partial class frmMain : Form
@@ -21,9 +23,11 @@ namespace ContentTool
 
         private static string lastFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), ".engenious");
 
-        private ContentProject CurrentProject{
-            get{return currentProject;}
-            set{
+        private ContentProject CurrentProject
+        {
+            get { return currentProject; }
+            set
+            {
                 currentProject = value;
                 if (builder != null)
                 {
@@ -82,44 +86,47 @@ namespace ContentTool
 
         private void Builder_BuildMessage(object sender, engenious.Content.Pipeline.BuildMessageEventArgs e)
         {
-            Log(Program.MakePathRelative(e.FileName) + " " + e.Message, e.MessageType == engenious.Content.Pipeline.BuildMessageEventArgs.BuildMessageType.Error);
+
+            Log(Program.MakePathRelative(e.FileName) + " " + e.Message, e.MessageType);
+
         }
 
-        void Builder_ItemProgress (object sender, ItemProgressEventArgs e)
+        void Builder_ItemProgress(object sender, ItemProgressEventArgs e)
         {
-            string message = e.Item + " " +(e.BuildStep & (BuildStep.Build|BuildStep.Clean)).ToString().ToLower() + "ing ";
+            string message = e.Item + " " + (e.BuildStep & (BuildStep.Build | BuildStep.Clean)).ToString().ToLower() + "ing ";
 
-            bool error=false;
+            BuildMessageEventArgs.BuildMessageType type = BuildMessageEventArgs.BuildMessageType.Information;
 
             if ((e.BuildStep & Builder.BuildStep.Abort) == Builder.BuildStep.Abort)
             {
                 message += "failed!";
-                error = true;
-            }else if ((e.BuildStep & Builder.BuildStep.Finished) == Builder.BuildStep.Finished)
-            {
-                message +="finished!";
+                type = BuildMessageEventArgs.BuildMessageType.Error;
             }
-            Log(message,error);
+            else if ((e.BuildStep & Builder.BuildStep.Finished) == Builder.BuildStep.Finished)
+            {
+                message += "finished!";
+            }
+            Log(message, type);
         }
 
-        void Builder_BuildStatusChanged (object sender, BuildStep buildStep)
+        void Builder_BuildStatusChanged(object sender, BuildStep buildStep)
         {
-            string message = (buildStep & (BuildStep.Build|BuildStep.Clean)).ToString() + " ";
-            bool error=false;
+            string message = (buildStep & (BuildStep.Build | BuildStep.Clean)).ToString() + " ";
+            BuildMessageEventArgs.BuildMessageType type = BuildMessageEventArgs.BuildMessageType.Information;
             if ((buildStep & Builder.BuildStep.Abort) == Builder.BuildStep.Abort)
             {
                 message += "aborted!";
-                error = true;
-            }else if ((buildStep & Builder.BuildStep.Finished) == Builder.BuildStep.Finished)
+                type = BuildMessageEventArgs.BuildMessageType.Warning;
+            }
+            else if ((buildStep & Builder.BuildStep.Finished) == Builder.BuildStep.Finished)
             {
-                message +="finished!";
+                message += "finished!";
                 if (builder.FailedBuilds != 0)
                 {
                     message += " " + builder.FailedBuilds.ToString() + " files failed to build!";
-                    error = true;
                 }
             }
-            Log(message,error);
+            Log(message, type);
         }
 
         #endregion
@@ -153,7 +160,7 @@ namespace ContentTool
             {
                 case NotifyCollectionChangedAction.Add:
                     {
-                        var node = new TreeNode(item.Name){ Tag = item };
+                        var node = new TreeNode(item.Name) { Tag = item };
                         if (
                             item.Parent?.Contents?.FirstOrDefault(
                                 x =>
@@ -201,7 +208,7 @@ namespace ContentTool
                         else
                             parentNode.Nodes.Remove(node);
 
-                        node = new TreeNode(item.Name){ Tag = item };
+                        node = new TreeNode(item.Name) { Tag = item };
                         node.SelectedImageKey = node.ImageKey = GetImageKey(item);
                         treeMap.Add(item, node);
                         if (parentNode == null)
@@ -295,7 +302,7 @@ namespace ContentTool
             this.importMenuItem.Enabled = false;
             this.closeMenuItem.Enabled = this.saveAsMenuItem.Enabled = fileOpened;
             this.saveMenuItem.Enabled = fileOpened;//TODO änderungen?
-            
+
         }
 
 
@@ -415,7 +422,18 @@ namespace ContentTool
 
         void ExistingFolderMenuItem_Click(object sender, EventArgs e)
         {
+            FolderBrowserDialog fbd = new FolderBrowserDialog();
+            fbd.ShowNewFolderButton = true;
+            if (fbd.ShowDialog() == DialogResult.OK)
+            {
+                ContentItem item = GetSelectedItem();
+                ContentFolder curFolder = item as ContentFolder;
+                if (curFolder == null)
+                    curFolder = item.Parent as ContentFolder;
+                if (curFolder == null)
+                    return;
 
+            }
         }
 
         void ExistingItemMenuItem_Click(object sender, EventArgs e)
@@ -431,21 +449,63 @@ namespace ContentTool
                     curFolder = item.Parent as ContentFolder;
                 if (curFolder == null)
                     return;
-                string absolutePath = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(currentFile), curFolder.getPath());
+
+                string absolutePath = System.IO.Path.Combine(Path.GetDirectoryName(currentFile), curFolder.getPath());
+
                 MakeDirectory(System.IO.Path.GetDirectoryName(currentFile), curFolder.getPath());
+
                 foreach (string file in ofd.FileNames)
                 {
-                    string destination = System.IO.Path.Combine(absolutePath, System.IO.Path.GetFileName(file));
-                    if (destination != file)
+                    string fileName = file;
+                    ContentFolder addedFolder = curFolder;
+                    if (MakePathRelative(ref fileName, absolutePath))
                     {
-                        System.IO.File.Copy(file, destination);
+                        addedFolder = CreateFolderStructure(Path.GetDirectoryName(fileName), curFolder);
                     }
-                    curFolder.Contents.Add(new ContentFile(System.IO.Path.GetFileName(file), curFolder));
+                    else
+                    {
+                        string destination = System.IO.Path.Combine(absolutePath, Path.GetFileName(file));
+                        if (destination != file)
+                        {
+                            System.IO.File.Copy(file, destination, true); //TODO: ask user?
+                        }
+                    }
+                    addedFolder.Contents.Add(new ContentFile(System.IO.Path.GetFileName(file), addedFolder));
                 }
-                
+
             }
         }
 
+        private ContentFolder CreateFolderStructure(string path,ContentFolder curFolder)
+        {
+            if (string.IsNullOrEmpty(path))
+                return curFolder;
+            int dInd = path.IndexOfAny(new [] { Path.DirectorySeparatorChar,Path.AltDirectorySeparatorChar,Path.PathSeparator,Path.VolumeSeparatorChar});
+            string remainingPath = null;
+            if (dInd != -1)
+            {
+                remainingPath = path.Substring(dInd + 1);
+                path = path.Substring(0, dInd);
+            }
+            var newFolder = (curFolder.GetElement(path) as ContentFolder) ?? new ContentFolder(path, curFolder);
+            curFolder.Contents.Add(newFolder);
+            if (!string.IsNullOrEmpty(remainingPath))
+                return CreateFolderStructure(remainingPath, newFolder);
+            return newFolder;
+
+        }
+        static bool MakePathRelative(ref string filename, string relativeTo)
+        {
+            filename = Path.GetFullPath(filename);
+            string absoluteFolder = Path.GetFullPath(relativeTo);
+
+            if (filename.StartsWith(absoluteFolder))
+            {
+                filename = filename.Substring(Math.Min(absoluteFolder.Length+1, filename.Length));
+                return true;
+            }
+            return false;
+        }
         void NewFolderMenuItem_Click(object sender, EventArgs e)
         {
 
@@ -796,26 +856,36 @@ namespace ContentTool
         /// </summary>
         /// <param name="message"></param>
         /// <param name="error"></param>
-        private void Log(string message, bool error = false)
+        private void Log(string message, BuildMessageEventArgs.BuildMessageType type)
         {
             if (this.InvokeRequired)
             {
                 this.BeginInvoke(new MethodInvoker(delegate ()
                 {
-                    Log(message, error);
+                    Log(message, type);
                 }));
                 return;
             }
-            if (error)
+
+            switch (type)
             {
-                txtLog.SelectionColor = System.Drawing.Color.Red;
+
+                case BuildMessageEventArgs.BuildMessageType.Warning:
+                    txtLog.SelectionColor = System.Drawing.Color.Orange;
+                    break;
+                case BuildMessageEventArgs.BuildMessageType.Error:
+                    txtLog.SelectionColor = System.Drawing.Color.Red;
+                    break;
+                default:
+                    txtLog.SelectionColor = System.Drawing.Color.Black;
+                    break;
+
             }
+
             txtLog.AppendText(message + "\n");
             txtLog.ScrollToCaret();
-            if (error)
-            {
-                txtLog.SelectionColor = System.Drawing.Color.Black;
-            }
+
+
         }
 
     }

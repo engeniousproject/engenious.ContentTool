@@ -9,7 +9,7 @@ using System.Windows.Forms.Design;
 
 namespace ContentTool.Dialog
 {
-    class ProcessorEditor : UITypeEditor
+    class ImporterEditor : UITypeEditor
     {
         public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context)
         {
@@ -34,8 +34,7 @@ namespace ContentTool.Dialog
             var file = context.Instance as ContentFile;
 
             string ext = System.IO.Path.GetExtension(file.Name);
-            var baseType = PipelineHelper.GetImporterOutputType(ext,file.ImporterName);
-            lb.Items.AddRange(PipelineHelper.GetProcessors(baseType).ToArray());
+            lb.Items.AddRange(PipelineHelper.GetImporters(ext).ToArray());
             
 
             editorService.DropDownControl(lb);
