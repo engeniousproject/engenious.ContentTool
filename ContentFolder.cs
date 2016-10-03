@@ -34,6 +34,28 @@ namespace ContentTool
             InvokeCollectionChange(sender, e);
         }
 
+        public ContentItem getElement(string path)
+        {
+            string trailingPath=null;
+            int ind = path.IndexOf("/");
+            if (ind != -1)
+            {
+                trailingPath = path.Substring(ind+1);
+                path = path.Substring(0,ind);
+            }
+            foreach(var c in Contents)
+            {
+                if (c.Name == path)
+                {
+                    if (c is ContentFolder && trailingPath != null)
+                        return ((ContentFolder)c).getElement(trailingPath);
+                    else
+                        return c;
+                }
+            }
+            return null;
+        }
+
         [System.ComponentModel.Browsable(false)]
         public ObservableList<ContentItem> Contents{ get; set; }
 

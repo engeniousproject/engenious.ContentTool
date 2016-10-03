@@ -118,7 +118,25 @@ namespace ContentTool
             Log(message,error);
         }
 
-        #endregion
+        void FrmMain_Load(object sender, System.EventArgs e)
+        {
+            foreach (string file in System.Environment.GetCommandLineArgs().Skip(1))
+            {
+                if (System.IO.Path.GetExtension(file) == ".ecp" && System.IO.File.Exists(file))
+                {
+                    OpenFile(file);
+                    return;
+                }
+            }
+
+            if (File.Exists(lastFile))
+            {
+                var last = File.ReadAllText(lastFile);
+                if(File.Exists(last))
+                    OpenFile(last);
+
+            }
+        }
 
         #region Project Events
 
