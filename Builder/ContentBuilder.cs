@@ -247,12 +247,11 @@ namespace ContentTool.Builder
         #region Thread Methods
         private void CleanThread()
         {
-            string outputDir = GetOutputDir();
             IsBuilding = true;
-            foreach (var file in cache.Files.Where(x => x.Value.IsBuilt(outputDir)).Select(x => x.Value.InputFile))
+            foreach (var cachedItem in cache.Files)
             {
-                ContentFile item;
-                if (builtFiles.TryGetValue(file, out item))
+                var item = Project.getElement(cachedItem.Value.InputFile) as ContentFile;
+                if (item != null)
                 {
                     ItemProgress?.BeginInvoke(this, new ItemProgressEventArgs(BuildStep.Clean, item), null, null);
                     if (System.IO.File.Exists(GetDestinationFileAbsolute(item)))

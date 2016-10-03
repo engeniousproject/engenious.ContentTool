@@ -19,6 +19,8 @@ namespace ContentTool
 
         private ContentProject currentProject;
 
+        private static string lastFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), ".engenious");
+
         private ContentProject CurrentProject{
             get{return currentProject;}
             set{
@@ -56,13 +58,7 @@ namespace ContentTool
             treeContentFiles.NodeMouseClick += TreeContentFilesOnNodeMouseClick;
         }
 
-        private void TreeContentFilesOnNodeMouseClick(object sender, TreeNodeMouseClickEventArgs treeNodeMouseClickEventArgs)
-        {
-            if(treeNodeMouseClickEventArgs.Button == MouseButtons.Right)
-                treeContentFiles.SelectedNode = treeNodeMouseClickEventArgs.Node;
-        }
-
-        private void FrmMain_Load(object sender, System.EventArgs e)
+        void FrmMain_Load(object sender, System.EventArgs e)
         {
             foreach (string file in System.Environment.GetCommandLineArgs().Skip(1))
             {
@@ -71,6 +67,14 @@ namespace ContentTool
                     OpenFile(file);
                     return;
                 }
+            }
+
+            if (File.Exists(lastFile))
+            {
+                var last = File.ReadAllText(lastFile);
+                if (File.Exists(last))
+                    OpenFile(last);
+
             }
         }
 
@@ -118,25 +122,7 @@ namespace ContentTool
             Log(message,error);
         }
 
-        void FrmMain_Load(object sender, System.EventArgs e)
-        {
-            foreach (string file in System.Environment.GetCommandLineArgs().Skip(1))
-            {
-                if (System.IO.Path.GetExtension(file) == ".ecp" && System.IO.File.Exists(file))
-                {
-                    OpenFile(file);
-                    return;
-                }
-            }
-
-            if (File.Exists(lastFile))
-            {
-                var last = File.ReadAllText(lastFile);
-                if(File.Exists(last))
-                    OpenFile(last);
-
-            }
-        }
+        #endregion
 
         #region Project Events
 
@@ -239,6 +225,12 @@ namespace ContentTool
         #endregion
 
         #region Tree Events
+
+        private void TreeContentFilesOnNodeMouseClick(object sender, TreeNodeMouseClickEventArgs treeNodeMouseClickEventArgs)
+        {
+            if (treeNodeMouseClickEventArgs.Button == MouseButtons.Right)
+                treeContentFiles.SelectedNode = treeNodeMouseClickEventArgs.Node;
+        }
 
         private void treeContentFiles_AfterSelect(object sender, TreeViewEventArgs e)
         {
@@ -526,6 +518,7 @@ namespace ContentTool
             treeContentFiles.Nodes.Add(rootNode);
             treeMap.Add(CurrentProject, rootNode);
             AddTreeNode(CurrentProject, rootNode);
+            rootNode.Expand();
         }
 
         /// <summary>
