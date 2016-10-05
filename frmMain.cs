@@ -433,6 +433,8 @@ namespace ContentTool
                 if (curFolder == null)
                     return;
 
+                var fn = new DirectoryInfo(fbd.SelectedPath).Name;
+                AddFolderFoo(fbd.SelectedPath,Path.Combine(Path.GetDirectoryName(currentFile), curFolder.getPath(),fn), curFolder);
             }
         }
 
@@ -449,38 +451,59 @@ namespace ContentTool
                     curFolder = item.Parent as ContentFolder;
                 if (curFolder == null)
                     return;
-
-                string absolutePath = System.IO.Path.Combine(Path.GetDirectoryName(currentFile), curFolder.getPath());
-
-                MakeDirectory(System.IO.Path.GetDirectoryName(currentFile), curFolder.getPath());
-
-                foreach (string file in ofd.FileNames)
+                
+                foreach (var file in ofd.FileNames)
                 {
-                    string fileName = file;
-                    ContentFolder addedFolder = curFolder;
+                    ContentFolder destFolder=curFolder;
+                    string fileName=file;
+                    string absolutePath = Path.Combine(Path.GetDirectoryName(currentFile), curFolder.getPath());
                     if (MakePathRelative(ref fileName, absolutePath))
                     {
-                        addedFolder = CreateFolderStructure(Path.GetDirectoryName(fileName), curFolder);
+                        destFolder = CreateTreeFolderStructure(Path.GetDirectoryName(fileName), curFolder);
                     }
-                    else
-                    {
-                        string destination = System.IO.Path.Combine(absolutePath, Path.GetFileName(file));
-                        if (destination != file)
-                        {
-                            System.IO.File.Copy(file, destination, true); //TODO: ask user?
-                        }
-                    }
-                    addedFolder.Contents.Add(new ContentFile(System.IO.Path.GetFileName(file), addedFolder));
+                    AddFileFoo(ofd.FileName,Path.Combine(absolutePath,Path.GetFileName(file)), destFolder);
                 }
-
+                
             }
         }
 
-        private ContentFolder CreateFolderStructure(string path,ContentFolder curFolder)
+
+        private void AddFolderFoo(string sourcePath, string destinationPath, ContentFolder folder)
+        {
+            var fn = new DirectoryInfo(sourcePath).Name;
+            ContentFolder f = folder.GetElement(fn) as ContentFolder ?? new ContentFolder(fn,folder);
+            folder.Contents.Add(f);
+            if (sourcePath != destinationPath)
+            {
+                Directory.CreateDirectory(destinationPath);
+            }
+
+            foreach (var dir in Directory.EnumerateDirectories(sourcePath))
+            {
+                var bar = new DirectoryInfo(dir).Name;
+                AddFolderFoo(dir, Path.Combine(destinationPath, bar), f);
+            }
+
+            foreach (var file in Directory.EnumerateFiles(sourcePath))
+            {
+                AddFileFoo( file, Path.Combine(destinationPath,new FileInfo(file).Name), f);
+            }
+        }
+
+        private void AddFileFoo(string sourcePath, string destinationPath, ContentFolder folder)
+        {
+            if (sourcePath != destinationPath)
+            {
+                File.Copy(sourcePath, destinationPath, true); //TODO ask user
+            }
+            folder.Contents.Add(new ContentFile(Path.GetFileName(destinationPath), folder));
+        }
+        
+        private ContentFolder CreateTreeFolderStructure(string path, ContentFolder curFolder)
         {
             if (string.IsNullOrEmpty(path))
                 return curFolder;
-            int dInd = path.IndexOfAny(new [] { Path.DirectorySeparatorChar,Path.AltDirectorySeparatorChar,Path.PathSeparator,Path.VolumeSeparatorChar});
+            int dInd = path.IndexOfAny(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar, Path.PathSeparator, Path.VolumeSeparatorChar });
             string remainingPath = null;
             if (dInd != -1)
             {
@@ -488,9 +511,10 @@ namespace ContentTool
                 path = path.Substring(0, dInd);
             }
             var newFolder = (curFolder.GetElement(path) as ContentFolder) ?? new ContentFolder(path, curFolder);
+
             curFolder.Contents.Add(newFolder);
             if (!string.IsNullOrEmpty(remainingPath))
-                return CreateFolderStructure(remainingPath, newFolder);
+                return CreateTreeFolderStructure(remainingPath, newFolder);
             return newFolder;
 
         }
@@ -501,7 +525,7 @@ namespace ContentTool
 
             if (filename.StartsWith(absoluteFolder))
             {
-                filename = filename.Substring(Math.Min(absoluteFolder.Length+1, filename.Length));
+                filename = filename.Substring(Math.Min(absoluteFolder.Length + 1, filename.Length));
                 return true;
             }
             return false;
