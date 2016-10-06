@@ -434,7 +434,7 @@ namespace ContentTool
                     return;
 
                 var fn = new DirectoryInfo(fbd.SelectedPath).Name;
-                AddFolderFoo(fbd.SelectedPath,Path.Combine(Path.GetDirectoryName(currentFile), curFolder.getPath(),fn), curFolder);
+                curFolder.AddSubFolder(fbd.SelectedPath,Path.Combine(Path.GetDirectoryName(currentFile), curFolder.getPath(),fn));
             }
         }
 
@@ -446,9 +446,8 @@ namespace ContentTool
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 ContentItem item = GetSelectedItem();
-                ContentFolder curFolder = item as ContentFolder;
-                if (curFolder == null)
-                    curFolder = item.Parent as ContentFolder;
+                ContentFolder curFolder = item as ContentFolder ?? item.Parent as ContentFolder;
+
                 if (curFolder == null)
                     return;
                 
@@ -459,65 +458,14 @@ namespace ContentTool
                     string absolutePath = Path.Combine(Path.GetDirectoryName(currentFile), curFolder.getPath());
                     if (MakePathRelative(ref fileName, absolutePath))
                     {
-                        destFolder = CreateTreeFolderStructure(Path.GetDirectoryName(fileName), curFolder);
+                        destFolder = curFolder.CreateTreeFolderStructure(Path.GetDirectoryName(fileName));
                     }
-                    AddFileFoo(ofd.FileName,Path.Combine(absolutePath,Path.GetFileName(file)), destFolder);
+                    destFolder.AddFile(ofd.FileName,Path.Combine(absolutePath,Path.GetFileName(file)));
                 }
                 
             }
         }
 
-
-        private void AddFolderFoo(string sourcePath, string destinationPath, ContentFolder folder)
-        {
-            var fn = new DirectoryInfo(sourcePath).Name;
-            ContentFolder f = folder.GetElement(fn) as ContentFolder ?? new ContentFolder(fn,folder);
-            folder.Contents.Add(f);
-            if (sourcePath != destinationPath)
-            {
-                Directory.CreateDirectory(destinationPath);
-            }
-
-            foreach (var dir in Directory.EnumerateDirectories(sourcePath))
-            {
-                var bar = new DirectoryInfo(dir).Name;
-                AddFolderFoo(dir, Path.Combine(destinationPath, bar), f);
-            }
-
-            foreach (var file in Directory.EnumerateFiles(sourcePath))
-            {
-                AddFileFoo( file, Path.Combine(destinationPath,new FileInfo(file).Name), f);
-            }
-        }
-
-        private void AddFileFoo(string sourcePath, string destinationPath, ContentFolder folder)
-        {
-            if (sourcePath != destinationPath)
-            {
-                File.Copy(sourcePath, destinationPath, true); //TODO ask user
-            }
-            folder.Contents.Add(new ContentFile(Path.GetFileName(destinationPath), folder));
-        }
-        
-        private ContentFolder CreateTreeFolderStructure(string path, ContentFolder curFolder)
-        {
-            if (string.IsNullOrEmpty(path))
-                return curFolder;
-            int dInd = path.IndexOfAny(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar, Path.PathSeparator, Path.VolumeSeparatorChar });
-            string remainingPath = null;
-            if (dInd != -1)
-            {
-                remainingPath = path.Substring(dInd + 1);
-                path = path.Substring(0, dInd);
-            }
-            var newFolder = (curFolder.GetElement(path) as ContentFolder) ?? new ContentFolder(path, curFolder);
-
-            curFolder.Contents.Add(newFolder);
-            if (!string.IsNullOrEmpty(remainingPath))
-                return CreateTreeFolderStructure(remainingPath, newFolder);
-            return newFolder;
-
-        }
         static bool MakePathRelative(ref string filename, string relativeTo)
         {
             filename = Path.GetFullPath(filename);
