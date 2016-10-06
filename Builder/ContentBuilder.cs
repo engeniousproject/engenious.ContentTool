@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using engenious.Content.Pipeline;
 
 namespace ContentTool.Builder
@@ -196,7 +197,7 @@ namespace ContentTool.Builder
             }
         }
 
-        public void Build()
+        public void Build(ContentItem item = null)
         {
             if (Project == null)
                 return;
@@ -204,9 +205,13 @@ namespace ContentTool.Builder
             currentBuild = BuildStep.Build;
             BuildStatusChanged?.BeginInvoke(this, BuildStep.Build, null, null);
 
-            buildingThread = new System.Threading.Thread(new System.Threading.ThreadStart(BuildThread));
+            if(item == null)
+                buildingThread = new System.Threading.Thread(new System.Threading.ThreadStart(BuildThread));
+            else
+                buildingThread = new System.Threading.Thread(new ThreadStart(()=>BuildThread(item)));
             buildingThread.Start();
         }
+
         public void Rebuild()
         {
             if (Project == null)
@@ -266,6 +271,11 @@ namespace ContentTool.Builder
 
         private void BuildThread()
         {
+            BuildThread(Project);
+        }
+
+        private void BuildThread(ContentItem item)
+        {
             FailedBuilds = 0;
 
             IsBuilding = true;
@@ -278,7 +288,12 @@ namespace ContentTool.Builder
                 importerContext.BuildMessage += RaiseBuildMessage;
                 processorContext.BuildMessage += RaiseBuildMessage;
 
-                BuildDir(Project, importerContext, processorContext);
+                if(item == null)
+                    BuildDir(Project, importerContext, processorContext);
+                else if(item is ContentFolder)
+                    BuildDir((ContentFolder)item,importerContext,processorContext);
+                else if (item is ContentFile)
+                    BuildFile((ContentFile) item, importerContext, processorContext);
             }
             //System.Threading.Thread.Sleep(8000);
             cache.Save(GetCacheFile());

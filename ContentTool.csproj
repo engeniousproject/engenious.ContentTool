@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="Commands\AddExistingFolder.cs" />
     <Compile Include="Commands\AddExistingItem.cs" />
+    <Compile Include="Commands\BuildItem.cs" />
     <Compile Include="Commands\DeleteItem.cs" />
     <Compile Include="Commands\RenameItem.cs" />
     <Compile Include="ContentItemCollection.cs" />

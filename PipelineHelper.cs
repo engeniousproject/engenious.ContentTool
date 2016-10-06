@@ -4,13 +4,17 @@ using System.Reflection;
 using System.Linq;
 using engenious.Content.Pipeline;
 using System.Linq.Expressions;
+using engenious.Pipeline.Pipeline.Editors;
 
 namespace ContentTool
 {
     public static class PipelineHelper
     {
         private static IList<Type> importers;
+        private static List<Type> editors = new List<Type>();
+        private static Dictionary<string, ContentEditorWrapper> editorsByType = new Dictionary<string, ContentEditorWrapper>();
         private static Dictionary<string, Type> processors = new Dictionary<string, Type>();
+
 
         private static List<KeyValuePair<Type, string>> processorsByType = new List<KeyValuePair<Type, string>>();
 
@@ -45,6 +49,7 @@ namespace ContentTool
             }
             ListImporters();
             ListProcessors();
+            ListEditors();
         }
 
         private static void ListImporters()
@@ -54,7 +59,7 @@ namespace ContentTool
         public static List<string> GetProcessors(Type tp)
         {
             List<string> fitting = new List<string>();
-            foreach(var pair in processorsByType)
+            foreach (var pair in processorsByType)
             {
                 if (pair.Key.IsAssignableFrom(tp))
                 {
@@ -70,13 +75,73 @@ namespace ContentTool
             foreach (var type in importers)
             {
                 var attribute =
-                    (ContentImporterAttribute) type.GetCustomAttributes(typeof (ContentImporterAttribute), true).First();
+                    (ContentImporterAttribute)type.GetCustomAttributes(typeof(ContentImporterAttribute), true).First();
                 if (attribute.FileExtensions != null && attribute.FileExtensions.Contains(extension))
                     fitting.Add(attribute.DisplayName);
             }
             return fitting;
         }
 
+        public static ContentEditorWrapper GetContentEditor(string extension, Type inputType, Type outputType)
+        {
+            string key = extension + "$" + inputType.FullName + "$" + outputType.FullName;
+            ContentEditorWrapper editorWrap = null;
+            if (editorsByType.TryGetValue(key, out editorWrap))
+                return editorWrap;
+            Type genericType = typeof(IContentEditor<,>).MakeGenericType(inputType, outputType);
+
+            foreach (var type in editors)
+            {
+                var attribute =
+                   (ContentEditorAttribute)type.GetCustomAttributes(typeof(ContentEditorAttribute), true).First();
+                if (attribute == null)
+                    continue;
+                if (attribute.SupportedFileExtensions.Contains(extension) && genericType.IsAssignableFrom(type))
+                {
+                    IContentEditor editor = (IContentEditor)Activator.CreateInstance(type);
+                    if (editor == null)
+                        continue;
+                    var methodInfo = genericType.GetMethod("Open");
+                    if (methodInfo == null)
+                        continue;
+                    var inputOArg = Expression.Parameter(typeof (object));
+                    var outputOArg = Expression.Parameter(typeof (object));
+
+
+                    var openMethod = Expression.Lambda<Action<object, object>>(
+                        Expression.Call(Expression.Constant(editor), methodInfo,
+                            Expression.Convert(inputOArg, inputType), Expression.Convert(outputOArg, outputType)),
+                        inputOArg, outputOArg).Compile();
+
+                    editorWrap = new ContentEditorWrapper(editor,openMethod);
+                    foreach (var ext in attribute.SupportedFileExtensions)
+                        editorsByType[ext + "$" + inputType.FullName + "$" + outputType.FullName] = editorWrap;
+                    
+                }
+            }
+
+            return editorWrap;
+            //editorsByType[key] = 
+        }
+
+        private static void ListEditors()
+        {
+            editors.Clear();
+            foreach (var assembly in assemblies)
+            {
+                foreach (var type in assembly.GetTypes())
+                {
+                    if (typeof(IContentEditor).IsAssignableFrom(type) && !(type.IsAbstract || type.IsInterface))
+                    {
+                        var attribute =
+                   (ContentEditorAttribute)type.GetCustomAttributes(typeof(ContentEditorAttribute), true).First();
+                        if (attribute == null)
+                            continue;
+                        editors.Add(type);
+                    }
+                }
+            }
+        }
         private static void ListProcessors()
         {
             processors.Clear();
@@ -97,30 +162,26 @@ namespace ContentTool
                 }
             }
         }
-        public static Type GetImporterOutputType(string extension,string importerName)
+        public static Type GetImporterOutputType(string extension, string importerName)
         {
-            var tp = GetImporterType(extension,importerName);
-            var prop = tp.GetProperty("ExportType", BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy);
-            if (prop == null)
+            var tp = GetImporterType(extension, importerName);
+            var field = tp.GetField("_exportType", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
+            if (field == null)
                 return typeof(object);
-            var method = prop.GetGetMethod();
-            var call = Expression.Call(method);
-            var lambda = Expression.Lambda<Func<Type>>(call);
+            var lambda = Expression.Lambda<Func<Type>>(Expression.Field(null, field));
             var func = lambda.Compile();
             return func();
         }
         public static Type GetProcessorInputType(Type tp)
         {
-            var prop = tp.GetProperty("ImportType", BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy);
-            if (prop == null)
+            var field = tp.GetField("_importType", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
+            if (field == null)
                 return typeof(object);
-            var method = prop.GetGetMethod();
-            var call = Expression.Call(method);
-            var lambda = Expression.Lambda<Func<Type>>(call);
+            var lambda = Expression.Lambda<Func<Type>>(Expression.Field(null, field));
             var func = lambda.Compile();
             return func();
         }
-        public static Type GetImporterType(string extension,string importerName)
+        public static Type GetImporterType(string extension, string importerName)
         {
             foreach (var type in importers)
             {
@@ -131,7 +192,7 @@ namespace ContentTool
             return null;
         }
 
-        public static IContentImporter CreateImporter(string extension,ref string importerName)
+        public static IContentImporter CreateImporter(string extension, ref string importerName)
         {
             if (importers == null)
                 DefaultInit();
@@ -148,9 +209,9 @@ namespace ContentTool
             importerName = null;
             return null;
         }
-        public static IContentImporter CreateImporter(string extension,string importerName=null)
+        public static IContentImporter CreateImporter(string extension, string importerName = null)
         {
-            string dummy=importerName;
+            string dummy = importerName;
             return CreateImporter(extension, ref importerName);
         }
 
