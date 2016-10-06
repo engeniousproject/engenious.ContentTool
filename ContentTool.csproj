@@ -48,6 +48,10 @@
     <Compile Include="..\SolutionInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\AddExistingFolder.cs" />
+    <Compile Include="Commands\AddExistingItem.cs" />
+    <Compile Include="Commands\DeleteItem.cs" />
+    <Compile Include="Commands\RenameItem.cs" />
     <Compile Include="ContentItemCollection.cs" />
     <Compile Include="Dialog\frmEditReferences.cs">
       <SubType>Form</SubType>
