@@ -346,7 +346,6 @@ namespace ContentTool
             this.existingItemMenuItem.Size = new System.Drawing.Size(152, 22);
             this.existingItemMenuItem.Text = "Existing Item...";
             this.existingItemMenuItem.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal;
-            this.existingItemMenuItem.Click += new System.EventHandler(this.ExistingItemMenuItem_Click);
             // 
             // existingFolderMenuItem
             // 
@@ -357,7 +356,6 @@ namespace ContentTool
             this.existingFolderMenuItem.Size = new System.Drawing.Size(152, 22);
             this.existingFolderMenuItem.Text = "Existing Folder...";
             this.existingFolderMenuItem.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal;
-            this.existingFolderMenuItem.Click += new System.EventHandler(this.ExistingFolderMenuItem_Click);
             // 
             // addMenuItem
             // 
@@ -384,7 +382,6 @@ namespace ContentTool
             this.renameMenuItem.Size = new System.Drawing.Size(152, 22);
             this.renameMenuItem.Text = "Rename";
             this.renameMenuItem.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal;
-            this.renameMenuItem.Click += new System.EventHandler(this.RenameMenuItem_Click);
             // 
             // deleteMenuItem
             // 
@@ -396,7 +393,6 @@ namespace ContentTool
             this.deleteMenuItem.Size = new System.Drawing.Size(152, 22);
             this.deleteMenuItem.Text = "Delete";
             this.deleteMenuItem.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal;
-            this.deleteMenuItem.Click += new System.EventHandler(this.DeleteMenuItem_Click);
             // 
             // editMenuItem
             // 
@@ -539,14 +535,12 @@ namespace ContentTool
             this.renameToolStripMenuItem1.Name = "renameToolStripMenuItem1";
             this.renameToolStripMenuItem1.Size = new System.Drawing.Size(161, 22);
             this.renameToolStripMenuItem1.Text = "Rename";
-            this.renameToolStripMenuItem1.Click += new System.EventHandler(this.ContextMenu_Rename);
             // 
             // deleteToolStripMenuItem
             // 
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
             this.deleteToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
             this.deleteToolStripMenuItem.Text = "Delete";
-            this.deleteToolStripMenuItem.Click += new System.EventHandler(this.ContextMenu_Delete);
             // 
             // contextMenuStrip_folder
             // 
@@ -578,14 +572,12 @@ namespace ContentTool
             this.renameToolStripMenuItem.Name = "renameToolStripMenuItem";
             this.renameToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
             this.renameToolStripMenuItem.Text = "Rename";
-            this.renameToolStripMenuItem.Click += new System.EventHandler(this.ContextMenu_Rename);
             // 
             // deleteToolStripMenuItem1
             // 
             this.deleteToolStripMenuItem1.Name = "deleteToolStripMenuItem1";
             this.deleteToolStripMenuItem1.Size = new System.Drawing.Size(161, 22);
             this.deleteToolStripMenuItem1.Text = "Delete";
-            this.deleteToolStripMenuItem1.Click += new System.EventHandler(this.ContextMenu_Delete);
             // 
             // buildToolStripMenuItem
             // 

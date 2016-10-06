@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using ContentTool.Builder;
+using ContentTool.Commands;
 using engenious.Content.Pipeline;
 
 namespace ContentTool
@@ -60,6 +61,16 @@ namespace ContentTool
             treeMap = new Dictionary<ContentItem, TreeNode>();
 
             treeContentFiles.NodeMouseClick += TreeContentFilesOnNodeMouseClick;
+
+
+            this.existingFolderMenuItem.Click += (o,e) => AddExistingFolder.Execute(GetSelectedItem(), currentFile);
+            this.existingItemMenuItem.Click += (o, e) => AddExistingItem.Execute(GetSelectedItem(), currentFile);
+            this.deleteMenuItem.Click += (o,e) => DeleteItem.Execute(GetSelectedItem());
+            this.deleteToolStripMenuItem.Click += (o,e) => DeleteItem.Execute(GetSelectedItem());
+            this.deleteToolStripMenuItem1.Click += (o, e) => DeleteItem.Execute(GetSelectedItem());
+            this.renameMenuItem.Click += (o, e) => RenameItem.Execute(GetSelectedItem(), treeMap);
+            this.renameToolStripMenuItem.Click += (o, e) => RenameItem.Execute(GetSelectedItem(), treeMap);
+            this.renameToolStripMenuItem1.Click += (o, e) => RenameItem.Execute(GetSelectedItem(), treeMap);
         }
 
         void FrmMain_Load(object sender, System.EventArgs e)
@@ -386,30 +397,6 @@ namespace ContentTool
 
         #region Edit Menu
 
-        void DeleteMenuItem_Click(object sender, EventArgs e)
-        {
-            ContentItem item = GetSelectedItem();
-            DeleteItem(item);
-        }
-
-        void RenameMenuItem_Click(object sender, EventArgs e)
-        {
-            ContentItem item = GetSelectedItem();
-            RenameItem(item);
-        }
-
-        private void RenameItem(ContentItem item)
-        {
-            if (item is ContentProject)
-                return;
-            TreeNode node = null;
-            if (treeMap.TryGetValue(item, out node))
-            {
-
-                node.BeginEdit();
-            }
-        }
-
         void RedoMenuItem_Click(object sender, EventArgs e)
         {
             throw new NotImplementedException();
@@ -420,64 +407,7 @@ namespace ContentTool
             throw new NotImplementedException();
         }
 
-        void ExistingFolderMenuItem_Click(object sender, EventArgs e)
-        {
-            FolderBrowserDialog fbd = new FolderBrowserDialog();
-            fbd.ShowNewFolderButton = true;
-            if (fbd.ShowDialog() == DialogResult.OK)
-            {
-                ContentItem item = GetSelectedItem();
-                ContentFolder curFolder = item as ContentFolder;
-                if (curFolder == null)
-                    curFolder = item.Parent as ContentFolder;
-                if (curFolder == null)
-                    return;
-
-                var fn = new DirectoryInfo(fbd.SelectedPath).Name;
-                curFolder.AddSubFolder(fbd.SelectedPath,Path.Combine(Path.GetDirectoryName(currentFile), curFolder.getPath(),fn));
-            }
-        }
-
-        void ExistingItemMenuItem_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Multiselect = true;
-            ofd.Filter = "All files|*.*|Image files(.png;.bmp;.jpg)|*.png;*.bmp;*.jpg";
-            if (ofd.ShowDialog() == DialogResult.OK)
-            {
-                ContentItem item = GetSelectedItem();
-                ContentFolder curFolder = item as ContentFolder ?? item.Parent as ContentFolder;
-
-                if (curFolder == null)
-                    return;
-                
-                foreach (var file in ofd.FileNames)
-                {
-                    ContentFolder destFolder=curFolder;
-                    string fileName=file;
-                    string absolutePath = Path.Combine(Path.GetDirectoryName(currentFile), curFolder.getPath());
-                    if (MakePathRelative(ref fileName, absolutePath))
-                    {
-                        destFolder = curFolder.CreateTreeFolderStructure(Path.GetDirectoryName(fileName));
-                    }
-                    destFolder.AddFile(ofd.FileName,Path.Combine(absolutePath,Path.GetFileName(file)));
-                }
-                
-            }
-        }
-
-        static bool MakePathRelative(ref string filename, string relativeTo)
-        {
-            filename = Path.GetFullPath(filename);
-            string absoluteFolder = Path.GetFullPath(relativeTo);
-
-            if (filename.StartsWith(absoluteFolder))
-            {
-                filename = filename.Substring(Math.Min(absoluteFolder.Length + 1, filename.Length));
-                return true;
-            }
-            return false;
-        }
+        
         void NewFolderMenuItem_Click(object sender, EventArgs e)
         {
 
@@ -512,17 +442,7 @@ namespace ContentTool
             currentFile = "";
             CloseFile();
         }
-
-        private void ContextMenu_Rename(object sender, EventArgs e)
-        {
-            var item = GetSelectedItem();
-            RenameItem(item);
-        }
-
-        private void ContextMenu_Delete(object sender, EventArgs e)
-        {
-            DeleteItem(GetSelectedItem());
-        }
+        
 
 
         #endregion
@@ -651,17 +571,7 @@ namespace ContentTool
 
             return GetItemFromNode(node);
         }
-
-        /// <summary>
-        /// Deletes an Item
-        /// </summary>
-        /// <param name="item"></param>
-        private void DeleteItem(ContentItem item)
-        {
-            var parent = item.Parent as ContentFolder;
-            parent.Contents.Remove(item);
-        }
-
+        
         #endregion
 
         #region File Operations
