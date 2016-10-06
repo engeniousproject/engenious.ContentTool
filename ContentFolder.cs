@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.IO;
 using System.Xml;
 using System.Linq;
 
@@ -22,12 +25,12 @@ namespace ContentTool
             this.Name = name;
         }
 
-        void Contents_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        void Contents_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             InvokePropertyChange(sender, e);
         }
 
-        void Contents_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        void Contents_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             InvokeCollectionChange(sender, e);
         }
@@ -54,7 +57,7 @@ namespace ContentTool
             return null;
         }
 
-        [System.ComponentModel.Browsable(false)]
+        [Browsable(false)]
         public ContentItemCollection Contents{ get; set; }
 
         public override string ToString()
@@ -95,7 +98,7 @@ namespace ContentTool
             }
         }
 
-        public override void WriteItems(System.Xml.XmlWriter writer)
+        public override void WriteItems(XmlWriter writer)
         {
             writer.WriteElementString("Name", Name);
 
@@ -112,6 +115,57 @@ namespace ContentTool
         }
 
         #endregion
+
+        public ContentFolder CreateTreeFolderStructure(string path)
+        {
+            if (string.IsNullOrEmpty(path))
+                return this;
+            int dInd = path.IndexOfAny(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar, Path.PathSeparator, Path.VolumeSeparatorChar });
+            string remainingPath = null;
+            if (dInd != -1)
+            {
+                remainingPath = path.Substring(dInd + 1);
+                path = path.Substring(0, dInd);
+            }
+            var newFolder = (GetElement(path) as ContentFolder) ?? new ContentFolder(path, this);
+
+            Contents.Add(newFolder);
+            if (!string.IsNullOrEmpty(remainingPath))
+                return newFolder.CreateTreeFolderStructure(remainingPath);
+            return newFolder;
+
+        }
+
+        public void AddSubFolder(string sourcePath, string destinationPath)
+        {
+            var fn = new DirectoryInfo(sourcePath).Name;
+            ContentFolder f = GetElement(fn) as ContentFolder ?? new ContentFolder(fn,this);
+            Contents.Add(f);
+            if (sourcePath != destinationPath)
+            {
+                Directory.CreateDirectory(destinationPath);
+            }
+
+            foreach (var dir in Directory.EnumerateDirectories(sourcePath))
+            {
+                var bar = new DirectoryInfo(dir).Name;
+                f.AddSubFolder(dir, Path.Combine(destinationPath, bar));
+            }
+
+            foreach (var file in Directory.EnumerateFiles(sourcePath))
+            {
+                f.AddFile( file, Path.Combine(destinationPath,new FileInfo(file).Name));
+            }
+        }
+
+        public void AddFile(string sourcePath, string destinationPath)
+        {
+            if (sourcePath != destinationPath)
+            {
+                File.Copy(sourcePath, destinationPath, true); //TODO ask user
+            }
+            Contents.Add(new ContentFile(Path.GetFileName(destinationPath), this));
+        }
     }
 }
 
