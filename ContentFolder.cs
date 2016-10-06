@@ -98,7 +98,7 @@ namespace ContentTool
             }
         }
 
-        public override void WriteItems(System.Xml.XmlWriter writer)
+        public override void WriteItems(XmlWriter writer)
         {
             writer.WriteElementString("Name", Name);
 
