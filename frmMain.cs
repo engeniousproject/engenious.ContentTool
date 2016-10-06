@@ -11,12 +11,12 @@ using System.IO;
 using ContentTool.Builder;
 using ContentTool.Commands;
 using engenious.Content.Pipeline;
+using engenious.Pipeline.Pipeline.Editors;
 
 namespace ContentTool
 {
     public partial class frmMain : Form
     {
-
         //TODO: architecture
         private string currentFile;
 
@@ -71,6 +71,9 @@ namespace ContentTool
             this.renameMenuItem.Click += (o, e) => RenameItem.Execute(GetSelectedItem(), treeMap);
             this.renameToolStripMenuItem.Click += (o, e) => RenameItem.Execute(GetSelectedItem(), treeMap);
             this.renameToolStripMenuItem1.Click += (o, e) => RenameItem.Execute(GetSelectedItem(), treeMap);
+            this.buildToolStripMenuItem.Click += (o, e) => BuildItem.Execute(GetSelectedItem(), builder);
+            this.buildToolStripMenuItem1.Click += (o, e) => BuildItem.Execute(GetSelectedItem(), builder);
+            this.buildToolStripMenuItem2.Click += (o, e) => BuildItem.Execute(GetSelectedItem(), builder);
         }
 
         void FrmMain_Load(object sender, System.EventArgs e)
@@ -253,6 +256,19 @@ namespace ContentTool
         private void treeContentFiles_AfterSelect(object sender, TreeViewEventArgs e)
         {
             prpItem.SelectedObject = e.Node.Tag;
+            panel_editor.Controls.Clear();
+            ContentFile file =  e.Node.Tag as ContentFile;
+            if (file == null)
+                return;
+            var editorWrap = PipelineHelper.GetContentEditor(Path.GetExtension(file.Name), file.Importer.ExportType, file.Processor.ExportType);
+            if (editorWrap == null)
+                return;
+            var absPath = Path.Combine(Path.GetDirectoryName(currentFile), file.getPath());
+            var importValue = file.Importer.Import(absPath, new ContentImporterContext());
+            var processValue = file.Processor.Process(importValue, absPath,
+                new ContentProcessorContext());
+            editorWrap.Open(importValue, processValue);
+            panel_editor.Controls.Add(editorWrap.Editor.MainControl);
         }
 
         void TreeContentFiles_BeforeLabelEdit(object sender, System.Windows.Forms.NodeLabelEditEventArgs e)
