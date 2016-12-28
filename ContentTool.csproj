@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="Commands\AddExistingFolder.cs" />
     <Compile Include="Commands\AddExistingItem.cs" />
+    <Compile Include="Commands\AddNewFolder.cs" />
     <Compile Include="Commands\BuildItem.cs" />
     <Compile Include="Commands\DeleteItem.cs" />
     <Compile Include="Commands\RenameItem.cs" />
@@ -61,6 +62,12 @@
       <DependentUpon>frmEditReferences.cs</DependentUpon>
     </Compile>
     <Compile Include="Dialog\ImporterEditor.cs" />
+    <Compile Include="Dialog\NewFolderDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialog\NewFolderDialog.Designer.cs">
+      <DependentUpon>NewFolderDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Dialog\ProcessorEditor.cs" />
     <Compile Include="Dialog\ReferenceCollectionEditor.cs" />
     <Compile Include="Program.cs" />
@@ -69,12 +76,6 @@
     <Compile Include="ContentFolder.cs" />
     <Compile Include="ContentProject.cs" />
     <Compile Include="ContentItem.cs" />
-    <Compile Include="Dialog\frmAddFolder.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Dialog\frmAddFolder.Designer.cs">
-      <DependentUpon>Dialog\frmAddFolder.cs</DependentUpon>
-    </Compile>
     <Compile Include="ObservableList.cs" />
     <Compile Include="frmMain.Designer.cs">
       <DependentUpon>frmMain.cs</DependentUpon>
@@ -116,6 +117,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Dialog\frmEditReferences.resx">
       <DependentUpon>frmEditReferences.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialog\NewFolderDialog.resx">
+      <DependentUpon>NewFolderDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>

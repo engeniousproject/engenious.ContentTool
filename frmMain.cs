@@ -62,7 +62,7 @@ namespace ContentTool
 
             treeContentFiles.NodeMouseClick += TreeContentFilesOnNodeMouseClick;
 
-
+            this.newFolderMenuItem.Click += (o, e) => AddNewFolder.Execute(GetSelectedItem(), currentFile);
             this.existingFolderMenuItem.Click += (o,e) => AddExistingFolder.Execute(GetSelectedItem(), currentFile);
             this.existingItemMenuItem.Click += (o, e) => AddExistingItem.Execute(GetSelectedItem(), currentFile);
             this.deleteMenuItem.Click += (o,e) => DeleteItem.Execute(GetSelectedItem());
@@ -258,7 +258,7 @@ namespace ContentTool
             prpItem.SelectedObject = e.Node.Tag;
             panel_editor.Controls.Clear();
             ContentFile file =  e.Node.Tag as ContentFile;
-            if (file == null)
+            if (file == null || file.Importer == null || file.Processor == null)
                 return;
             var editorWrap = PipelineHelper.GetContentEditor(Path.GetExtension(file.Name), file.Importer.ExportType, file.Processor.ExportType);
             if (editorWrap == null)
