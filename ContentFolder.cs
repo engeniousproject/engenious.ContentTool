@@ -35,6 +35,11 @@ namespace ContentTool
             InvokeCollectionChange(sender, e);
         }
 
+        /// <summary>
+        /// Gets an Element by path relative to the current content folder
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         public ContentItem GetElement(string path)
         {
             string trailingPath=null;
@@ -116,6 +121,11 @@ namespace ContentTool
 
         #endregion
 
+        /// <summary>
+        /// Returns the complete folder structure up to the given path
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns>ContentFolder with folder structure</returns>
         public ContentFolder CreateTreeFolderStructure(string path)
         {
             if (string.IsNullOrEmpty(path))
@@ -136,6 +146,11 @@ namespace ContentTool
 
         }
 
+        /// <summary>
+        /// Adds a folder structure up to the given folder and copies it if necessary
+        /// </summary>
+        /// <param name="sourcePath"></param>
+        /// <param name="destinationPath"></param>
         public void AddSubFolder(string sourcePath, string destinationPath)
         {
             var fn = new DirectoryInfo(sourcePath).Name;
@@ -158,6 +173,11 @@ namespace ContentTool
             }
         }
 
+        /// <summary>
+        /// Adds a file to the given folder and copies it if necessary
+        /// </summary>
+        /// <param name="sourcePath"></param>
+        /// <param name="destinationPath"></param>
         public void AddFile(string sourcePath, string destinationPath)
         {
             if (sourcePath != destinationPath)

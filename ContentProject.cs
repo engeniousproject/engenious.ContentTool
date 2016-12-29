@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Xml;
 
 namespace ContentTool
@@ -127,7 +128,7 @@ namespace ContentTool
             }*/
         }
 
-        public static void Save(string filename, ContentProject project)
+        public void Save(string filename)
         {
             var settings = new XmlWriterSettings();
             settings.Indent = true;
@@ -135,31 +136,34 @@ namespace ContentTool
             settings.NewLineOnAttributes = false;
             settings.OmitXmlDeclaration = true;
             settings.Encoding = System.Text.Encoding.UTF8;
+
+            this.File = filename;
+
             //System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(ContentProject));
             using (var writer = XmlWriter.Create(filename, settings))
             {
-                Save(writer, project);
+                Save(writer);
             }
 
         }
 
-        public static void Save(XmlWriter writer, ContentProject project)
+        public void Save(XmlWriter writer)
         {
             writer.WriteStartDocument();
             writer.WriteStartElement("Content");
             {
                 writer.WriteStartElement("References");
-                if (project.References != null)
+                if (this.References != null)
                 {
-                    foreach (var reference in project.References)
+                    foreach (var reference in References)
                         writer.WriteElementString("Reference", reference);
                 }
                 writer.WriteEndElement();
 
-                writer.WriteElementString("Configuration", project.Configuration.ToString());
-                writer.WriteElementString("OutputDir", project.OutputDir);
+                writer.WriteElementString("Configuration", Configuration.ToString());
+                writer.WriteElementString("OutputDir", OutputDir);
 
-                project.WriteItems(writer);
+                WriteItems(writer);
             }
             writer.WriteEndElement();
         }

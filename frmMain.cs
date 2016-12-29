@@ -18,7 +18,7 @@ namespace ContentTool
     public partial class frmMain : Form
     {
         //TODO: architecture
-        private string currentFile;
+        //private string currentFile;
 
         private ContentProject currentProject;
 
@@ -62,9 +62,9 @@ namespace ContentTool
 
             treeContentFiles.NodeMouseClick += TreeContentFilesOnNodeMouseClick;
 
-            this.newFolderMenuItem.Click += (o, e) => AddNewFolder.Execute(GetSelectedItem(), currentFile);
-            this.existingFolderMenuItem.Click += (o,e) => AddExistingFolder.Execute(GetSelectedItem(), currentFile);
-            this.existingItemMenuItem.Click += (o, e) => AddExistingItem.Execute(GetSelectedItem(), currentFile);
+            this.newFolderMenuItem.Click += (o, e) => AddNewFolder.Execute(GetSelectedItem(), CurrentProject.File);
+            this.existingFolderMenuItem.Click += (o,e) => AddExistingFolder.Execute(GetSelectedItem(), CurrentProject.File);
+            this.existingItemMenuItem.Click += (o, e) => AddExistingItem.Execute(GetSelectedItem(), CurrentProject.File);
             this.deleteMenuItem.Click += (o,e) => DeleteItem.Execute(GetSelectedItem());
             this.deleteToolStripMenuItem.Click += (o,e) => DeleteItem.Execute(GetSelectedItem());
             this.deleteToolStripMenuItem1.Click += (o, e) => DeleteItem.Execute(GetSelectedItem());
@@ -263,7 +263,7 @@ namespace ContentTool
             var editorWrap = PipelineHelper.GetContentEditor(Path.GetExtension(file.Name), file.Importer.ExportType, file.Processor.ExportType);
             if (editorWrap == null)
                 return;
-            var absPath = Path.Combine(Path.GetDirectoryName(currentFile), file.getPath());
+            var absPath = Path.Combine(Path.GetDirectoryName(CurrentProject.File), file.getPath());
             var importValue = file.Importer.Import(absPath, new ContentImporterContext());
             var processValue = file.Processor.Process(importValue, absPath,
                 new ContentProcessorContext());
@@ -325,7 +325,7 @@ namespace ContentTool
 
         void FileMenuItem_DropDownOpening(object sender, System.EventArgs e)
         {
-            bool fileOpened = !string.IsNullOrEmpty(currentFile) || CurrentProject != null;
+            bool fileOpened = CurrentProject != null;
             this.importMenuItem.Enabled = false;
             this.closeMenuItem.Enabled = this.saveAsMenuItem.Enabled = fileOpened;
             this.saveMenuItem.Enabled = fileOpened;//TODO änderungen?
@@ -345,7 +345,6 @@ namespace ContentTool
 
         void CloseMenuItem_Click(object sender, EventArgs e)
         {
-            currentFile = "";
             CloseFile();
 
         }
@@ -406,7 +405,7 @@ namespace ContentTool
         void BuildMainMenuItem_DropDownOpening(object sender, System.EventArgs e)
         {
             cleanMenuItem.Enabled = builder.CanClean;
-            rebuildMenuItem.Enabled = System.IO.File.Exists(currentFile) && cleanMenuItem.Enabled;
+            rebuildMenuItem.Enabled = System.IO.File.Exists(CurrentProject.File) && cleanMenuItem.Enabled;
         }
 
         #endregion
@@ -455,7 +454,6 @@ namespace ContentTool
 
         private void ContextMenu_Close(object sender, EventArgs e)
         {
-            currentFile = "";
             CloseFile();
         }
         
@@ -505,7 +503,7 @@ namespace ContentTool
                 string ext = System.IO.Path.GetExtension(item.Name);
                 if (!imgList.Images.ContainsKey(ext))
                 {
-                    string filePath = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(currentFile), item.getPath());
+                    string filePath = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(CurrentProject.File), item.getPath());
                     if (System.IO.File.Exists(filePath))
                         imgList.Images.Add(ext, System.Drawing.Icon.ExtractAssociatedIcon(filePath));
                 }
@@ -604,11 +602,10 @@ namespace ContentTool
                 if (MessageBox.Show("Your Project is currently Building." + message, "Close file", MessageBoxButtons.YesNo) == DialogResult.No)
                     return false;
 
-                builder.Build();
+                builder.Abort();
             }
 
             prpItem.SelectedObject = null;
-            currentFile = null;
             CurrentProject = null;
             RecalcTreeView();
             return true;
@@ -620,9 +617,8 @@ namespace ContentTool
         /// <param name="file"></param>
         private void SaveFile(string file)
         {
-            currentFile = file;
             CurrentProject.Name = file;
-            ContentProject.Save(file, CurrentProject);
+            CurrentProject.Save(file);
         }
 
         /// <summary>
@@ -631,7 +627,6 @@ namespace ContentTool
         /// <param name="file"></param>
         private void OpenFile(string file)
         {
-            currentFile = file;
             CurrentProject = ContentProject.Load(file);
             CurrentProject.CollectionChanged += CurrentProject_CollectionChanged;
             CurrentProject.PropertyChanged += CurrentProject_PropertyChanged;
@@ -658,12 +653,12 @@ namespace ContentTool
         /// </summary>
         private void Save()
         {
-            if (string.IsNullOrEmpty(currentFile) || !System.IO.File.Exists(currentFile))
+            if (string.IsNullOrEmpty(CurrentProject.File) || !System.IO.File.Exists(CurrentProject.File))
             {
                 SaveAs();
                 return;
             }
-            SaveFile(currentFile);
+            SaveFile(CurrentProject.File);
         }
 
         /// <summary>
@@ -673,7 +668,7 @@ namespace ContentTool
         {
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.Filter = "Engenious Content Project(.ecp)|*.ecp";
-            sfd.FileName = currentFile;
+            sfd.FileName = CurrentProject.File;
             sfd.OverwritePrompt = true;
             if (sfd.ShowDialog() == DialogResult.OK)
             {
@@ -687,11 +682,11 @@ namespace ContentTool
         /// <returns></returns>
         private bool SaveFirst()
         {
-            if (string.IsNullOrEmpty(currentFile))
+            if (string.IsNullOrEmpty(CurrentProject.File))
             {
                 SaveMenuItem_Click(saveMenuItem, new EventArgs());
             }
-            return System.IO.File.Exists(currentFile);
+            return System.IO.File.Exists(CurrentProject.File);
         }
 
 

@@ -44,6 +44,8 @@ namespace ContentTool
             this.showInExplorerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
+            this.buildToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip_file = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.showInExplorerToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.renameToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -57,8 +59,6 @@ namespace ContentTool
             this.deleteToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.buildToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
-            this.buildToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer_main)).BeginInit();
             this.splitContainer_main.Panel1.SuspendLayout();
             this.splitContainer_main.Panel2.SuspendLayout();
@@ -75,10 +75,6 @@ namespace ContentTool
             this.contextMenuStrip_project.SuspendLayout();
             this.contextMenuStrip_file.SuspendLayout();
             this.contextMenuStrip_folder.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer_right)).BeginInit();
-            this.splitContainer_right.Panel1.SuspendLayout();
-            this.splitContainer_right.Panel2.SuspendLayout();
-            this.splitContainer_right.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer_main
@@ -92,7 +88,6 @@ namespace ContentTool
             // 
             this.splitContainer_main.Panel1.Controls.Add(this.splitContainer_left);
             this.splitContainer_main.Panel1.Text = "Panel1";
-            this.splitContainer_main.Panel1MinSize = 150;
             // 
             // splitContainer_main.Panel2
             // 
@@ -159,26 +154,26 @@ namespace ContentTool
             this.prpItem.TabIndex = 0;
             // 
             // splitContainer_right
-            //
+            // 
             this.splitContainer_right.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer_right.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
             this.splitContainer_right.Location = new System.Drawing.Point(0, 0);
             this.splitContainer_right.Name = "splitContainer_right";
             this.splitContainer_right.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            //
+            // 
             // splitContainer_right.Panel1
-            //
+            // 
             this.splitContainer_right.Panel1.Controls.Add(this.panel_editor);
-            //
+            // 
             // splitContainer_right.Panel2
-            //
+            // 
             this.splitContainer_right.Panel2.Controls.Add(this.txtLog);
             this.splitContainer_right.Size = new System.Drawing.Size(486, 468);
             this.splitContainer_right.SplitterDistance = 284;
             this.splitContainer_right.TabIndex = 1;
-            //
+            // 
             // panel_editor
-            //
+            // 
             this.panel_editor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.panel_editor.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel_editor.Location = new System.Drawing.Point(0, 0);
@@ -186,7 +181,7 @@ namespace ContentTool
             this.panel_editor.Padding = new System.Windows.Forms.Padding(10);
             this.panel_editor.Size = new System.Drawing.Size(486, 284);
             this.panel_editor.TabIndex = 0;
-            //
+            // 
             // txtLog
             // 
             this.txtLog.BackColor = System.Drawing.SystemColors.Window;
@@ -206,7 +201,7 @@ namespace ContentTool
             this.newMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.newMenuItem.Name = "newMenuItem";
             this.newMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.newMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.newMenuItem.Size = new System.Drawing.Size(185, 22);
             this.newMenuItem.Text = "New...";
             this.newMenuItem.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal;
             this.newMenuItem.Click += new System.EventHandler(this.NewMenuItem_Click);
@@ -218,7 +213,7 @@ namespace ContentTool
             this.openMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.openMenuItem.Name = "openMenuItem";
             this.openMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.openMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.openMenuItem.Size = new System.Drawing.Size(185, 22);
             this.openMenuItem.Text = "Open...";
             this.openMenuItem.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal;
             this.openMenuItem.Click += new System.EventHandler(this.OpenMenuItem_Click);
@@ -229,7 +224,7 @@ namespace ContentTool
             this.closeMenuItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.closeMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.closeMenuItem.Name = "closeMenuItem";
-            this.closeMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.closeMenuItem.Size = new System.Drawing.Size(185, 22);
             this.closeMenuItem.Text = "Close...";
             this.closeMenuItem.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal;
             this.closeMenuItem.Click += new System.EventHandler(this.CloseMenuItem_Click);
@@ -240,7 +235,7 @@ namespace ContentTool
             this.importMenuItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.importMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.importMenuItem.Name = "importMenuItem";
-            this.importMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.importMenuItem.Size = new System.Drawing.Size(185, 22);
             this.importMenuItem.Text = "Import...";
             this.importMenuItem.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal;
             // 
@@ -251,7 +246,7 @@ namespace ContentTool
             this.saveMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.saveMenuItem.Name = "saveMenuItem";
             this.saveMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.saveMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.saveMenuItem.Size = new System.Drawing.Size(185, 22);
             this.saveMenuItem.Text = "Save";
             this.saveMenuItem.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal;
             this.saveMenuItem.Click += new System.EventHandler(this.SaveMenuItem_Click);
@@ -264,7 +259,7 @@ namespace ContentTool
             this.saveAsMenuItem.Name = "saveAsMenuItem";
             this.saveAsMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.S)));
-            this.saveAsMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.saveAsMenuItem.Size = new System.Drawing.Size(185, 22);
             this.saveAsMenuItem.Text = "Save As...";
             this.saveAsMenuItem.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal;
             this.saveAsMenuItem.Click += new System.EventHandler(this.SaveAsMenuItem_Click);
@@ -275,7 +270,7 @@ namespace ContentTool
             this.exitMenuItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.exitMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.exitMenuItem.Name = "exitMenuItem";
-            this.exitMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.exitMenuItem.Size = new System.Drawing.Size(185, 22);
             this.exitMenuItem.Text = "Exit";
             this.exitMenuItem.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal;
             this.exitMenuItem.Click += new System.EventHandler(this.ExitMenuItem_Click);
@@ -306,7 +301,7 @@ namespace ContentTool
             this.undoMenuItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.undoMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.undoMenuItem.Name = "undoMenuItem";
-            this.undoMenuItem.Size = new System.Drawing.Size(133, 22);
+            this.undoMenuItem.Size = new System.Drawing.Size(152, 22);
             this.undoMenuItem.Text = "Undo";
             this.undoMenuItem.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal;
             this.undoMenuItem.Click += new System.EventHandler(this.UndoMenuItem_Click);
@@ -318,7 +313,7 @@ namespace ContentTool
             this.redoMenuItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.redoMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.redoMenuItem.Name = "redoMenuItem";
-            this.redoMenuItem.Size = new System.Drawing.Size(133, 22);
+            this.redoMenuItem.Size = new System.Drawing.Size(152, 22);
             this.redoMenuItem.Text = "Redo";
             this.redoMenuItem.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal;
             this.redoMenuItem.Click += new System.EventHandler(this.RedoMenuItem_Click);
@@ -330,7 +325,7 @@ namespace ContentTool
             this.newItemMenuItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.newItemMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.newItemMenuItem.Name = "newItemMenuItem";
-            this.newItemMenuItem.Size = new System.Drawing.Size(151, 22);
+            this.newItemMenuItem.Size = new System.Drawing.Size(152, 22);
             this.newItemMenuItem.Text = "New Item...";
             this.newItemMenuItem.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal;
             // 
@@ -340,7 +335,7 @@ namespace ContentTool
             this.newFolderMenuItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.newFolderMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.newFolderMenuItem.Name = "newFolderMenuItem";
-            this.newFolderMenuItem.Size = new System.Drawing.Size(151, 22);
+            this.newFolderMenuItem.Size = new System.Drawing.Size(152, 22);
             this.newFolderMenuItem.Text = "New Folder...";
             this.newFolderMenuItem.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal;
             // 
@@ -350,7 +345,7 @@ namespace ContentTool
             this.existingItemMenuItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.existingItemMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.existingItemMenuItem.Name = "existingItemMenuItem";
-            this.existingItemMenuItem.Size = new System.Drawing.Size(151, 22);
+            this.existingItemMenuItem.Size = new System.Drawing.Size(152, 22);
             this.existingItemMenuItem.Text = "Existing Item...";
             this.existingItemMenuItem.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal;
             // 
@@ -360,7 +355,7 @@ namespace ContentTool
             this.existingFolderMenuItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.existingFolderMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.existingFolderMenuItem.Name = "existingFolderMenuItem";
-            this.existingFolderMenuItem.Size = new System.Drawing.Size(151, 22);
+            this.existingFolderMenuItem.Size = new System.Drawing.Size(152, 22);
             this.existingFolderMenuItem.Text = "Existing Folder...";
             this.existingFolderMenuItem.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal;
             // 
@@ -375,7 +370,7 @@ namespace ContentTool
             this.addMenuItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.addMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.addMenuItem.Name = "addMenuItem";
-            this.addMenuItem.Size = new System.Drawing.Size(133, 22);
+            this.addMenuItem.Size = new System.Drawing.Size(152, 22);
             this.addMenuItem.Text = "Add";
             this.addMenuItem.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal;
             // 
@@ -386,7 +381,7 @@ namespace ContentTool
             this.renameMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.renameMenuItem.Name = "renameMenuItem";
             this.renameMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F2;
-            this.renameMenuItem.Size = new System.Drawing.Size(133, 22);
+            this.renameMenuItem.Size = new System.Drawing.Size(152, 22);
             this.renameMenuItem.Text = "Rename";
             this.renameMenuItem.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal;
             // 
@@ -397,7 +392,7 @@ namespace ContentTool
             this.deleteMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.deleteMenuItem.Name = "deleteMenuItem";
             this.deleteMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Delete;
-            this.deleteMenuItem.Size = new System.Drawing.Size(133, 22);
+            this.deleteMenuItem.Size = new System.Drawing.Size(152, 22);
             this.deleteMenuItem.Text = "Delete";
             this.deleteMenuItem.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal;
             // 
@@ -421,7 +416,7 @@ namespace ContentTool
             this.buildMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.buildMenuItem.Name = "buildMenuItem";
             this.buildMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F8;
-            this.buildMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.buildMenuItem.Size = new System.Drawing.Size(150, 22);
             this.buildMenuItem.Text = "Build";
             this.buildMenuItem.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal;
             this.buildMenuItem.Click += new System.EventHandler(this.BuildMenuItem_Click);
@@ -433,7 +428,7 @@ namespace ContentTool
             this.rebuildMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.rebuildMenuItem.Name = "rebuildMenuItem";
             this.rebuildMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F8)));
-            this.rebuildMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.rebuildMenuItem.Size = new System.Drawing.Size(150, 22);
             this.rebuildMenuItem.Text = "Rebuild";
             this.rebuildMenuItem.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal;
             this.rebuildMenuItem.Click += new System.EventHandler(this.RebuildMenuItem_Click);
@@ -444,7 +439,7 @@ namespace ContentTool
             this.cleanMenuItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.cleanMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.cleanMenuItem.Name = "cleanMenuItem";
-            this.cleanMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.cleanMenuItem.Size = new System.Drawing.Size(150, 22);
             this.cleanMenuItem.Text = "Clean";
             this.cleanMenuItem.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal;
             this.cleanMenuItem.Click += new System.EventHandler(this.CleanMenuItem_Click);
@@ -456,7 +451,7 @@ namespace ContentTool
             this.cancelMenuItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.cancelMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
             this.cancelMenuItem.Name = "cancelMenuItem";
-            this.cancelMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.cancelMenuItem.Size = new System.Drawing.Size(150, 22);
             this.cancelMenuItem.Text = "Cancel Build";
             this.cancelMenuItem.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal;
             this.cancelMenuItem.Click += new System.EventHandler(this.CancelMenuItem_Click);
@@ -509,17 +504,28 @@ namespace ContentTool
             this.showInExplorerToolStripMenuItem.Click += new System.EventHandler(this.ContextMenu_ShowInExplorer);
             // 
             // addToolStripMenuItem1
-            //
+            // 
             this.addToolStripMenuItem1.Name = "addToolStripMenuItem1";
             this.addToolStripMenuItem1.Size = new System.Drawing.Size(161, 22);
             this.addToolStripMenuItem1.Text = "Add";
-            //
+            // 
             // closeToolStripMenuItem
             // 
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
             this.closeToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
             this.closeToolStripMenuItem.Text = "Close";
             this.closeToolStripMenuItem.Click += new System.EventHandler(this.ContextMenu_Close);
+            // 
+            // toolStripMenuItem3
+            // 
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(158, 6);
+            // 
+            // buildToolStripMenuItem2
+            // 
+            this.buildToolStripMenuItem2.Name = "buildToolStripMenuItem2";
+            this.buildToolStripMenuItem2.Size = new System.Drawing.Size(161, 22);
+            this.buildToolStripMenuItem2.Text = "Build";
             // 
             // contextMenuStrip_file
             // 
@@ -538,26 +544,26 @@ namespace ContentTool
             this.showInExplorerToolStripMenuItem1.Size = new System.Drawing.Size(161, 22);
             this.showInExplorerToolStripMenuItem1.Text = "Show in Explorer";
             this.showInExplorerToolStripMenuItem1.Click += new System.EventHandler(this.ContextMenu_ShowInExplorer);
-            //
+            // 
             // renameToolStripMenuItem1
-            //
+            // 
             this.renameToolStripMenuItem1.Name = "renameToolStripMenuItem1";
             this.renameToolStripMenuItem1.Size = new System.Drawing.Size(161, 22);
             this.renameToolStripMenuItem1.Text = "Rename";
-            //
+            // 
             // deleteToolStripMenuItem
             // 
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
             this.deleteToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
             this.deleteToolStripMenuItem.Text = "Delete";
-            //
+            // 
             // toolStripMenuItem2
-            //
+            // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
             this.toolStripMenuItem2.Size = new System.Drawing.Size(158, 6);
-            //
+            // 
             // buildToolStripMenuItem
-            //
+            // 
             this.buildToolStripMenuItem.Name = "buildToolStripMenuItem";
             this.buildToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
             this.buildToolStripMenuItem.Text = "Build";
@@ -586,7 +592,7 @@ namespace ContentTool
             this.addToolStripMenuItem.Name = "addToolStripMenuItem";
             this.addToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
             this.addToolStripMenuItem.Text = "Add";
-            //
+            // 
             // renameToolStripMenuItem
             // 
             this.renameToolStripMenuItem.Name = "renameToolStripMenuItem";
@@ -598,57 +604,18 @@ namespace ContentTool
             this.deleteToolStripMenuItem1.Name = "deleteToolStripMenuItem1";
             this.deleteToolStripMenuItem1.Size = new System.Drawing.Size(161, 22);
             this.deleteToolStripMenuItem1.Text = "Delete";
-            this.deleteToolStripMenuItem1.Name = "deleteToolStripMenuItem1";
-            this.deleteToolStripMenuItem1.Size = new System.Drawing.Size(161, 22);
-            this.deleteToolStripMenuItem1.Text = "Delete";
-            //
-            // splitContainer_right
             // 
-            this.splitContainer_right.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer_right.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
-            this.splitContainer_right.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer_right.Name = "splitContainer_right";
-            this.splitContainer_right.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            //
-            // splitContainer_right.Panel1
-            //
-            this.splitContainer_right.Panel1.Controls.Add(this.panel_editor);
-            //
-            // splitContainer_right.Panel2
-            //
-            this.splitContainer_right.Panel2.Controls.Add(this.txtLog);
-            this.splitContainer_right.Size = new System.Drawing.Size(486, 468);
-            this.splitContainer_right.SplitterDistance = 284;
-            this.splitContainer_right.TabIndex = 1;
-            //
-            // panel_editor
-            //
-            this.panel_editor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panel_editor.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel_editor.Location = new System.Drawing.Point(0, 0);
-            this.panel_editor.Name = "panel_editor";
-            this.panel_editor.Size = new System.Drawing.Size(486, 284);
-            this.panel_editor.TabIndex = 0;
+            // toolStripMenuItem1
+            // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.Size = new System.Drawing.Size(158, 6);
-            //
+            // 
             // buildToolStripMenuItem1
-            //
+            // 
             this.buildToolStripMenuItem1.Name = "buildToolStripMenuItem1";
             this.buildToolStripMenuItem1.Size = new System.Drawing.Size(161, 22);
             this.buildToolStripMenuItem1.Text = "Build";
-            //
-            // toolStripMenuItem3
-            //
-            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(158, 6);
-            //
-            // buildToolStripMenuItem2
-            //
-            this.buildToolStripMenuItem2.Name = "buildToolStripMenuItem2";
-            this.buildToolStripMenuItem2.Size = new System.Drawing.Size(161, 22);
-            this.buildToolStripMenuItem2.Text = "Build";
-            //
+            // 
             // frmMain
             // 
             this.ClientSize = new System.Drawing.Size(681, 492);
@@ -657,15 +624,23 @@ namespace ContentTool
             this.Name = "frmMain";
             this.Text = "Content Pipeline";
             this.Load += new System.EventHandler(this.FrmMain_Load);
+            this.splitContainer_main.Panel1.ResumeLayout(false);
+            this.splitContainer_main.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer_main)).EndInit();
+            this.splitContainer_main.ResumeLayout(false);
+            this.splitContainer_left.Panel1.ResumeLayout(false);
+            this.splitContainer_left.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer_left)).EndInit();
+            this.splitContainer_left.ResumeLayout(false);
+            this.splitContainer_right.Panel1.ResumeLayout(false);
+            this.splitContainer_right.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer_right)).EndInit();
+            this.splitContainer_right.ResumeLayout(false);
             this.mainMenu.ResumeLayout(false);
             this.mainMenu.PerformLayout();
             this.contextMenuStrip_project.ResumeLayout(false);
             this.contextMenuStrip_file.ResumeLayout(false);
             this.contextMenuStrip_folder.ResumeLayout(false);
-            this.splitContainer_right.Panel1.ResumeLayout(false);
-            this.splitContainer_right.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer_right)).EndInit();
-            this.splitContainer_right.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
