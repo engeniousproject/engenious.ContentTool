@@ -99,12 +99,15 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
+    <None Include="..\libs\Assimp64.so">
+      <Link>Assimp64.so</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="app.config" />
     <None Include="OpenTK.dll.config" />
     <None Include="Resources\Licenses.txt" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\ContentPipeline\engenious.Pipeline.csproj">
       <Project>{9771E0FC-D752-4D7A-89E4-4F6FA2EC3C1D}</Project>
@@ -135,5 +138,15 @@
     <None Include="Resources\project.png">
       <LogicalName>project</LogicalName>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\libs\Assimp32.dll">
+      <Link>Assimp32.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\libs\Assimp64.dll">
+      <Link>Assimp64.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 </Project>
