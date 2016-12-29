@@ -86,7 +86,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "NewFolderDialog";
+            this.FileName = "NewFolderDialog";
             this.Text = "New Folder";
             this.ResumeLayout(false);
             this.PerformLayout();

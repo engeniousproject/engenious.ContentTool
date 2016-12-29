@@ -10,6 +10,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using ContentTool.Builder;
 using ContentTool.Commands;
+using ContentTool.Items;
 using engenious.Content.Pipeline;
 using engenious.Pipeline.Pipeline.Editors;
 
@@ -17,12 +18,7 @@ namespace ContentTool
 {
     public partial class frmMain : Form
     {
-        //TODO: architecture
-        //private string currentFile;
-
         private ContentProject currentProject;
-
-        private static string lastFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), ".engenious");
 
         private ContentProject CurrentProject
         {
@@ -87,13 +83,8 @@ namespace ContentTool
                 }
             }
 
-            if (File.Exists(lastFile))
-            {
-                var last = File.ReadAllText(lastFile);
-                if (File.Exists(last))
-                    OpenFile(last);
-
-            }
+            if (File.Exists(Program.Configuration.LastFile))
+                OpenFile(Program.Configuration.LastFile);
         }
 
         #region Build Events
@@ -627,6 +618,9 @@ namespace ContentTool
         /// <param name="file"></param>
         private void OpenFile(string file)
         {
+            Program.Configuration.LastFile = file;
+            Program.Configuration.Save();
+
             CurrentProject = ContentProject.Load(file);
             CurrentProject.CollectionChanged += CurrentProject_CollectionChanged;
             CurrentProject.PropertyChanged += CurrentProject_PropertyChanged;

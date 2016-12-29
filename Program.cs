@@ -7,11 +7,15 @@ using System.Runtime.Serialization.Formatters.Binary;
 using OpenTK;
 using OpenTK.Graphics;
 using ContentTool.Builder;
+using ContentTool.Items;
 
 namespace ContentTool
 {
     class Program
     {
+
+        public static ToolConfiguration Configuration { get; set; }
+
         internal static string MakePathRelative(string filename)
         {
             try
@@ -32,6 +36,8 @@ namespace ContentTool
 
             Arguments = new Arguments();
             Arguments.ParseArguments(args);
+
+            Configuration = ToolConfiguration.Load();
 
             if (Arguments.Hidden)
             {

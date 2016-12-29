@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Linq;
-using System.Xml.Serialization;
-using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Xml;
+using System.Xml.Serialization;
 
-namespace ContentTool
+namespace ContentTool.Items
 {
     [Serializable()]
     public class ContentFile : ContentItem

@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Xml;
 
-namespace ContentTool
+namespace ContentTool.Items
 {
     public enum Configuration
     {

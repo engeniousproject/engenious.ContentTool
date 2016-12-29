@@ -1,4 +1,6 @@
-﻿namespace ContentTool.Commands
+﻿using ContentTool.Items;
+
+namespace ContentTool.Commands
 {
     public static class DeleteItem
     {

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ContentTool.Dialog;
+using ContentTool.Items;
 
 namespace ContentTool.Commands
 {
@@ -20,7 +21,7 @@ namespace ContentTool.Commands
 
             if (addFolderForm.ShowDialog() == DialogResult.OK)
             {
-                var name = addFolderForm.Name;
+                var name = addFolderForm.FileName;
                 var itemPath = Path.Combine(Path.GetDirectoryName(currentFile), selectedItem.getPath());
                 var folderPath = Path.Combine(itemPath, name);
 

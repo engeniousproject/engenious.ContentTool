@@ -1,10 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
-using engenious.Pipeline;
-using System.Collections.Generic;
 using System.Xml;
 
-namespace ContentTool
+namespace ContentTool.Items
 {
     [System.Xml.Serialization.XmlInclude(typeof(ContentFolder))]
     [System.Xml.Serialization.XmlInclude(typeof(ContentFile))]

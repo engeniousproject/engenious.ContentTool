@@ -12,7 +12,7 @@ namespace ContentTool.Dialog
 {
     public partial class NewFolderDialog : Form
     {
-        public string Name { get; set; }
+        public string FileName { get; set; }
 
         public NewFolderDialog()
         {
@@ -23,14 +23,14 @@ namespace ContentTool.Dialog
         private void button_ok_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.OK;
-            Name = textBox_name.Text;
+            FileName = textBox_name.Text;
             Close();
         }
 
         private void button_cancel_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
-            Name = textBox_name.Text;
+            FileName = textBox_name.Text;
             Close();
         }
 

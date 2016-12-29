@@ -4,6 +4,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using ContentTool.Items;
 using engenious.Content.Pipeline;
 
 namespace ContentTool.Builder

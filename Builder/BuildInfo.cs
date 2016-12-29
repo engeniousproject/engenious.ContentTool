@@ -19,11 +19,13 @@ namespace  ContentTool.Builder
         {
             Dependencies = new List<string>();
         }
+
         public void Refresh(string importPath)
         {
             string inputFile = Path.Combine(importPath,InputFile);
             InputTime=new FileInfo(inputFile).LastWriteTimeUtc;
         }
+
         public void BuildDone(string outputPath)
         {
             string outputFile = Path.Combine(outputPath,OutputFile);

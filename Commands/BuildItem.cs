@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ContentTool.Builder;
+using ContentTool.Items;
 
 namespace ContentTool.Commands
 {

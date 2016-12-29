@@ -5,6 +5,7 @@ using System.Drawing.Design;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms.Design;
+using ContentTool.Items;
 
 namespace ContentTool.Dialog
 {

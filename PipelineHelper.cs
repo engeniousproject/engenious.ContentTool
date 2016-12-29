@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Linq;
 using engenious.Content.Pipeline;
 using System.Linq.Expressions;
+using ContentTool.Items;
 using engenious.Pipeline.Pipeline.Editors;
 
 namespace ContentTool
