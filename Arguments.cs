@@ -10,12 +10,14 @@ namespace ContentTool
         public string ContentProject{get;private set;}
         public string ProjectDir { get; private set; }
         public bool Hidden{get;private set;}
+        public string ReadProjectProperty { get; private set; }
         public string Configuration{ get; set; }
         public BuildAction BuildAction { get; set; }
         public Arguments()
         {
             Configuration = null;
             OutputDirectory = null;
+            ReadProjectProperty = null;
             ProjectDir = Environment.CurrentDirectory;
             BuildAction = BuildAction.Build;
         }
@@ -60,6 +62,10 @@ namespace ContentTool
                     //Configuration configuration;
                     //if (Enum.TryParse(arg.Substring("/configuration:".Length),out configuration))
                     //    Configuration = configuration;
+                }
+                else if (arg.StartsWith("/readProperty:"))
+                {
+                    ReadProjectProperty = arg.Substring("/readProperty:".Length);
                 }
                 else if (arg.StartsWith("/clean"))
                 {

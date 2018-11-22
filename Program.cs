@@ -25,6 +25,27 @@ namespace ContentTool
                 try
                 {
                     var project = ContentProject.Load(string.IsNullOrEmpty(arguments.ContentProject) ? @"D:\Projects\engenious\Sample\Content\Content.ecp" : arguments.ContentProject,true);
+
+                    if (arguments.ReadProjectProperty != null)
+                    {
+                        string[] rec = arguments.ReadProjectProperty.Split(new [] {'/'}, StringSplitOptions.RemoveEmptyEntries);
+                        object currentNode = project;
+                        foreach (var r in rec)
+                        {
+                            var prop = currentNode.GetType().GetProperty(r);
+                            if (prop == null)
+                                return 3;
+
+                            currentNode = prop.GetValue(currentNode);
+                        }
+                        var res = currentNode?.ToString();
+                        if (res != null)
+                            Console.WriteLine(res);
+                        else
+                            return 3;
+                        
+                        return 0;
+                    }
                     
                     project.OutputDirectory = arguments.OutputDirectory ?? project.OutputDirectory;
                     project.Configuration = arguments.Configuration ?? project.Configuration;
