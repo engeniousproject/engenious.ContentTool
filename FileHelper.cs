@@ -1,10 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using ContentTool.Forms.Dialogs;
-using ContentTool.Models;
+using engenious.ContentTool.Forms.Dialogs;
+using engenious.ContentTool.Models;
 
-namespace ContentTool
+namespace engenious.ContentTool
 {
     [Flags]
     public enum FileAction

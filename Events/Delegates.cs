@@ -1,6 +1,6 @@
-﻿using ContentTool.Models;
+﻿using engenious.ContentTool.Models;
 
-namespace ContentTool
+namespace engenious.ContentTool
 {
     public class Delegates
     {

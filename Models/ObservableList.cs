@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 
-namespace ContentTool.Models
+namespace engenious.ContentTool.Models
 {
     
     public class ObservableList<T> :  INotifyCollectionChanged, IList<T>, INotifyPropertyChanged

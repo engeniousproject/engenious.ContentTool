@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ContentTool.Models.History
+namespace engenious.ContentTool.Models.History
 {
     public class History : IHistory
     {

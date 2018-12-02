@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace ContentTool.Controls
+namespace engenious.ContentTool.Controls
 {
     partial class ConsoleView
     {
@@ -43,11 +43,11 @@ namespace ContentTool.Controls
             // richTextBox
             // 
             this.richTextBox.Dock = DockStyle.Fill;
-            this.richTextBox.Location = new Point(0, 0);
+            this.richTextBox.Location = new System.Drawing.Point(0, 0);
             this.richTextBox.Name = "richTextBox";
             this.richTextBox.ReadOnly = true;
             this.richTextBox.ShortcutsEnabled = false;
-            this.richTextBox.Size = new Size(396, 342);
+            this.richTextBox.Size = new System.Drawing.Size(396, 342);
             this.richTextBox.TabIndex = 0;
             this.richTextBox.Text = "";
             this.richTextBox.MouseClick += new MouseEventHandler(this.ConsoleView_MouseClick);
@@ -57,12 +57,12 @@ namespace ContentTool.Controls
             this.contextMenuStrip.Items.AddRange(new ToolStripItem[] {
             this.clearToolStripMenuItem});
             this.contextMenuStrip.Name = "contextMenuStrip";
-            this.contextMenuStrip.Size = new Size(102, 26);
+            this.contextMenuStrip.Size = new System.Drawing.Size(102, 26);
             // 
             // clearToolStripMenuItem
             // 
             this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
-            this.clearToolStripMenuItem.Size = new Size(101, 22);
+            this.clearToolStripMenuItem.Size = new System.Drawing.Size(101, 22);
             this.clearToolStripMenuItem.Text = "Clear";
             this.clearToolStripMenuItem.Click += new EventHandler(this.clearToolStripMenuItem_Click);
             // 
@@ -72,7 +72,7 @@ namespace ContentTool.Controls
             this.AutoScaleMode = AutoScaleMode.Font;
             this.Controls.Add(this.richTextBox);
             this.Name = "ConsoleView";
-            this.Size = new Size(396, 342);
+            this.Size = new System.Drawing.Size(396, 342);
             this.MouseClick += new MouseEventHandler(this.ConsoleView_MouseClick);
             this.contextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);

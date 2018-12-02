@@ -3,10 +3,10 @@ using System.Drawing;
 using System.IO;
 using System.Linq.Expressions;
 using System.Windows.Forms;
-using ContentTool.Models;
-using ContentTool.Models.History;
+using engenious.ContentTool.Models;
+using engenious.ContentTool.Models.History;
 
-namespace ContentTool.Viewer.Viewers
+namespace engenious.ContentTool.Viewer.Viewers
 {
     [ViewerInfo(".png", false)]
     [ViewerInfo(".bmp", false)]

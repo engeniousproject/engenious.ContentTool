@@ -4,9 +4,9 @@ using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
-using ContentTool.Observer;
+using engenious.ContentTool.Observer;
 
-namespace ContentTool.Models
+namespace engenious.ContentTool.Models
 {
     public abstract class ContentItem : INotifyPropertyValueChanged,INotifyCollectionChanged
     {

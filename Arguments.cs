@@ -1,7 +1,7 @@
 ﻿using System;
-using ContentTool.Builder;
+using engenious.ContentTool.Builder;
 
-namespace ContentTool
+namespace engenious.ContentTool
 {
     
     public class Arguments

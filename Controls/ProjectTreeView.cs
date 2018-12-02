@@ -7,12 +7,12 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
-using ContentTool.Forms;
-using ContentTool.Models;
-using static ContentTool.Delegates;
-using PropertyValueChangedEventArgs = ContentTool.Observer.PropertyValueChangedEventArgs;
+using engenious.ContentTool.Forms;
+using engenious.ContentTool.Models;
+using static engenious.ContentTool.Delegates;
+using PropertyValueChangedEventArgs = engenious.ContentTool.Observer.PropertyValueChangedEventArgs;
 
-namespace ContentTool.Controls
+namespace engenious.ContentTool.Controls
 {
     public partial class ProjectTreeView : UserControl
     {
@@ -40,7 +40,7 @@ namespace ContentTool.Controls
             }
         }
 
-        private void ProjectOnPropertyChanged(object sender, PropertyValueChangedEventArgs args)
+        private void ProjectOnPropertyChanged(object sender, Observer.PropertyValueChangedEventArgs args)
         {
             var contentNode = sender as ContentItem;
             var node = GetNodeFromItem(contentNode);
@@ -406,12 +406,12 @@ namespace ContentTool.Controls
 
         public event EventHandler Refreshed;
 
-        public event ItemActionEventHandler BuildItemClick;
-        public event ItemActionEventHandler ShowInExplorerItemClick;
-        public event FolderAddActionEventHandler AddExistingFolderClick;
-        public event FolderAddActionEventHandler AddNewFolderClick;
-        public event FolderAddActionEventHandler AddExistingItemClick;
-        public event ItemActionEventHandler RemoveItemClick;
+        public event Delegates.ItemActionEventHandler BuildItemClick;
+        public event Delegates.ItemActionEventHandler ShowInExplorerItemClick;
+        public event Delegates.FolderAddActionEventHandler AddExistingFolderClick;
+        public event Delegates.FolderAddActionEventHandler AddNewFolderClick;
+        public event Delegates.FolderAddActionEventHandler AddExistingItemClick;
+        public event Delegates.ItemActionEventHandler RemoveItemClick;
 
         private void treeView_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
         {

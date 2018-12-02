@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using ContentTool.Observer;
+using engenious.ContentTool.Observer;
 
-namespace ContentTool.Models
+namespace engenious.ContentTool.Models
 {
     public class ContentItemCollection : INotifyCollectionChanged, IList<ContentItem>, INotifyPropertyValueChanged
     {

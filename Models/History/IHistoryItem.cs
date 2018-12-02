@@ -1,4 +1,4 @@
-namespace ContentTool.Models.History
+namespace engenious.ContentTool.Models.History
 {
     public interface IHistoryItem
     {

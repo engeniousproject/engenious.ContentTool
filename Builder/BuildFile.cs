@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using engenious.Pipeline;
 
-namespace ContentTool.Builder
+namespace engenious.ContentTool.Builder
 {
     [Serializable]
     public class BuildFile

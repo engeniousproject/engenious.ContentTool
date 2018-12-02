@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace ContentTool.Controls
+namespace engenious.ContentTool.Controls
 {
     public partial class ConsoleView : UserControl
     {
@@ -11,7 +11,7 @@ namespace ContentTool.Controls
             InitializeComponent();
         }
 
-        public void Write(string text, Color color = default(Color))
+        public void Write(string text, System.Drawing.Color color = default(System.Drawing.Color))
         {
             richTextBox.SelectionStart = richTextBox.TextLength;
             richTextBox.SelectionLength = 0;
@@ -19,7 +19,7 @@ namespace ContentTool.Controls
             richTextBox.AppendText(text);
         }
 
-        public void WriteLine(string text, Color color = default(Color))
+        public void WriteLine(string text, System.Drawing.Color color = default(System.Drawing.Color))
         {
             Write(text + Environment.NewLine, color);
         }

@@ -4,9 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
-using ContentTool.Models;
+using engenious.ContentTool.Models;
 
-namespace ContentTool.Viewer
+namespace engenious.ContentTool.Viewer
 {
     public class ViewerManager
     {

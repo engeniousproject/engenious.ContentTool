@@ -2,7 +2,7 @@
 using System.IO;
 using System.Xml.Linq;
 
-namespace ContentTool.Models
+namespace engenious.ContentTool.Models
 {
     public class ContentFolder : ContentItem
     {

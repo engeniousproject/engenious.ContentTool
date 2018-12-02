@@ -1,10 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
-using ContentTool.Models;
-using ContentTool.Models.History;
+using engenious.ContentTool.Models;
+using engenious.ContentTool.Models.History;
 
-namespace ContentTool.Viewer.Viewers
+namespace engenious.ContentTool.Viewer.Viewers
 {
     [ViewerInfo(".txt", false)]
     [ViewerInfo(".glsl", false)]

@@ -5,7 +5,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace ContentTool.Models.History
+namespace engenious.ContentTool.Models.History
 {
     public class HistoryCollectionChange<T> : IHistoryItem
     {

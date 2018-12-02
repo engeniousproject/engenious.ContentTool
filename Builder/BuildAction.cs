@@ -1,4 +1,4 @@
-﻿namespace ContentTool.Builder
+﻿namespace engenious.ContentTool.Builder
 {
     public enum BuildAction
     {

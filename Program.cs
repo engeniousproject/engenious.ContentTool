@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Windows.Forms;
-using ContentTool.Builder;
-using ContentTool.Forms;
-using ContentTool.Models;
-using ContentTool.Presenters;
 using engenious.Content.Pipeline;
+using engenious.ContentTool.Builder;
+using engenious.ContentTool.Forms;
+using engenious.ContentTool.Models;
+using engenious.ContentTool.Presenters;
 
-namespace ContentTool
+namespace engenious.ContentTool
 {
     internal static class Program
     {

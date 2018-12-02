@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace ContentTool.Viewer.Viewers
+namespace engenious.ContentTool.Viewer.Viewers
 {
     partial class TextViewer
     {
@@ -39,9 +39,9 @@ namespace ContentTool.Viewer.Viewers
             // richTextBox
             // 
             this.richTextBox.Dock = DockStyle.Fill;
-            this.richTextBox.Location = new Point(0, 0);
+            this.richTextBox.Location = new System.Drawing.Point(0, 0);
             this.richTextBox.Name = "richTextBox";
-            this.richTextBox.Size = new Size(150, 150);
+            this.richTextBox.Size = new System.Drawing.Size(150, 150);
             this.richTextBox.TabIndex = 0;
             this.richTextBox.Text = "";
             // 

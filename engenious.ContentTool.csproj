@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net461</TargetFramework>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <Description>engenious content-tool for engenious content projects(.ecp).</Description>
+    </PropertyGroup>
+    <ItemGroup>
+        <Reference Include="System.Windows.Forms"/>
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\engenious\engenious.csproj" Condition="Exists('..\engenious\engenious.csproj')"/>
+        <PackageReference Include="engenious" Version="*" Condition="!Exists('..\engenious\engenious.csproj')"/>
+
+        <ProjectReference Include="..\engenious.Pipeline\engenious.Pipeline.csproj" Condition="Exists('..\engenious.Pipeline\engenious.Pipeline.csproj')"/>
+        <PackageReference Include="engenious.Pipeline" Version="*" Condition="!Exists('..\engenious.Pipeline\engenious.Pipeline.csproj')"/>
+
+
+        <PackageReference Include="LitGit" Version="0.1.0.15-alpha" PrivateAssets="all"/>
+    </ItemGroup>
+    <ItemGroup>
+        <LitGitTemplateReference Include="engenious.ContentTool.Nuget.props.template"/>
+
+        <None Update="engenious.ContentTool.Nuget.props" Condition="Exists('engenious.ContentTool.Nuget.props')">
+            <DependentUpon>engenious.ContentTool.Nuget.props.template</DependentUpon>
+        </None>
+    </ItemGroup>
+
+    <Import Project="engenious.ContentTool.Nuget.props" Condition="Exists('engenious.ContentTool.Nuget.props')"/>
+</Project>

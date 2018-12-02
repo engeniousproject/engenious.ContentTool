@@ -1,8 +1,8 @@
 ﻿using System.Windows.Forms;
-using ContentTool.Models;
-using ContentTool.Models.History;
+using engenious.ContentTool.Models;
+using engenious.ContentTool.Models.History;
 
-namespace ContentTool.Viewer
+namespace engenious.ContentTool.Viewer
 {
     public interface IViewer
     {

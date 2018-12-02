@@ -6,10 +6,10 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Xml.Linq;
-using ContentTool.Controls;
 using engenious.Content.Pipeline;
+using engenious.ContentTool.Controls;
 
-namespace ContentTool.Models
+namespace engenious.ContentTool.Models
 {
     public class ContentFile : ContentItem
     {

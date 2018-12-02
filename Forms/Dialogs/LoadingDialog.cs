@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace ContentTool.Forms.Dialogs
+namespace engenious.ContentTool.Forms.Dialogs
 {
     public partial class LoadingDialog : Form
     {

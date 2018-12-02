@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ContentTool.Models.History
+namespace engenious.ContentTool.Models.History
 {
     public interface IHistory : IHistoryItem
     {

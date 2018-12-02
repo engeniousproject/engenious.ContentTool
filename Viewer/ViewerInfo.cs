@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ContentTool.Viewer
+namespace engenious.ContentTool.Viewer
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
     public class ViewerInfo : Attribute

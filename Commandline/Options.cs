@@ -1,4 +1,4 @@
-﻿namespace ContentTool.Commandline
+﻿namespace engenious.ContentTool.Commandline
 {
     internal class Options
     {

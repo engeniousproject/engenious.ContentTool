@@ -1,6 +1,6 @@
 using System.ComponentModel;
 
-namespace ContentTool.Observer
+namespace engenious.ContentTool.Observer
 {
     public class PropertyValueChangedEventArgs : PropertyChangedEventArgs
     {

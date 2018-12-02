@@ -5,12 +5,12 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
-using ContentTool.Forms.Dialogs;
-using ContentTool.Models;
-using ContentTool.Viewer;
+using engenious.ContentTool.Forms.Dialogs;
+using engenious.ContentTool.Models;
+using engenious.ContentTool.Viewer;
 using Timer = System.Windows.Forms.Timer;
 
-namespace ContentTool.Forms
+namespace engenious.ContentTool.Forms
 {
     public partial class MainShell : Form, IMainShell
     {
@@ -224,8 +224,8 @@ namespace ContentTool.Forms
             }
         }
 
-        public void WriteLog(string text, Color color = default(Color)) => consoleView.Write(text, color);
-        public void WriteLineLog(string text, Color color = default(Color)) => consoleView.WriteLine(text, color);
+        public void WriteLog(string text, System.Drawing.Color color = default(System.Drawing.Color)) => consoleView.Write(text, color);
+        public void WriteLineLog(string text, System.Drawing.Color color = default(System.Drawing.Color)) => consoleView.WriteLine(text, color);
         public void ClearLog() => consoleView.Clear();
 
         public void ShowLoading(string title = "Please wait...")

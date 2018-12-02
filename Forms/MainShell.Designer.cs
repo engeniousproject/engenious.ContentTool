@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel;
 using System.Windows.Forms;
-using ContentTool.Controls;
+using engenious.ContentTool.Controls;
 
-namespace ContentTool.Forms
+namespace engenious.ContentTool.Forms
 {
     partial class MainShell
     {
@@ -373,7 +373,7 @@ namespace ContentTool.Forms
             // toolStripButton_new
             // 
             this.toolStripButton_new.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton_new.Image = global::ContentTool.Properties.Resources.Objects;
+            this.toolStripButton_new.Image = global::engenious.ContentTool.Properties.Resources.Objects;
             this.toolStripButton_new.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton_new.Name = "toolStripButton_new";
             this.toolStripButton_new.Size = new System.Drawing.Size(24, 24);
@@ -382,7 +382,7 @@ namespace ContentTool.Forms
             // toolStripButton_open
             // 
             this.toolStripButton_open.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton_open.Image = global::ContentTool.Properties.Resources.Open_folder;
+            this.toolStripButton_open.Image = global::engenious.ContentTool.Properties.Resources.Open_folder;
             this.toolStripButton_open.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton_open.Name = "toolStripButton_open";
             this.toolStripButton_open.Size = new System.Drawing.Size(24, 24);
@@ -391,7 +391,7 @@ namespace ContentTool.Forms
             // toolStripButton_save
             // 
             this.toolStripButton_save.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton_save.Image = global::ContentTool.Properties.Resources.Save;
+            this.toolStripButton_save.Image = global::engenious.ContentTool.Properties.Resources.Save;
             this.toolStripButton_save.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton_save.Name = "toolStripButton_save";
             this.toolStripButton_save.Size = new System.Drawing.Size(24, 24);
@@ -406,7 +406,7 @@ namespace ContentTool.Forms
             // toolStripButton_newItemAdd
             // 
             this.toolStripButton_newItemAdd.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton_newItemAdd.Image = global::ContentTool.Properties.Resources.New_file;
+            this.toolStripButton_newItemAdd.Image = global::engenious.ContentTool.Properties.Resources.New_file;
             this.toolStripButton_newItemAdd.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton_newItemAdd.Name = "toolStripButton_newItemAdd";
             this.toolStripButton_newItemAdd.Size = new System.Drawing.Size(24, 24);
@@ -416,7 +416,7 @@ namespace ContentTool.Forms
             // toolStripButton_existingItemAdd
             // 
             this.toolStripButton_existingItemAdd.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton_existingItemAdd.Image = global::ContentTool.Properties.Resources.Import;
+            this.toolStripButton_existingItemAdd.Image = global::engenious.ContentTool.Properties.Resources.Import;
             this.toolStripButton_existingItemAdd.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton_existingItemAdd.Name = "toolStripButton_existingItemAdd";
             this.toolStripButton_existingItemAdd.Size = new System.Drawing.Size(24, 24);
@@ -426,7 +426,7 @@ namespace ContentTool.Forms
             // toolStripButton_newFolderAdd
             // 
             this.toolStripButton_newFolderAdd.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton_newFolderAdd.Image = global::ContentTool.Properties.Resources.Add_folder;
+            this.toolStripButton_newFolderAdd.Image = global::engenious.ContentTool.Properties.Resources.Add_folder;
             this.toolStripButton_newFolderAdd.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton_newFolderAdd.Name = "toolStripButton_newFolderAdd";
             this.toolStripButton_newFolderAdd.Size = new System.Drawing.Size(24, 24);
@@ -436,7 +436,7 @@ namespace ContentTool.Forms
             // toolStripButton_existingFolderAdd
             // 
             this.toolStripButton_existingFolderAdd.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton_existingFolderAdd.Image = global::ContentTool.Properties.Resources.Open_folder;
+            this.toolStripButton_existingFolderAdd.Image = global::engenious.ContentTool.Properties.Resources.Open_folder;
             this.toolStripButton_existingFolderAdd.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton_existingFolderAdd.Name = "toolStripButton_existingFolderAdd";
             this.toolStripButton_existingFolderAdd.Size = new System.Drawing.Size(24, 24);
@@ -451,7 +451,7 @@ namespace ContentTool.Forms
             // toolStripButton_build
             // 
             this.toolStripButton_build.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton_build.Image = global::ContentTool.Properties.Resources.Equipment;
+            this.toolStripButton_build.Image = global::engenious.ContentTool.Properties.Resources.Equipment;
             this.toolStripButton_build.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton_build.Name = "toolStripButton_build";
             this.toolStripButton_build.Size = new System.Drawing.Size(24, 24);
@@ -461,7 +461,7 @@ namespace ContentTool.Forms
             // toolStripButton_clean
             // 
             this.toolStripButton_clean.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton_clean.Image = global::ContentTool.Properties.Resources.Eraser;
+            this.toolStripButton_clean.Image = global::engenious.ContentTool.Properties.Resources.Eraser;
             this.toolStripButton_clean.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton_clean.Name = "toolStripButton_clean";
             this.toolStripButton_clean.Size = new System.Drawing.Size(24, 24);

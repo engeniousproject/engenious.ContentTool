@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Windows.Forms;
 using engenious.Content.Pipeline;
 
-namespace ContentTool.Controls
+namespace engenious.ContentTool.Controls
 {
     public partial class ItemPropertyView : PropertyGrid
     {

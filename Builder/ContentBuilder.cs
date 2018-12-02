@@ -7,12 +7,12 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
-using ContentTool.Models;
 using engenious.Content.Pipeline;
 using engenious.Content.Serialization;
+using engenious.ContentTool.Models;
 using Microsoft.CSharp;
 
-namespace ContentTool.Builder
+namespace engenious.ContentTool.Builder
 {
     public class ContentBuilder
     {

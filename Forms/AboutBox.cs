@@ -3,7 +3,7 @@ using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 
-namespace ContentTool.Forms
+namespace engenious.ContentTool.Forms
 {
     partial class AboutBox : Form
     {

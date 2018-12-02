@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace ContentTool.Forms.Dialogs
+namespace engenious.ContentTool.Forms.Dialogs
 {
     public partial class OverwriteDialog : Form
     {

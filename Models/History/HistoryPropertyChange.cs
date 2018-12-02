@@ -2,7 +2,7 @@ using System;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace ContentTool.Models.History
+namespace engenious.ContentTool.Models.History
 {
     public class HistoryPropertyChange : IHistoryItem
     {

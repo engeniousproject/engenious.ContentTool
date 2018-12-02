@@ -5,7 +5,7 @@ using System.Drawing;
 using System.Drawing.Text;
 using System.Windows.Forms;
 
-namespace ContentTool.Controls
+namespace engenious.ContentTool.Controls
 {
     public class FontComboBox : ComboBox
     {

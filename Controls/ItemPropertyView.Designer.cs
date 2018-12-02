@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace ContentTool.Controls
+namespace engenious.ContentTool.Controls
 {
     partial class ItemPropertyView
     {
@@ -39,9 +39,9 @@ namespace ContentTool.Controls
             // 
             this.propertyGrid.Dock = DockStyle.Fill;
             this.propertyGrid.LineColor = SystemColors.ControlDark;
-            this.propertyGrid.Location = new Point(0, 0);
+            this.propertyGrid.Location = new System.Drawing.Point(0, 0);
             this.propertyGrid.Name = "propertyGrid";
-            this.propertyGrid.Size = new Size(150, 150);
+            this.propertyGrid.Size = new System.Drawing.Size(150, 150);
             this.propertyGrid.TabIndex = 0;
             // 
             // ItemPropertyView

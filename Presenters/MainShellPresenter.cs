@@ -6,12 +6,12 @@ using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
 using System.Xml.Linq;
-using ContentTool.Builder;
-using ContentTool.Forms;
-using ContentTool.Models;
-using ContentTool.Viewer;
+using engenious.ContentTool.Builder;
+using engenious.ContentTool.Forms;
+using engenious.ContentTool.Models;
+using engenious.ContentTool.Viewer;
 
-namespace ContentTool.Presenters
+namespace engenious.ContentTool.Presenters
 {
     internal class MainShellPresenter
     {

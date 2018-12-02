@@ -4,10 +4,10 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Xml.Linq;
-using ContentTool.Models.History;
-using ContentTool.Observer;
+using engenious.ContentTool.Models.History;
+using engenious.ContentTool.Observer;
 
-namespace ContentTool.Models
+namespace engenious.ContentTool.Models
 {
     public class ContentProject : ContentFolder
     {

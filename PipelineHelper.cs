@@ -4,11 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using ContentTool.Models;
 using engenious.Content.Pipeline;
+using engenious.ContentTool.Models;
 using engenious.Pipeline.Pipeline.Editors;
 
-namespace ContentTool
+namespace engenious.ContentTool
 {
     public static class PipelineHelper
     {

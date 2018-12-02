@@ -5,9 +5,9 @@ using System.Drawing.Design;
 using System.IO;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
-using ContentTool.Models;
+using engenious.ContentTool.Models;
 
-namespace ContentTool.Controls
+namespace engenious.ContentTool.Controls
 {
     internal class ProcessorNameDropDown : StringConverter
     {

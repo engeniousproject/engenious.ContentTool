@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using ContentTool.Models;
-using ContentTool.Viewer;
-using static ContentTool.Delegates;
+using engenious.ContentTool.Models;
+using engenious.ContentTool.Viewer;
+using static engenious.ContentTool.Delegates;
 
-namespace ContentTool.Forms
+namespace engenious.ContentTool.Forms
 {
     public interface IMainShell
     {
@@ -21,8 +21,8 @@ namespace ContentTool.Forms
         string ShowSaveAsDialog();
         string ShowIntegrateDialog();
 
-        void WriteLog(string text, Color color = default(Color));
-        void WriteLineLog(string text, Color color = default(Color));
+        void WriteLog(string text, System.Drawing.Color color = default(System.Drawing.Color));
+        void WriteLineLog(string text, System.Drawing.Color color = default(System.Drawing.Color));
         void ClearLog();
         void ShowLog();
         void HideLog();
@@ -55,27 +55,27 @@ namespace ContentTool.Forms
         event EventHandler UndoClick;
         event EventHandler RedoClick;
 
-        event ItemActionEventHandler BuildItemClick;
-        event ItemActionEventHandler ShowInExplorerItemClick;
-        event ItemActionEventHandler RemoveItemClick;
-        event ItemActionEventHandler RenameItemClick;
+        event Delegates.ItemActionEventHandler BuildItemClick;
+        event Delegates.ItemActionEventHandler ShowInExplorerItemClick;
+        event Delegates.ItemActionEventHandler RemoveItemClick;
+        event Delegates.ItemActionEventHandler RenameItemClick;
 
         event EventHandler OnShellLoad;
 
         event EventHandler RebuildClick;
         event EventHandler CleanClick;
 
-        event FolderAddActionEventHandler AddExistingFolderClick;
-        event FolderAddActionEventHandler AddNewFolderClick;
-        event FolderAddActionEventHandler AddExistingItemClick;
+        event Delegates.FolderAddActionEventHandler AddExistingFolderClick;
+        event Delegates.FolderAddActionEventHandler AddNewFolderClick;
+        event Delegates.FolderAddActionEventHandler AddExistingItemClick;
 
         event EventHandler NewProjectClick;
         event EventHandler OpenProjectClick;
-        event ItemActionEventHandler CloseProjectClick;
-        event ItemActionEventHandler SaveProjectClick;
-        event ItemActionEventHandler SaveProjectAsClick;
+        event Delegates.ItemActionEventHandler CloseProjectClick;
+        event Delegates.ItemActionEventHandler SaveProjectClick;
+        event Delegates.ItemActionEventHandler SaveProjectAsClick;
 
-        event ItemActionEventHandler OnItemSelect;
+        event Delegates.ItemActionEventHandler OnItemSelect;
         
         event EventHandler IntegrateCSClick;
 

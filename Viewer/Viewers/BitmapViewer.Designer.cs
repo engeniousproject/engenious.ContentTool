@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace ContentTool.Viewer.Viewers
+namespace engenious.ContentTool.Viewer.Viewers
 {
     partial class BitmapViewer
     {
@@ -40,9 +40,9 @@ namespace ContentTool.Viewer.Viewers
             // 
             this.pictureBox.Dock = DockStyle.Fill;
             this.pictureBox.InitialImage = null;
-            this.pictureBox.Location = new Point(0, 0);
+            this.pictureBox.Location = new System.Drawing.Point(0, 0);
             this.pictureBox.Name = "pictureBox";
-            this.pictureBox.Size = new Size(150, 150);
+            this.pictureBox.Size = new System.Drawing.Size(150, 150);
             this.pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
             this.pictureBox.TabIndex = 0;
             this.pictureBox.TabStop = false;

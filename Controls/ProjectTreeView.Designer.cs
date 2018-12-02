@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace ContentTool.Controls
+namespace engenious.ContentTool.Controls
 {
     partial class ProjectTreeView
     {
@@ -46,10 +46,10 @@ namespace ContentTool.Controls
             this.treeView.ImageIndex = 0;
             this.treeView.ImageList = this.imageList;
             this.treeView.LabelEdit = true;
-            this.treeView.Location = new Point(0, 0);
+            this.treeView.Location = new System.Drawing.Point(0, 0);
             this.treeView.Name = "treeView";
             this.treeView.SelectedImageIndex = 0;
-            this.treeView.Size = new Size(150, 150);
+            this.treeView.Size = new System.Drawing.Size(150, 150);
             this.treeView.TabIndex = 0;
             this.treeView.AfterLabelEdit += new NodeLabelEditEventHandler(this.treeView_AfterLabelEdit);
             this.treeView.KeyUp += new KeyEventHandler(this.treeView_KeyUp);
@@ -57,7 +57,7 @@ namespace ContentTool.Controls
             // imageList
             // 
             this.imageList.ImageStream = ((ImageListStreamer)(resources.GetObject("imageList.ImageStream")));
-            this.imageList.TransparentColor = Color.Transparent;
+            this.imageList.TransparentColor = System.Drawing.Color.Transparent;
             this.imageList.Images.SetKeyName(0, "project");
             this.imageList.Images.SetKeyName(1, "folder");
             this.imageList.Images.SetKeyName(2, "warning");

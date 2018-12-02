@@ -5,11 +5,11 @@ using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
 using System.Windows.Forms;
-using ContentTool.Models;
-using ContentTool.Models.History;
+using engenious.ContentTool.Models;
+using engenious.ContentTool.Models.History;
 using engenious.Pipeline;
 
-namespace ContentTool.Viewer.Viewers
+namespace engenious.ContentTool.Viewer.Viewers
 {
     [ViewerInfo(".spritefont", false)]
     public partial class SpriteFontViewer : UserControl, IViewer
