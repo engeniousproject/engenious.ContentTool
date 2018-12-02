@@ -6,5 +6,6 @@
         <Title>${PRODUCT}</Title>
         <Authors>${AUTHORS}</Authors>
         <PackageProjectUrl>${PROJECT_URL}</PackageProjectUrl>
+        <IsTool>true</IsTool>
     </PropertyGroup>
 </Project>
