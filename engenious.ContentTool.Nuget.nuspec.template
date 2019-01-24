@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>${PRODUCT}</id>
+        <version>${VERSION_FULL}</version>
+        <title>${PRODUCT}</title>
+        <authors>${AUTHORS}</authors>
+        <ProjectUrl>${PROJECT_URL}</ProjectUrl>
+        <IsTool>true</IsTool>
+        <description>engenious content-tool for engenious content projects(.ecp).</description>
+    </metadata>
+    <files>
+        <file src="bin/Debug/**/*.config" target="content" />
+        
+        <file src="engenious.ContentTool.targets" target="build" />
+        
+        <file src="bin/Debug/**/*.dll" target="tools" />
+        <file src="bin/Debug/**/*.exe" target="tools" />
+        <file src="bin/Debug/**/*.config" target="tools" />
+    </files>
+</package>
