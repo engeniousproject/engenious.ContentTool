@@ -3,6 +3,7 @@
 
 #CUSTOM FILES
 *.ego
+engenious.ContentTool.Nuget.nuspec
 engenious.ContentTool.Nuget.props
 Properties/AssemblyInfo.cs
 
