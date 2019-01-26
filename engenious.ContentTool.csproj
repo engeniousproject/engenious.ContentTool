@@ -32,6 +32,17 @@
         </None>
         
     </ItemGroup>
+    <ItemGroup>
+        <SharpFontNativeFiles Include="$(NuGetPackageRoot)sharpfont.dependencies/2.6.0/bin/msvc12/**/*.*" Condition="Exists('$(NuGetPackageRoot)sharpfont.dependencies/2.6.0/bin/msvc12/')" />
+
+    </ItemGroup>
+    <Target Name="CopySharpFontNativeFiles" BeforeTargets="Build">
+        <Copy
+                SourceFiles="@(SharpFontNativeFiles)"
+                DestinationFolder="$(OutDir)\%(RecursiveDir)" SkipUnchangedFiles="true"
+        />
+    </Target>
+    
 
     <!--<ItemGroup>
         <Content Include="engenious.targets">
