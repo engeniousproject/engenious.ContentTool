@@ -167,7 +167,7 @@
         <PackageReference Include="engenious.Pipeline" Version="*" Condition="!Exists('..\engenious.Pipeline\engenious.Pipeline.csproj')" />
 
 
-        <PackageReference Include="LitGit" Version="0.1.0.15-alpha" PrivateAssets="all" />
+        <PackageReference Include="LitGit" Version="0.1.0.17-alpha" PrivateAssets="all" />
     </ItemGroup>
     <ItemGroup>
         <LitGitTemplateReference Include="engenious.ContentTool.Nuget.nuspec.template" />
@@ -183,10 +183,7 @@
 
     </ItemGroup>
     <Target Name="CopySharpFontNativeFiles" BeforeTargets="Build">
-        <Copy
-                SourceFiles="@(SharpFontNativeFiles)"
-                DestinationFolder="$(OutDir)\%(RecursiveDir)" SkipUnchangedFiles="true"
-        />
+        <Copy SourceFiles="@(SharpFontNativeFiles)" DestinationFolder="$(OutDir)\%(RecursiveDir)" SkipUnchangedFiles="true" />
     </Target>
     
 
