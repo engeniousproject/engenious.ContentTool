@@ -585,7 +585,7 @@ namespace engenious.ContentTool.Forms
             this.Controls.Add(this.menuStrip_main);
             this.MainMenuStrip = this.menuStrip_main;
             this.Name = "MainShell";
-            this.Text = "MainShell";
+            this.Text = "Content Tool";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainShell_FormClosing);
             this.menuStrip_main.ResumeLayout(false);
             this.menuStrip_main.PerformLayout();
