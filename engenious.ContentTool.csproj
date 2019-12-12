@@ -12,7 +12,8 @@
 
         <IncludeBuiltProjectOutputGroup>true</IncludeBuiltProjectOutputGroup>
         <NuspecFile>engenious.ContentTool.Nuget.nuspec</NuspecFile>
-        <ApplicationIcon />
+		<NuspecProperties>configuration=$(Configuration)</NuspecProperties>
+		<ApplicationIcon />
         <StartupObject />
     </PropertyGroup>
     <ItemGroup>
