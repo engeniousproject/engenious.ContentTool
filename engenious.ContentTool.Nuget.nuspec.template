@@ -10,12 +10,12 @@
         <description>engenious content-tool for engenious content projects(.ecp).</description>
     </metadata>
     <files>
-        <file src="bin\$configuration$\**\*.config" target="content" />
+        <file src="bin/$configuration$/**/*.config" target="content" />
         
         <file src="engenious.ContentTool.targets" target="build" />
         
-        <file src="bin\$configuration$\**\*.dll" target="tools" />
-        <file src="bin\$configuration$\**\*.exe" target="tools" />
-        <file src="bin\$configuration$\**\*.config" target="tools" />
+        <file src="bin/$configuration$/**/*.dll" target="tools" />
+        <file src="bin/$configuration$/**/*.exe" target="tools" />
+        <file src="bin/$configuration$/**/*.config" target="tools" />
     </files>
 </package>
