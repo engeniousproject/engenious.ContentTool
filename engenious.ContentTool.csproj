@@ -164,7 +164,7 @@
     <ItemGroup>
         <PackageReference Include="System.Resources.Extensions" Version="4.7.0" />
         <ProjectReference Include="..\engenious\engenious.csproj" Condition="Exists('..\engenious\engenious.csproj')" />
-        <PackageReference Include="engenious" Version="*" Condition="!Exists('..\engenious\engenious.csproj')" />
+        <PackageReference Include="engenious" Version="0.3.0.29-alpha" Condition="!Exists('..\engenious\engenious.csproj')" />
 
         <ProjectReference Include="..\engenious.Pipeline\engenious.Pipeline.csproj" Condition="Exists('..\engenious.Pipeline\engenious.Pipeline.csproj')" />
         <PackageReference Include="engenious.Pipeline" Version="0.3.0.6-alpha" Condition="!Exists('..\engenious.Pipeline\engenious.Pipeline.csproj')" />
