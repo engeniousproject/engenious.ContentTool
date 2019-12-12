@@ -7,6 +7,8 @@
 
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <Description>engenious content-tool for engenious content projects(.ecp).</Description>
+		
+		<GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
 
         <IncludeBuiltProjectOutputGroup>true</IncludeBuiltProjectOutputGroup>
         <NuspecFile>engenious.ContentTool.Nuget.nuspec</NuspecFile>
@@ -160,6 +162,7 @@
 		</Compile>
 	</ItemGroup>
     <ItemGroup>
+        <PackageReference Include="System.Resources.Extensions" Version="4.7.0" />
         <ProjectReference Include="..\engenious\engenious.csproj" Condition="Exists('..\engenious\engenious.csproj')" />
         <PackageReference Include="engenious" Version="*" Condition="!Exists('..\engenious\engenious.csproj')" />
 
