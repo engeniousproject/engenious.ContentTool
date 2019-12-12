@@ -12,7 +12,7 @@
 
         <IncludeBuiltProjectOutputGroup>true</IncludeBuiltProjectOutputGroup>
         <NuspecFile>engenious.ContentTool.Nuget.nuspec</NuspecFile>
-		<NuspecProperties>configuration=$(Configuration)</NuspecProperties>
+		<NuspecProperties>configuration=$(Configuration);framework=$(TargetFramework)</NuspecProperties>
 		<ApplicationIcon />
         <StartupObject />
     </PropertyGroup>
