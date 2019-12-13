@@ -171,7 +171,7 @@
         <PackageReference Include="engenious.Pipeline" Version="0.3.0.6-alpha" Condition="!Exists('..\engenious.Pipeline\engenious.Pipeline.csproj')" />
 
 
-        <PackageReference Include="LitGit" Version="0.1.0.17-alpha" PrivateAssets="all" />
+        <PackageReference Include="LitGit" Version="0.2.0.11-alpha" PrivateAssets="all" />
     </ItemGroup>
     <ItemGroup>
         <LitGitTemplateReference Include="engenious.ContentTool.Nuget.nuspec.template" />
