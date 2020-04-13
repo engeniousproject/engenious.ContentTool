@@ -163,7 +163,7 @@
 		</Compile>
 	</ItemGroup>
     <ItemGroup>
-        <PackageReference Include="System.Resources.Extensions" Version="4.7.0" />
+        <PackageReference Include="System.Resources.Extensions" Version="4.6.0" />
         <ProjectReference Include="..\engenious\engenious.csproj" Condition="Exists('..\engenious\engenious.csproj')" />
         <PackageReference Include="engenious" Version="0.3.0.29-alpha" Condition="!Exists('..\engenious\engenious.csproj')" />
 
