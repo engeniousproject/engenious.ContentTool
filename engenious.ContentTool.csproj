@@ -163,6 +163,7 @@
 		</Compile>
 	</ItemGroup>
     <ItemGroup>
+        <PackageReference Include="SharpFont.Dependencies" Version="2.6.0" />
         <PackageReference Include="System.Resources.Extensions" Version="4.6.0" />
         <ProjectReference Include="..\engenious\engenious.csproj" Condition="Exists('..\engenious\engenious.csproj')" />
         <PackageReference Include="engenious" Version="0.3.0.33-alpha" Condition="!Exists('..\engenious\engenious.csproj')" />
