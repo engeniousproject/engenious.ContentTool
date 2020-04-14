@@ -165,10 +165,10 @@
     <ItemGroup>
         <PackageReference Include="System.Resources.Extensions" Version="4.6.0" />
         <ProjectReference Include="..\engenious\engenious.csproj" Condition="Exists('..\engenious\engenious.csproj')" />
-        <PackageReference Include="engenious" Version="0.3.0.29-alpha" Condition="!Exists('..\engenious\engenious.csproj')" />
+        <PackageReference Include="engenious" Version="0.3.0.33-alpha" Condition="!Exists('..\engenious\engenious.csproj')" />
 
         <ProjectReference Include="..\engenious.Pipeline\engenious.Pipeline.csproj" Condition="Exists('..\engenious.Pipeline\engenious.Pipeline.csproj')" />
-        <PackageReference Include="engenious.Pipeline" Version="0.3.0.6-alpha" Condition="!Exists('..\engenious.Pipeline\engenious.Pipeline.csproj')" />
+        <PackageReference Include="engenious.Pipeline" Version="0.3.0.8-alpha" Condition="!Exists('..\engenious.Pipeline\engenious.Pipeline.csproj')" />
 
 
         <PackageReference Include="LitGit" Version="0.2.0.11-alpha" PrivateAssets="all" />
