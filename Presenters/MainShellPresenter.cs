@@ -244,7 +244,7 @@ namespace engenious.ContentTool.Presenters
             _shell.ShowLoading();
             _shell.SuspendRendering();
 
-            var progress = new Action<int>(i => _shell.WaitProgress(i));
+            var progress = new Action<int>(i => _shell.Invoke(new MethodInvoker(() => _shell.WaitProgress(i))));
             var t = new Thread(() =>
             {
                 FileHelper.CopyDirectory(src, dest, fld, FileAction.Ask, progress);
