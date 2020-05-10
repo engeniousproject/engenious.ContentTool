@@ -1,5 +1,6 @@
 using System;
 using engenious.Graphics;
+using engenious.Helper;
 using engenious.WinForms;
 
 namespace engenious.ContentTool.Viewer.Viewers
@@ -118,7 +119,7 @@ namespace engenious.ContentTool.Viewer.Viewers
             d = new Vector3(Math.Abs(d.X), Math.Abs(d.Y), Math.Abs(d.Z));
             var maxD = Math.Max(d.X, Math.Max(d.Y, d.Z)) * 2;
             float minScreen = Math.Min(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
-            World = Matrix.CreateScaling(minScreen / maxD, minScreen / maxD, minScreen / maxD) * Matrix.CreateRotationX(-MathF.PI / 4) * Matrix.CreateRotationZ((float)gameTime.TotalGameTime.TotalSeconds);
+            World = Matrix.CreateScaling(minScreen / maxD, minScreen / maxD, minScreen / maxD) * Matrix.CreateRotationX(-MathHelper.PiOver4) * Matrix.CreateRotationZ((float)gameTime.TotalGameTime.TotalSeconds);
             Projection = Matrix.CreateOrthographic(this.GraphicsDevice.Viewport.Width, this.GraphicsDevice.Viewport.Height, 1000, -1000);
             View = Matrix.Identity;
 
