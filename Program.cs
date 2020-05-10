@@ -10,10 +10,13 @@ namespace engenious.ContentTool
 {
     internal static class Program
     {
-        [STAThread]
-        static int Main(string[] args)
+        static unsafe void test(int* stuff)
         {
-
+            
+        }
+        [STAThread]
+        static unsafe int Main(string[] args)
+        {
             //Console.WriteLine(@"D:\Projects\engenious\Sample\Content\simple.glsl(13) : error C2143: syntax error : missing';' before '}'");
 
             

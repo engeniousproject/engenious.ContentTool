@@ -7,7 +7,6 @@ using engenious.ContentTool.Models.History;
 namespace engenious.ContentTool.Viewer.Viewers
 {
     [ViewerInfo(".txt", false)]
-    [ViewerInfo(".glsl", false)]
     public partial class TextViewer : UserControl, IViewer
     {
 

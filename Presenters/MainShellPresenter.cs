@@ -10,6 +10,7 @@ using engenious.ContentTool.Builder;
 using engenious.ContentTool.Forms;
 using engenious.ContentTool.Models;
 using engenious.ContentTool.Viewer;
+using engenious.Graphics;
 
 namespace engenious.ContentTool.Presenters
 {
@@ -21,6 +22,9 @@ namespace engenious.ContentTool.Presenters
 
         private readonly ViewerManager _viewerManager;
         private readonly Arguments _arguments;
+
+        private GraphicsDevice _graphicsDevice;
+        private IRenderingSurface _renderingSurface;
 
         public MainShellPresenter(IMainShell shell, Arguments arguments)
         {
@@ -58,6 +62,8 @@ namespace engenious.ContentTool.Presenters
             shell.OnShellLoad += Shell_OnShellLoad;
 
             shell.IntegrateCSClick += ShellOnIntegrateCsClick;
+
+            shell.CreateGraphicsContext += (sender, renderingContext) => (_graphicsDevice, _renderingSurface) = renderingContext;
 
             _viewerManager = new ViewerManager();
         }
@@ -197,11 +203,8 @@ namespace engenious.ContentTool.Presenters
                     MessageBoxIcon.Warning) != DialogResult.Yes)
                 return;
             var folder = item.Parent as ContentFolder;
-            if (folder != null)
-            {
-                //TODO remove from disk
-                folder.Content.Remove(item);
-            }
+            //TODO remove from disk
+            folder?.Content.Remove(item);
         }
 
         private void Shell_OnShellLoad(object sender, EventArgs e)
@@ -308,7 +311,7 @@ namespace engenious.ContentTool.Presenters
         {
             if (_builder == null)
             {
-                _builder = new ContentBuilder(_shell.Project);
+                _builder = new ContentBuilder(_shell.Project, _renderingSurface, _graphicsDevice);
                 _builder.BuildMessage += a => _shell.Invoke(((MethodInvoker) (() => _shell.WriteLineLog(a.Message))));
             }
             _shell.ShowLog();
@@ -322,7 +325,7 @@ namespace engenious.ContentTool.Presenters
         {
             if (_builder == null)
             {
-                _builder = new ContentBuilder(_shell.Project);
+                _builder = new ContentBuilder(_shell.Project, _renderingSurface, _graphicsDevice);
                 _builder.BuildMessage += a => _shell.Invoke(((MethodInvoker) (() => _shell.WriteLineLog(a.Message))));
             }
             _shell.ShowLog();
@@ -334,7 +337,7 @@ namespace engenious.ContentTool.Presenters
         {
             if (_builder == null)
             {
-                _builder = new ContentBuilder(_shell.Project);
+                _builder = new ContentBuilder(_shell.Project, _renderingSurface, _graphicsDevice);
                 _builder.BuildMessage += a => _shell.Invoke(((MethodInvoker) (() => _shell.WriteLineLog(a.Message))));
             }
             _shell.ShowLog();

@@ -97,9 +97,6 @@
 		<Compile Update="Viewer\Viewers\BitmapViewer.cs">
 		  <SubType>UserControl</SubType>
 		</Compile>
-		<Compile Update="Viewer\Viewers\BitmapViewer.Designer.cs">
-		  <DependentUpon>BitmapViewer.cs</DependentUpon>
-		</Compile>
 		<Compile Update="Viewer\Viewers\SpriteFontViewer.cs">
 		  <SubType>UserControl</SubType>
 		</Compile>
@@ -143,9 +140,6 @@
 		  <DependentUpon>Resources.resx</DependentUpon>
 		  <DesignTime>True</DesignTime>
 		</Compile>
-		<EmbeddedResource Update="Viewer\Viewers\BitmapViewer.resx">
-		  <DependentUpon>BitmapViewer.cs</DependentUpon>
-		</EmbeddedResource>
 		<EmbeddedResource Update="Viewer\Viewers\SpriteFontViewer.resx">
 		  <DependentUpon>SpriteFontViewer.cs</DependentUpon>
 		</EmbeddedResource>
@@ -161,15 +155,21 @@
 		  <DependentUpon>Settings.settings</DependentUpon>
 		  <DesignTimeSharedInput>True</DesignTimeSharedInput>
 		</Compile>
+		<Compile Update="Viewer\Viewers\EffectModelViewer.Designer.cs">
+		  <DependentUpon>ModelEffectViewer.cs</DependentUpon>
+		</Compile>
 	</ItemGroup>
     <ItemGroup>
         <PackageReference Include="SharpFont.Dependencies" Version="2.6.0" />
         <PackageReference Include="System.Resources.Extensions" Version="4.6.0" />
         <ProjectReference Include="..\engenious\engenious.csproj" Condition="Exists('..\engenious\engenious.csproj')" />
-        <PackageReference Include="engenious" Version="0.3.0.33-alpha" Condition="!Exists('..\engenious\engenious.csproj')" />
+        <PackageReference Include="engenious" Version="0.4.0.3-alpha" Condition="!Exists('..\engenious\engenious.csproj')" />
+
+		<ProjectReference Include="..\engenious.WinForms\engenious.WinForms.csproj" Condition="Exists('..\engenious.WinForms\engenious.WinForms.csproj')" />
+		<PackageReference Include="engenious.WinForms" Version="0.1.0.3-alpha" Condition="!Exists('..\engenious.WinForms\engenious.WinForms.csproj')" />
 
         <ProjectReference Include="..\engenious.Pipeline\engenious.Pipeline.csproj" Condition="Exists('..\engenious.Pipeline\engenious.Pipeline.csproj')" />
-        <PackageReference Include="engenious.Pipeline" Version="0.3.0.8-alpha" Condition="!Exists('..\engenious.Pipeline\engenious.Pipeline.csproj')" />
+        <PackageReference Include="engenious.Pipeline" Version="0.4.0-alpha" Condition="!Exists('..\engenious.Pipeline\engenious.Pipeline.csproj')" />
 
 
         <PackageReference Include="LitGit" Version="0.2.0.11-alpha" PrivateAssets="all" />

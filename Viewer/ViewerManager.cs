@@ -11,8 +11,8 @@ namespace engenious.ContentTool.Viewer
     public class ViewerManager
     {
 
-        private readonly Dictionary<string, Type> _viewerTypes = new Dictionary<string, Type>();
-        private readonly Dictionary<string, IViewer> _viewers = new Dictionary<string, IViewer>();
+        private readonly Dictionary<string, (Type type, bool needsCompilation)> _viewerTypes = new Dictionary<string, (Type, bool)>();
+        private readonly Dictionary<string, (IViewer viewer, bool needsCompilation)> _viewers = new Dictionary<string, (IViewer, bool)>();
 
         public ViewerManager()
         {
@@ -26,18 +26,32 @@ namespace engenious.ContentTool.Viewer
             foreach(var type in types)
             {
                 foreach(var attr in type.GetCustomAttributes(typeof(ViewerInfo), true).Where(x=>x != null))
-                    _viewerTypes.Add(((ViewerInfo)attr).Extension, type);
+                    _viewerTypes.Add(((ViewerInfo)attr).Extension, (type, ((ViewerInfo)attr).NeedsCompilation));
             }
         }
 
         public IViewer GetViewer(ContentFile item)
         {
-            if (_viewers.TryGetValue(Path.GetExtension(item.FilePath), out IViewer viewer))
-                return viewer;
-            if (!_viewerTypes.TryGetValue(Path.GetExtension(item.FilePath), out Type type))
+            bool needsCompilation;
+            IViewer view;
+            if (_viewers.TryGetValue(Path.GetExtension(item.FilePath), out var viewer))
+            {
+                view = viewer.viewer;
+                needsCompilation = viewer.needsCompilation;
+            }
+            else if (_viewerTypes.TryGetValue(Path.GetExtension(item.FilePath), out var viewerInfo))
+            {
+                view = (IViewer)Activator.CreateInstance(viewerInfo.type);
+                needsCompilation = viewerInfo.needsCompilation;
+                _viewers.Add(Path.GetExtension(item.FilePath), (view, viewerInfo.needsCompilation));
+            }
+            else
                 return null;
-            var view = (IViewer)Activator.CreateInstance(type);
-            _viewers.Add(Path.GetExtension(item.FilePath), view);
+
+            if (needsCompilation)
+            {
+                
+            }
             return view;
         }
 

@@ -8,6 +8,8 @@ using System.Windows.Forms;
 using engenious.ContentTool.Forms.Dialogs;
 using engenious.ContentTool.Models;
 using engenious.ContentTool.Viewer;
+using engenious.Graphics;
+using engenious.WinForms;
 using Timer = System.Windows.Forms.Timer;
 
 namespace engenious.ContentTool.Forms
@@ -76,6 +78,26 @@ namespace engenious.ContentTool.Forms
         public MainShell()
         {
             InitializeComponent();
+            var gameControl = new GameControl();
+            
+            Controls.Add(gameControl);
+            gameControl.HandleCreated += OnGameHandleCreated;
+        }
+
+        class Asdf : WinForms.WinFormsGame
+        {
+            public Asdf(GameControl control) : base(control)
+            {
+            }
+        }
+        private void OnGameHandleCreated(object sender, EventArgs e)
+        {
+            var gameControl = (GameControl) sender;
+            gameControl.Visible = false;
+            
+            var game = new Asdf(gameControl);
+            
+            CreateGraphicsContext?.Invoke(this,(game.GraphicsDevice, gameControl));
         }
 
         public event EventHandler OnShellLoad;
@@ -347,6 +369,7 @@ namespace engenious.ContentTool.Forms
         public event EventHandler IntegrateCSClick;
         public event EventHandler OnAboutClick;
         public event EventHandler OnHelpClick;
+        public event EventHandler<(GraphicsDevice graphicsDevice, IRenderingSurface renderingSurface)> CreateGraphicsContext;
 
         public event EventHandler UndoClick;
         public event EventHandler RedoClick;

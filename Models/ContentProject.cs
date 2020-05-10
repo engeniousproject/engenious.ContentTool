@@ -43,6 +43,11 @@ namespace engenious.ContentTool.Models
             }
         }
 
+        /// <summary>
+        /// Directory to save the output to
+        /// </summary>
+        public string ConfiguredOutputDirectory => string.Format(OutputDirectory.Replace("{Configuration}", "{0}"), Project.Configuration);
+
         private string _outputDirectory;
 
         /// <summary>

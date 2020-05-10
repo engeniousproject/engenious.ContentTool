@@ -10,6 +10,7 @@ using System.Threading;
 using engenious.Content.Pipeline;
 using engenious.Content.Serialization;
 using engenious.ContentTool.Models;
+using engenious.Graphics;
 using Microsoft.CSharp;
 
 namespace engenious.ContentTool.Builder
@@ -30,10 +31,12 @@ namespace engenious.ContentTool.Builder
 
         private Thread _buildThread;
 
-        public ContentBuilder(ContentProject project)
+        public ContentBuilder(ContentProject project, IRenderingSurface renderingSurface = null, GraphicsDevice graphicsDevice = null)
         {
             Project = project;
             _syncContext = SynchronizationContext.Current;
+            RenderingSurface = renderingSurface;
+            GraphicsDevice = graphicsDevice;
 
             _cache = BuildCache.Load(Path.Combine(Path.GetDirectoryName(project.ContentProjectPath), "obj",project.Configuration,
                 project.Name + ".dat"));
@@ -142,18 +145,20 @@ namespace engenious.ContentTool.Builder
             return lst;
         }
 
+        internal IRenderingSurface RenderingSurface { get; }
+        internal GraphicsDevice GraphicsDevice { get; }
+        
         protected void BuildThread(ContentItem item)
         {
             FailedBuilds = 0;
             PipelineHelper.PreBuilt(Project);
 
-            var outputDestination = Path.Combine(Path.GetDirectoryName(Project.ContentProjectPath),
-                string.Format(Project.OutputDirectory.Replace("{Configuration}", "{0}"), Project.Configuration));
+            var outputDestination = Path.Combine(Path.GetDirectoryName(Project.ContentProjectPath), Project.ConfiguredOutputDirectory);
 
             
             
             using (var iContext = new ContentImporterContext())
-            using (var pContext = new ContentProcessorContext(_syncContext,Path.GetDirectoryName(Project.ContentProjectPath)))
+            using (var pContext = new ContentProcessorContext(_syncContext, RenderingSurface, GraphicsDevice, Path.GetDirectoryName(Project.ContentProjectPath)))
             {
                 //Console.WriteLine($"GL Version: {pContext.GraphicsDevice.DriverVersion.ToString()}");
                 //Console.WriteLine($"GLSL Version: {pContext.GraphicsDevice.GlslVersion.ToString()}");

@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using engenious.ContentTool.Models;
 using engenious.ContentTool.Viewer;
+using engenious.Graphics;
 using static engenious.ContentTool.Delegates;
 
 namespace engenious.ContentTool.Forms
@@ -81,5 +82,7 @@ namespace engenious.ContentTool.Forms
 
         event EventHandler OnAboutClick;
         event EventHandler OnHelpClick;
+
+        event EventHandler<(GraphicsDevice graphicsDevice, IRenderingSurface renderingSurface)> CreateGraphicsContext;
     }
 }
