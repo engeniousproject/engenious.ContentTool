@@ -278,10 +278,18 @@ namespace engenious.ContentTool.Builder
             var typeWriter = SerializationManager.Instance.GetWriter(processedFile.GetType());
             var outputContentFileWriter = new engenious.Content.ContentFile(typeWriter.RuntimeReaderName);
 
-            var formatter = new BinaryFormatter();
             using (var fs = new FileStream(destination, FileMode.Create, FileAccess.Write))
             {
-                formatter.Serialize(fs, outputContentFileWriter);
+                fs.Write(BitConverter.GetBytes(engenious.Helper.BitHelper.BitConverterToBigEndian(engenious.Content.ContentFile.MAGIC)), 0, sizeof(uint));
+
+                const byte writerVersion = 1;
+                fs.WriteByte(writerVersion);
+
+                var fileTypeBuffer = System.Text.Encoding.UTF8.GetBytes(outputContentFileWriter.FileType);
+                fs.Write(BitConverter.GetBytes(engenious.Helper.BitHelper.BitConverterToLittleEndian((uint)fileTypeBuffer.Length)), 0, sizeof(uint));
+
+                fs.Write(fileTypeBuffer, 0, fileTypeBuffer.Length);
+
                 var writer = new ContentWriter(fs);
                 writer.WriteObject(processedFile, typeWriter);
             }
