@@ -63,7 +63,7 @@
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\..\engenious.Avalonia\engenious.Avalonia.csproj" Condition="Exists('..\..\engenious.Avalonia\engenious.Avalonia.csproj')"/>
-      <ProjectReference Include="..\engenious.ContentTool\engenious.ContentTool.csproj" Condition="Exists('..\..\engenious.Avalonia\engenious.ContentTool.csproj')"/>
+      <ProjectReference Include="..\engenious.ContentTool\engenious.ContentTool.csproj" Condition="Exists('..\engenious.ContentTool\engenious.ContentTool.csproj')"/>
     </ItemGroup>
 
     <Target Name="CopyAssembly" AfterTargets="Build">
