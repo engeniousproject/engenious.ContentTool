@@ -67,10 +67,6 @@ namespace engenious.ContentTool.Avalonia
             _logText = this.FindControl<TextBlock>("logText");
             _defaultTextBlockColorDummy = this.FindControl<TextBlock>("defaultTextBlockColorDummy");
 
-            Project = ContentProject.Load("/home/julian/Projects/octoawesome/OctoAwesome/OctoAwesome.Client/Content/Content.ecp");
-            
-            var tmp = RootPropertyView.Create("Test", Project, 3);
-            this.FindControl<PropertyGrid>("propertyGrid").PropertyView = tmp;
             _promptShell = new PromptShell();
         }
         
@@ -94,6 +90,8 @@ namespace engenious.ContentTool.Avalonia
 
                 if (_project != null)
                 {
+                    var tmp = RootPropertyView.Create("Test", Project, 3);
+                    this.FindControl<PropertyGrid>("propertyGrid").PropertyView = tmp;
                     _project.History.HistoryChanged -= HistoryOnHistoryChanged;
                     _project.CollectionChanged -= ProjectOnCollectionChanged;
                 }

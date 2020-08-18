@@ -3,6 +3,11 @@
     <PropertyGroup>
         <OutputType>Library</OutputType>
         <TargetFramework>netcoreapp3.1</TargetFramework>
+        <RuntimeIdentifiers>win10-x64;osx-x64;linux-x64</RuntimeIdentifiers>
+
+        <OutputPath>..\bin\$(Configuration)\</OutputPath>
+        
+        <IsPackable>false</IsPackable>
     </PropertyGroup>
 
     <ItemGroup>
@@ -58,16 +63,18 @@
         <PackageReference Include="Avalonia.Desktop" Version="0.10.0-preview2" />
         <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.0-preview2" />
         <PackageReference Include="Dialogs.Avalonia" Version="0.1.28" />
-        <PackageReference Include="engenious.opentk" Version="4.0.0.2-pre" />
+        <PackageReference Include="engenious.opentk" Version="4.0.0.3-pre" />
         <PackageReference Include="MessageBox.Avalonia" Version="0.10.0-prev1" />
     </ItemGroup>
     <ItemGroup>
-      <ProjectReference Include="..\..\engenious.Avalonia\engenious.Avalonia.csproj" Condition="Exists('..\..\engenious.Avalonia\engenious.Avalonia.csproj')"/>
-      <ProjectReference Include="..\engenious.ContentTool\engenious.ContentTool.csproj" Condition="Exists('..\engenious.ContentTool\engenious.ContentTool.csproj')"/>
+      <PackageReference Include="engenious.Avalonia" Version="0.5.0.5-alpha" Condition="!Exists('..\..\engenious.Avalonia\engenious.Avalonia.csproj')" />
+        
+      <ProjectReference Include="..\..\engenious.Avalonia\engenious.Avalonia.csproj" Condition="Exists('..\..\engenious.Avalonia\engenious.Avalonia.csproj')" />
+      <ProjectReference Include="..\engenious.ContentTool\engenious.ContentTool.csproj" Condition="Exists('..\engenious.ContentTool\engenious.ContentTool.csproj')" />
     </ItemGroup>
 
     <Target Name="CopyAssembly" AfterTargets="Build">
-        <Copy SourceFiles="bin\$(Configuration)\$(TargetFramework)\engenious.ContentTool.Avalonia.dll" DestinationFolder="..\bin\$(Configuration)\$(TargetFramework)\Plugins" />
+        <!--<Copy SourceFiles="bin\$(Configuration)\$(TargetFramework)\engenious.ContentTool.Avalonia.dll" DestinationFolder="..\bin\$(Configuration)\$(TargetFramework)\Plugins" />-->
     </Target>
     
 

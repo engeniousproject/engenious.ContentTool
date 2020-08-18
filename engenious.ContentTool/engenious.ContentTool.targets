@@ -33,14 +33,11 @@
       <ContentRootDirectory>Content</ContentRootDirectory>
 
 
-      <EngeniousContentBuilderExe Condition="'$(EngeniousContentBuilderExe)' == ''">$(MSBuildThisFileDirectory)..\tools\net461\engenious.ContentTool.exe</EngeniousContentBuilderExe>
+      <EngeniousContentBuilderExe Condition="'$(EngeniousContentBuilderExe)' == ''">$(MSBuildThisFileDirectory)..\tools\engenious.ContentTool.dll</EngeniousContentBuilderExe>
 
       <Header>/configuration:$(Configuration) /outputDir:&quot;$(ParentOutputDir)&quot; /intermediateDir:&quot;$(ParentIntermediateDir)&quot; /projectDir:&quot;$(ProjectDir)/&quot; /hidden:true</Header>
 
-      <MonoExe Condition=" '$(OS)' != 'Windows_NT' And Exists ('/Library/Frameworks/Mono.framework/Versions/Current/bin/mono') ">/Library/Frameworks/Mono.framework/Versions/Current/bin/mono</MonoExe>
-      <MonoExe Condition=" '$(OS)' != 'Windows_NT' And Exists ('/usr/local/bin/mono') ">/usr/local/bin/mono</MonoExe>
-      <MonoExe Condition=" '$(OS)' != 'Windows_NT' And Exists ('/usr/bin/mono') ">/usr/bin/mono</MonoExe>
-      <MonoExe Condition=" '$(OS)' != 'Windows_NT' And '$(MonoExe)' == '' ">mono</MonoExe>
+      <DotnetExe>dotnet</DotnetExe>
     </PropertyGroup>
 
     <MakeDir Directories="$(ParentIntermediateDir)"/>
@@ -59,13 +56,6 @@
     </RebuildDependsOn>
   </PropertyGroup>
 
-  <!--<Target Name="CopyContent" BeforeTargets="BeforeBuild;PreBuildEvent"
-        DependsOnTargets="Prepare">
-    <ItemGroup>
-      <AdditionalFiles Include="$(MSBuildThisFileDirectory)..\additional\net40\**\*.*" />
-    </ItemGroup>
-    <Copy SourceFiles="@(AdditionalFiles)" DestinationFolder="$(ProjectDir)\$(OutputPath)\" SkipUnchangedFiles="true" />
-  </Target>-->
 
   <Target Name="BuildContent"
         BeforeTargets="BeforeBuild;PreBuildEvent"
@@ -73,7 +63,7 @@
 
 
     <!--<Exec Command="chmod +x &quot;$(EngeniousContentBuilderExe)&quot;" Condition=" '$(OS)' == 'Unix' " />-->
-    <Exec Command="$(MonoExe) &quot;$(EngeniousContentBuilderExe)&quot; /@:&quot;%(ContentReferences.FullPath)&quot; $(Header)"
+    <Exec Command="$(DotnetExe) &quot;$(EngeniousContentBuilderExe)&quot; /@:&quot;%(ContentReferences.FullPath)&quot; $(Header)"
           WorkingDirectory="%(ContentReferences.RootDir)%(ContentReferences.Directory)" Condition="Exists('%(ContentReferences.FullPath)')" />
     <ItemGroup>
       <ExtraContent Include="$(ParentOutputDir)\**\*.*" />
@@ -81,11 +71,11 @@
     <Copy SourceFiles="@(ExtraContent)" DestinationFolder="$(ProjectDir)\$(OutputPath)\Content\%(RecursiveDir)" SkipUnchangedFiles="true" />
   </Target>
   <Target Name="CleanContent" BeforeTargets="BeforeClean;Clean" DependsOnTargets="Prepare"> 
-    <Exec Command="$(MonoExe) &quot;$(EngeniousContentBuilderExe)&quot; /@:&quot;%(ContentReferences.FullPath)&quot; $(Header) /clean"
+    <Exec Command="$(DotnetExe) &quot;$(EngeniousContentBuilderExe)&quot; /@:&quot;%(ContentReferences.FullPath)&quot; $(Header) /clean"
           WorkingDirectory="%(ContentReferences.RootDir)%(ContentReferences.Directory)" Condition="Exists('%(ContentReferences.FullPath)')" />
   </Target>
   <Target Name="RebuildContent" BeforeTargets="BeforeRebuild;Rebuild" DependsOnTargets="Prepare"> 
-    <Exec Command="$(MonoExe) &quot;$(EngeniousContentBuilderExe)&quot; /@:&quot;%(ContentReferences.FullPath)&quot; $(Header) /rebuild"
+    <Exec Command="$(DotnetExe) &quot;$(EngeniousContentBuilderExe)&quot; /@:&quot;%(ContentReferences.FullPath)&quot; $(Header) /rebuild"
           WorkingDirectory="%(ContentReferences.RootDir)%(ContentReferences.Directory)" Condition="Exists('%(ContentReferences.FullPath)')" />
   </Target>
 </Project>

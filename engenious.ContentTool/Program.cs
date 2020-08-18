@@ -49,7 +49,7 @@ namespace engenious.ContentTool
             {
                 var execPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
-                var pluginsPath = Path.Combine(execPath ?? string.Empty, "Plugins");
+                var pluginsPath = execPath ?? string.Empty;
 
                 var factories = new List<IShellFactory>();
                 if (Directory.Exists(pluginsPath))
@@ -64,7 +64,7 @@ namespace engenious.ContentTool
                     {
                         try
                         {
-                            var assembly = Assembly.LoadFile(assemblyPath);
+                            var assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(assemblyPath);
                             var shellFactoryAttribute = assembly.GetCustomAttribute<ShellFactoryAttribute>();
                             if (shellFactoryAttribute == null)
                                 continue;
@@ -73,7 +73,7 @@ namespace engenious.ContentTool
                         }
                         catch (Exception ex)
                         {
-                            Console.Error.WriteLine(ex.Message);
+                            Console.Error.WriteLine($"Loading {Path.GetFileName(assemblyPath)}: " + ex.Message);
                         }
                     }
                 }
@@ -98,7 +98,10 @@ namespace engenious.ContentTool
                         var mainShellPresenter = new MainShellPresenter(mainShell, promptShell, arguments);
                         mainShell.Run();
                     }
+                    
+                    return 0;
                 }
+
             }
 
             if (!File.Exists(arguments.ContentProject))
