@@ -1,7 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using engenious.ContentTool.Forms.Dialogs;
+using System.Threading.Tasks;
+using engenious.ContentTool.Forms;
 using engenious.ContentTool.Models;
 
 namespace engenious.ContentTool
@@ -31,7 +32,7 @@ namespace engenious.ContentTool
                 return subPath;
             }
         }
-        public static FileAction CopyDirectory(string src, string dest, ContentFolder fld,
+        public static async Task<FileAction> CopyDirectory(string src, string dest, ContentFolder fld, IPromptShell promptShell,
             FileAction action = FileAction.Ask, Action<int> progress=null)
         {
             var foldername = Path.GetFileName(src);
@@ -46,18 +47,18 @@ namespace engenious.ContentTool
             }
             fld = newfld;
 
-            action = CopyFiles(Directory.GetFiles(src), dest, fld, action);
+            action = await CopyFiles(Directory.GetFiles(src), dest, fld, promptShell, action);
             var dirs = Directory.GetDirectories(src);
             for (int i = 0; i < dirs.Length; i++)
             {
                 var dir = dirs[i];
-                action = CopyDirectory(dir, dest, fld, action, null);
+                action = await CopyDirectory(dir, dest, fld, promptShell, action, null);
                 progress?.Invoke((int) (i * 100.0f / dirs.Length));
             }
             return action;
         }
 
-        public static FileAction CopyFiles(string[] files, string dir, ContentFolder fld,
+        public static async Task<FileAction> CopyFiles(string[] files, string dir, ContentFolder fld, IPromptShell promptShell,
             FileAction action = FileAction.Ask)
         {
             foreach (var src in files)
@@ -76,11 +77,7 @@ namespace engenious.ContentTool
                         {
                             if (action.HasFlag(FileAction.Ask))
                             {
-                                using (var ask = new OverwriteDialog())
-                                {
-                                    ask.FileName = filename;
-                                    action = ask.ShowDialog();
-                                }
+                                action = await promptShell.ShowOverwriteDialog(filename);
                             }
                             switch ((FileAction) ((int) action & 0xE))
                             {

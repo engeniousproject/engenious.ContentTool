@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml'
+             x:Class="engenious.ContentTool.Avalonia.GroupBox"
+             xmlns:ct="clr-namespace:engenious.ContentTool.Avalonia"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch" Margin="5">
+    <UserControl.Template>
+        <ControlTemplate>
+            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Grid.RowSpan="1" Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Header}" HorizontalAlignment="Left" Margin="7 0 0 0" VerticalAlignment="Top" Background="{DynamicResource ThemeBackgroundBrush}" ZIndex="10"/>
+                <Border Grid.Row="0" Grid.RowSpan="2" BorderThickness="1" BorderBrush="{DynamicResource ThemeBorderMidBrush}" Margin="0 5 0 0" Padding="5 16 5 7">
+                    <ContentPresenter Content="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Content}" />
+                </Border>
+            </Grid>
+        </ControlTemplate>
+    </UserControl.Template>
+</UserControl>

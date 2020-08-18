@@ -1,0 +1,156 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml'
+        xmlns:ct="clr-namespace:engenious.ContentTool.Avalonia"
+        x:Class="engenious.ContentTool.Avalonia.MainWindow"
+        Title="engenious Content Tool"
+        Width="800"
+        Height="600" Closing="FormClosing">
+    <Design.DataContext>
+        <ct:MainWindow />
+    </Design.DataContext>
+    <Panel>
+        <Grid x:Name="Overlay" ZIndex="1000" IsVisible="{Binding Path=LoadingShown}">
+            <Grid.Background>
+                <SolidColorBrush Color="Black" Opacity=".5" />
+            </Grid.Background>
+            <StackPanel Margin="20" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock>Please wait...</TextBlock>
+                <ProgressBar IsIndeterminate="{Binding Path=IsProgressIndeterminate}" Height="20" Value="{Binding Path=ProgressValue}">
+                    
+                </ProgressBar>
+            </StackPanel>
+        </Grid>
+        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ColumnDefinitions="*"
+              RowDefinitions="Auto, Auto, *">
+            <Menu Grid.Row="0" Grid.Column="0" BorderBrush="Gray" BorderThickness="0,0,0,1" Padding="0">
+                <Menu.Styles>
+                    <Style Selector="Menu > MenuItem">
+                        <Setter Property="MenuItem.Padding" Value="10,3,10,3" />
+                        <Setter Property="MenuItem.MinWidth" Value="30" />
+                        <Setter Property="MenuItem.Margin" Value="2" />
+                    </Style>
+                </Menu.Styles>
+                <MenuItem Header="_File">
+                    <MenuItem Header="_New Project..." Click="OnNewProjectButtonClick" />
+                    <MenuItem Header="_Open Project..." Click="OnOpenProjectButtonClick" />
+                    <Separator />
+                    <MenuItem Header="_Save Project..." Click="OnSaveProjectButtonClick" IsEnabled="{Binding Path=IsProjectOpen}" />
+                    <MenuItem Header="Save Project _as..." Click="OnSaveProjectAsButtonClick" IsEnabled="{Binding Path=IsProjectOpen}" />
+                    <Separator />
+                    <MenuItem Header="_Close Project" Click="OnCloseProjectButtonClick" IsEnabled="{Binding Path=IsProjectOpen}" />
+                    <MenuItem Header="_Exit" Click="OnExitButtonClick" />
+                </MenuItem>
+                <MenuItem Header="_Edit" IsEnabled="{Binding Path=IsProjectOpen}">
+                    <MenuItem Header="Undo" Click="OnUndoButtonClick" />
+                    <MenuItem Header="Redo" Click="OnRedoButtonClick" />
+                    <Separator />
+                    <MenuItem Header="Add">
+                        <MenuItem Header="New Item" Click="OnNewItemButtonClick" />
+                        <MenuItem Header="New Folder" Click="OnNewFolderButtonClick" />
+                        <MenuItem Header="Existing Item" Click="OnExistingItemButtonClick" />
+                        <MenuItem Header="Existing Folder" Click="OnExistingFolderButtonClick" />
+                    </MenuItem>
+                    <MenuItem Header="Rename" Click="OnRenameItemButtonClick" />
+                    <MenuItem Header="Remove" Click="OnRemoveItemButtonClick" />
+                </MenuItem>
+                <MenuItem Header="_Build">
+                    <MenuItem Header="Build" Click="OnBuildButtonClick" IsEnabled="{Binding Path=IsProjectOpen}" />
+                    <MenuItem Header="Clean" Click="OnCleanButtonClick" IsEnabled="{Binding Path=IsProjectOpen}" />
+                    <MenuItem Header="Rebuild" Click="OnRebuildButtonClick" IsEnabled="{Binding Path=IsProjectOpen}" />
+                    <Separator />
+                    <MenuItem Header="Always show log" Click="AlwaysShowLogClicked">
+                        <MenuItem.Icon>
+                            <CheckBox HorizontalAlignment="Stretch" Width="20" Height="20" IsChecked="{Binding Path=AlwaysShowLog}">uhhh</CheckBox>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+            </Menu>
+            <Border Grid.Row="1" Grid.Column="0" BorderBrush="LightGray" BorderThickness="0,0,0,1" CornerRadius="0"
+                    HorizontalAlignment="Stretch" Margin="2">
+                <StackPanel Orientation="Horizontal">
+                    <StackPanel.Styles>
+                        <Style Selector="Button">
+                            <Setter Property="Button.Width" Value="30" />
+                            <Setter Property="Button.Padding" Value="1" />
+                            <Setter Property="Button.Margin" Value="2" />
+                            <Setter Property="Button.BorderBrush" Value="Transparent" />
+                            <Setter Property="Button.Background" Value="Transparent" />
+                        </Style>
+                        <Style Selector="Panel">
+                            <Setter Property="Panel.Width" Value="1" />
+                            <Setter Property="Panel.Margin" Value="5" />
+                            <Setter Property="Panel.Background" Value="LightGray" />
+                        </Style>
+                    </StackPanel.Styles>
+
+                    <Button Click="OnNewProjectButtonClick">
+                        <Image Source="/Resources/Objects.png" />
+                    </Button>
+                    <Button Click="OnOpenProjectButtonClick">
+                        <Image Source="/Resources/Open_folder.png" />
+                    </Button>
+                    <Button Click="OnSaveProjectButtonClick" IsEnabled="{Binding Path=IsProjectOpen}">
+                        <Image Source="/Resources/Save.png" />
+                    </Button>
+                    <Panel VerticalAlignment="Stretch" />
+                    <Button Click="OnNewItemButtonClick" IsEnabled="{Binding Path=IsProjectOpen}">
+                        <Image Source="/Resources/New_file.png" />
+                    </Button>
+                    <Button Click="OnExistingItemButtonClick" IsEnabled="{Binding Path=IsProjectOpen}">
+                        <Image Source="/Resources/Import.png" />
+                    </Button>
+                    <Button Click="OnNewFolderButtonClick" IsEnabled="{Binding Path=IsProjectOpen}">
+                        <Image Source="/Resources/Add_folder.png" />
+                    </Button>
+                    <Button Click="OnExistingFolderButtonClick" IsEnabled="{Binding Path=IsProjectOpen}">
+                        <Image Source="/Resources/Folder.png" />
+                    </Button>
+                    <Panel VerticalAlignment="Stretch" />
+                    <Button Click="OnBuildButtonClick" IsEnabled="{Binding Path=IsProjectOpen}">
+                        <Image Source="/Resources/Equipment.png" />
+                    </Button>
+                    <Button Click="OnCleanButtonClick" IsEnabled="{Binding Path=IsProjectOpen}">
+                        <Image Source="/Resources/Eraser.png" />
+                    </Button>
+                </StackPanel>
+            </Border>
+
+
+            <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" ColumnDefinitions="200, Auto, *"
+                  RowDefinitions="*" Grid.Row="2" Grid.Column="0">
+
+                <Grid Grid.Row="0" Grid.Column="0" RowDefinitions="*, Auto, 200" ColumnDefinitions="*">
+                    <Panel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="0" Grid.Row="0">
+                        <ct:ProjectTreeView HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                            x:Name="projectTreeView" />
+                    </Panel>
+                    <GridSplitter Grid.Column="0" Grid.Row="1" />
+                    <Panel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="0" Grid.Row="2">
+                        <ct:PropertyGrid x:Name="propertyGrid"></ct:PropertyGrid>
+                    </Panel>
+                </Grid>
+
+                <GridSplitter Grid.Row="0" Grid.Column="1"/>
+
+                <Grid Grid.Row="0" Grid.Column="2" RowDefinitions="*, Auto, 200" ColumnDefinitions="*">
+                    <Border Child="{Binding Path=CurrentPreviewControl}"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="0" Grid.Row="0" Grid.RowSpan="{Binding Path=LogRowSpan}">
+                        
+                    </Border>
+                    <GridSplitter Grid.Column="0" Grid.Row="1"  IsVisible="{Binding Path=LogShown}"/>
+                    <TextBlock x:Name="defaultTextBlockColorDummy" IsVisible="False"></TextBlock>
+                    <Panel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="0" Grid.Row="2" IsVisible="{Binding Path=LogShown}">
+                        <ListBox Items="{Binding Path=LogItems}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Foreground="{Binding Color}" Text="{Binding Text}" />
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Panel>
+                </Grid>
+
+
+            </Grid>
+        </Grid>
+    </Panel>
+</Window>

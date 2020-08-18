@@ -1,5 +1,10 @@
 ﻿using System;
-using System.Windows.Forms;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Loader;
+using System.Threading.Tasks;
 using engenious.Content.Pipeline;
 using engenious.ContentTool.Builder;
 using engenious.ContentTool.Forms;
@@ -8,14 +13,25 @@ using engenious.ContentTool.Presenters;
 
 namespace engenious.ContentTool
 {
+    public class AssemblyContext : AssemblyLoadContext
+    {
+        public Assembly Load(Stream stream)
+        {
+            this.Resolving += ResolvingHandler;
+            return this.LoadFromStream(stream);
+        }
+
+        public Assembly ResolvingHandler(AssemblyLoadContext context, AssemblyName assemblyName)
+        {
+            var assembly = context.LoadFromAssemblyName(assemblyName);
+            Console.WriteLine("Resolving: " + assemblyName.FullName);
+            return assembly;
+        }
+    }
     internal static class Program
     {
-        static unsafe void test(int* stuff)
-        {
-            
-        }
         [STAThread]
-        static unsafe int Main(string[] args)
+        static async Task<int> Main(string[] args)
         {
             //Console.WriteLine(@"D:\Projects\engenious\Sample\Content\simple.glsl(13) : error C2143: syntax error : missing';' before '}'");
 
@@ -55,8 +71,6 @@ namespace engenious.ContentTool
                     
                     var builder = new ContentBuilder(project);
 
-                    
-
                     builder.BuildMessage += eventArgs =>
                     {
                         if (eventArgs.MessageType != BuildMessageEventArgs.BuildMessageType.Information)
@@ -87,12 +101,56 @@ namespace engenious.ContentTool
                 }
             }
             //TODO implement CommandLine
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.EnableVisualStyles();
 
-            var mainShell = new MainShell();
-            var mainShellPresenter = new MainShellPresenter(mainShell, arguments);
-            Application.Run(mainShell);
+            //var mainShell = new MainShell();
+
+            var execPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+            var pluginsPath = Path.Combine(execPath ?? string.Empty, "Plugins");
+
+            AssemblyLoadContext.Default.Resolving += (context, name) =>
+            {
+                return AssemblyLoadContext.Default.LoadFromAssemblyPath(Path.Combine(execPath, name.Name + ".dll"));
+            };
+            var factories = new List<IShellFactory>();
+            foreach (var assemblyPath in Directory.EnumerateFiles(pluginsPath, "*.dll", SearchOption.TopDirectoryOnly))
+            {
+                try
+                {
+                    var assembly = Assembly.LoadFile(assemblyPath);
+                    var shellFactoryAttribute = assembly.GetCustomAttribute<ShellFactoryAttribute>();
+                    if (shellFactoryAttribute == null)
+                        continue;
+                    factories.Add((IShellFactory)Activator.CreateInstance(shellFactoryAttribute.ShellFactoryType));
+                }
+                catch(Exception ex)
+                {
+                    Console.Error.WriteLine(ex.Message);
+                }
+            }
+            
+            
+
+            var shellFactory = factories.FirstOrDefault();
+            
+            if (shellFactory == null)
+            {
+                Console.Error.WriteLine("error: Could not open UI. No UI shell found.");
+                return -1;
+            }
+
+            ReferenceManager.References.Add(Assembly.GetExecutingAssembly());
+            ReferenceManager.References.Add(shellFactory.GetType().Assembly);
+            
+
+            var promptShell = shellFactory.CreatePromptShell();
+            
+            using (var mainShell = shellFactory.CreateMainShell())
+            {
+                var mainShellPresenter = new MainShellPresenter(mainShell, promptShell, arguments);
+                mainShell.Run();
+            }
+
             return 0;
         }
     }

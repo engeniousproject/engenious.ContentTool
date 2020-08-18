@@ -94,5 +94,10 @@ namespace engenious.ContentTool.Models
 
         public event NotifyCollectionChangedEventHandler CollectionChanged;
         public event NotifyPropertyValueChangedHandler PropertyChanged;
+
+        public void Sort()
+        {
+            
+        }
     }
 }

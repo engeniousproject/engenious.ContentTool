@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
-        <TargetFramework>net461</TargetFramework>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -16,6 +16,8 @@
 		<ApplicationIcon />
         <StartupObject />
         <LangVersion>7.3</LangVersion>
+        
+        <OutputPath>..\bin\$(Configuration)\</OutputPath>
     </PropertyGroup>
     <ItemGroup>
       <None Remove="Resources\Add_folder.png" />
@@ -50,33 +52,6 @@
       <Content Include="Resources\Warning.png" />
     </ItemGroup>
 	<ItemGroup>
-		<Compile Update="Controls\ConsoleView.cs">
-		  <SubType>UserControl</SubType>
-		</Compile>
-		<Compile Update="Controls\ConsoleView.Designer.cs">
-		  <DependentUpon>ConsoleView.cs</DependentUpon>
-		</Compile>
-		<Compile Update="Controls\FontComboBox.cs">
-		  <SubType>Component</SubType>
-		</Compile>
-		<Compile Update="Controls\ItemPropertyView.cs">
-		  <SubType>UserControl</SubType>
-		</Compile>
-		<Compile Update="Controls\ItemPropertyView.Designer.cs">
-		  <DependentUpon>ItemPropertyView.cs</DependentUpon>
-		</Compile>
-		<Compile Update="Controls\ProjectTreeView.cs">
-		  <SubType>UserControl</SubType>
-		</Compile>
-		<Compile Update="Controls\ProjectTreeView.Designer.cs">
-		  <DependentUpon>ProjectTreeView.cs</DependentUpon>
-		</Compile>
-	    <Compile Update="Forms\AboutBox.cs">
-		  <SubType>Form</SubType>
-		</Compile>
-		<Compile Update="Forms\AboutBox.Designer.cs">
-		  <DependentUpon>AboutBox.cs</DependentUpon>
-		</Compile>
 		<Compile Update="Forms\Dialogs\LoadingDialog.cs">
 		  <SubType>Form</SubType>
 		</Compile>
@@ -88,12 +63,6 @@
 		</Compile>
 		<Compile Update="Forms\Dialogs\OverwriteDialog.Designer.cs">
 		  <DependentUpon>OverwriteDialog.cs</DependentUpon>
-		</Compile>
-		<Compile Update="Forms\MainShell.cs">
-		  <SubType>Form</SubType>
-		</Compile>
-		<Compile Update="Forms\MainShell.Designer.cs">
-		  <DependentUpon>MainShell.cs</DependentUpon>
 		</Compile>
 		<Compile Update="Viewer\Viewers\BitmapViewer.cs">
 		  <SubType>UserControl</SubType>
@@ -110,74 +79,37 @@
 		<Compile Update="Viewer\Viewers\TextViewer.Designer.cs">
 		  <DependentUpon>TextViewer.cs</DependentUpon>
 		</Compile>
-		<EmbeddedResource Update="Controls\ConsoleView.resx">
-		  <DependentUpon>ConsoleView.cs</DependentUpon>
-		</EmbeddedResource>
-		<EmbeddedResource Update="Controls\ItemPropertyView.resx">
-		  <DependentUpon>ItemPropertyView.cs</DependentUpon>
-		</EmbeddedResource>
-		<EmbeddedResource Update="Controls\ProjectTreeView.resx">
-		  <DependentUpon>ProjectTreeView.cs</DependentUpon>
-		</EmbeddedResource>
-		<EmbeddedResource Update="Forms\AboutBox.resx">
-		  <DependentUpon>AboutBox.cs</DependentUpon>
-		</EmbeddedResource>
 		<EmbeddedResource Update="Forms\Dialogs\LoadingDialog.resx">
 		  <DependentUpon>LoadingDialog.cs</DependentUpon>
 		</EmbeddedResource>
 		<EmbeddedResource Update="Forms\Dialogs\OverwriteDialog.resx">
 		  <DependentUpon>OverwriteDialog.cs</DependentUpon>
 		</EmbeddedResource>
-		<EmbeddedResource Update="Forms\MainShell.resx">
-		  <DependentUpon>MainShell.cs</DependentUpon>
-		</EmbeddedResource>
-		<EmbeddedResource Update="Properties\Resources.resx">
-		  <Generator>PublicResXFileCodeGenerator</Generator>
-		  <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-		  <SubType>Designer</SubType>
-		</EmbeddedResource>
-		<Compile Update="Properties\Resources.Designer.cs">
-		  <AutoGen>True</AutoGen>
-		  <DependentUpon>Resources.resx</DependentUpon>
-		  <DesignTime>True</DesignTime>
-		</Compile>
 		<EmbeddedResource Update="Viewer\Viewers\SpriteFontViewer.resx">
 		  <DependentUpon>SpriteFontViewer.cs</DependentUpon>
 		</EmbeddedResource>
 		<EmbeddedResource Update="Viewer\Viewers\TextViewer.resx">
 		  <DependentUpon>TextViewer.cs</DependentUpon>
 		</EmbeddedResource>
-		<None Update="Properties\Settings.settings">
-		  <Generator>SettingsSingleFileGenerator</Generator>
-		  <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-		</None>
-		<Compile Update="Properties\Settings.Designer.cs">
-		  <AutoGen>True</AutoGen>
-		  <DependentUpon>Settings.settings</DependentUpon>
-		  <DesignTimeSharedInput>True</DesignTimeSharedInput>
-		</Compile>
 		<Compile Update="Viewer\Viewers\EffectModelViewer.Designer.cs">
 		  <DependentUpon>ModelEffectViewer.cs</DependentUpon>
 		</Compile>
 	</ItemGroup>
     <ItemGroup>
+        <PackageReference Include="Mono.Cecil" Version="0.11.2" />
         <PackageReference Include="SharpFont.Dependencies" Version="2.6.0" />
         <PackageReference Include="System.Resources.Extensions" Version="4.6.0" />
-        <ProjectReference Include="..\engenious\engenious.csproj" Condition="Exists('..\engenious\engenious.csproj')" />
+        <ProjectReference Include="..\..\engenious\engenious.csproj" Condition="Exists('..\..\engenious\engenious.csproj')" />
         <PackageReference Include="engenious" Version="0.4.0.4-alpha" Condition="!Exists('..\engenious\engenious.csproj')" />
 
-        <ProjectReference Include="..\engenious.WinForms\engenious.WinForms.csproj" Condition="Exists('..\engenious.WinForms\engenious.WinForms.csproj')" />
-        <PackageReference Include="engenious.WinForms" Version="0.1.0.3-alpha" Condition="!Exists('..\engenious.WinForms\engenious.WinForms.csproj')" />
-
-        <ProjectReference Include="..\engenious.Pipeline\engenious.Pipeline.csproj" Condition="Exists('..\engenious.Pipeline\engenious.Pipeline.csproj')" />
-        <PackageReference Include="engenious.Pipeline" Version="0.4.0-alpha" Condition="!Exists('..\engenious.Pipeline\engenious.Pipeline.csproj')" />
+        <ProjectReference Include="..\..\engenious.Pipeline\engenious.Pipeline.csproj" Condition="Exists('..\..\engenious.Pipeline\engenious.Pipeline.csproj')" />
+        <PackageReference Include="engenious.Pipeline" Version="0.4.0-alpha" Condition="!Exists('..\..\engenious.Pipeline\engenious.Pipeline.csproj')" />
 
 
         <PackageReference Include="LitGit" Version="0.2.0.11-alpha" PrivateAssets="all" />
     </ItemGroup>
     <ItemGroup>
         <LitGitTemplateReference Include="engenious.ContentTool.Nuget.nuspec.template" />
-        <Reference Include="System.Windows.Forms" />
 
         <None Update="engenious.ContentTool.Nuget.nuspec" Condition="Exists('engenious.ContentTool.Nuget.nuspec')">
             <DependentUpon>engenious.ContentTool.Nuget.nuspec.template</DependentUpon>

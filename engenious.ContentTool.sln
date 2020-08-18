@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "engenious.ContentTool", "engenious.ContentTool\engenious.ContentTool.csproj", "{BD864B09-10C1-4E43-B0E6-5A3F7C4F4823}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "engenious.ContentTool.Avalonia", "engenious.ContentTool.Avalonia\engenious.ContentTool.Avalonia.csproj", "{51A95A5A-3307-4CF4-8435-CCF4FE78783C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BD864B09-10C1-4E43-B0E6-5A3F7C4F4823}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD864B09-10C1-4E43-B0E6-5A3F7C4F4823}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD864B09-10C1-4E43-B0E6-5A3F7C4F4823}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD864B09-10C1-4E43-B0E6-5A3F7C4F4823}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51A95A5A-3307-4CF4-8435-CCF4FE78783C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51A95A5A-3307-4CF4-8435-CCF4FE78783C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51A95A5A-3307-4CF4-8435-CCF4FE78783C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51A95A5A-3307-4CF4-8435-CCF4FE78783C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

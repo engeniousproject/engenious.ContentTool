@@ -1,10 +1,5 @@
-﻿using System;
-using System.ComponentModel;
-using System.Drawing.Design;
+﻿using System.ComponentModel;
 using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Xml.Linq;
 using engenious.Content.Pipeline;
 using engenious.ContentTool.Controls;

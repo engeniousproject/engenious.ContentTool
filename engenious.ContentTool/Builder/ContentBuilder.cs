@@ -1,17 +1,13 @@
 ﻿using System;
-using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
 using engenious.Content.Pipeline;
 using engenious.Content.Serialization;
 using engenious.ContentTool.Models;
 using engenious.Graphics;
 using Microsoft.CSharp;
+using Mono.Cecil;
 
 namespace engenious.ContentTool.Builder
 {
@@ -31,14 +27,16 @@ namespace engenious.ContentTool.Builder
 
         private Thread _buildThread;
 
-        public ContentBuilder(ContentProject project, IRenderingSurface renderingSurface = null, GraphicsDevice graphicsDevice = null)
+        public ContentBuilder(ContentProject project, IRenderingSurface renderingSurface = null,
+            GraphicsDevice graphicsDevice = null)
         {
             Project = project;
             _syncContext = SynchronizationContext.Current;
             RenderingSurface = renderingSurface;
             GraphicsDevice = graphicsDevice;
 
-            _cache = BuildCache.Load(Path.Combine(Path.GetDirectoryName(project.ContentProjectPath), "obj",project.Configuration,
+            _cache = BuildCache.Load(Path.Combine(Path.GetDirectoryName(project.ContentProjectPath), "obj",
+                project.Configuration,
                 project.Name + ".dat"));
         }
 
@@ -46,6 +44,7 @@ namespace engenious.ContentTool.Builder
         {
             Build(Project);
         }
+
         public void Build(ContentItem item)
         {
             _buildThread = new Thread(() =>
@@ -54,7 +53,7 @@ namespace engenious.ContentTool.Builder
                 BuildThread(item);
                 IsBuilding = false;
             });
-            _buildThread.SetApartmentState(ApartmentState.STA);
+            //_buildThread.SetApartmentState(ApartmentState.STA);
             _buildThread.Start();
         }
 
@@ -66,7 +65,7 @@ namespace engenious.ContentTool.Builder
                 CleanThread();
                 IsBuilding = false;
             });
-            _buildThread.SetApartmentState(ApartmentState.STA);
+            //_buildThread.SetApartmentState(ApartmentState.STA);
             _buildThread.Start();
         }
 
@@ -82,7 +81,7 @@ namespace engenious.ContentTool.Builder
                 BuildThread(Project);
                 IsBuilding = false;
             });
-            _buildThread.SetApartmentState(ApartmentState.STA);
+            //_buildThread.SetApartmentState(ApartmentState.STA);
             _buildThread.Start();
         }
 
@@ -97,83 +96,52 @@ namespace engenious.ContentTool.Builder
             _buildThread.Join();
         }
 
-        private List<CompilerError> CompileCachedSources()
-        {
-            var provider = new CSharpCodeProvider();
-            // Build the parameters for source compilation.
-            var cp = new CompilerParameters();
-
-            // Add an assembly reference.
-            cp.ReferencedAssemblies.Add("System.dll");
-            cp.ReferencedAssemblies.Add(typeof(engenious.Graphics.GraphicsDevice).Assembly.Location);
-            // Generate an executable instead of
-            // a class library.
-            cp.GenerateExecutable = false;
-
-            // Set the assembly file name to generate.
-            cp.OutputAssembly = Path.Combine(Path.GetDirectoryName(Project.ContentProjectPath),"engenious.CreatedContent." + Project.Name + ".dll");
-            // Save the assembly as a physical file.
-            cp.GenerateInMemory = false;
-
-            var sources = new List<string>();
-            foreach (var x in _cache.Files.Values)
-            {
-                if (x.Sources == null)
-                    continue;
-                for (int i = x.Sources.Count - 1; i >= 0; i--)//reverse(newer files first)
-                {
-                    var s = x.Sources[i];
-                    if (s?.Source == null)
-                        continue;
-                    sources.Add(s.Source);
-                }
-
-            }
-
-            if (sources.Count == 0)
-                return new List<CompilerError>(0);
-            //var sources = _cache.Files.SelectMany(x => x.Value?.Sources?.Select(i => i?.Source)).ToArray();
-            // Invoke compilation.
-            var cr = provider.CompileAssemblyFromSource(cp, sources.ToArray());//CompileAssemblyFromFile(cp, sourceFile);
-
-            var lst = new List<CompilerError>();//
-            for (int i = 0; i < cr.Errors.Count; i++)
-            {
-                var e = cr.Errors[i];
-                lst.Add(e);
-            }
-            return lst;
-        }
-
         internal IRenderingSurface RenderingSurface { get; }
         internal GraphicsDevice GraphicsDevice { get; }
-        
+
         protected void BuildThread(ContentItem item)
         {
             FailedBuilds = 0;
             PipelineHelper.PreBuilt(Project);
 
-            var outputDestination = Path.Combine(Path.GetDirectoryName(Project.ContentProjectPath), Project.ConfiguredOutputDirectory);
+            var outputDestination = Path.Combine(Path.GetDirectoryName(Project.ContentProjectPath),
+                Project.ConfiguredOutputDirectory);
 
+            string moduleName = "engenious.CreatedContent." + Project.Name;
+
+            string createdContentAssemblyFile = Path.Combine(Path.GetDirectoryName(Project.ContentProjectPath),
+                moduleName + ".dll");
+            bool rewriteAssembly = File.Exists(createdContentAssemblyFile);
             
-            
-            using (var iContext = new ContentImporterContext())
-            using (var pContext = new ContentProcessorContext(_syncContext, RenderingSurface, GraphicsDevice, Path.GetDirectoryName(Project.ContentProjectPath)))
+            AssemblyDefinition assemblyDefinition = rewriteAssembly ? 
+                AssemblyDefinition.ReadAssembly(createdContentAssemblyFile) : 
+                AssemblyDefinition.CreateAssembly(new AssemblyNameDefinition(moduleName, new Version()), moduleName,
+                    ModuleKind.Dll);
+            using (var iContext = new ContentImporterContext(assemblyDefinition))
+            using (var pContext = new ContentProcessorContext(_syncContext, assemblyDefinition, RenderingSurface, GraphicsDevice,
+                Path.GetDirectoryName(Project.ContentProjectPath)))
             {
                 //Console.WriteLine($"GL Version: {pContext.GraphicsDevice.DriverVersion.ToString()}");
                 //Console.WriteLine($"GLSL Version: {pContext.GraphicsDevice.GlslVersion.ToString()}");
-                
+
+
                 iContext.BuildMessage += RaiseBuildMessage;
                 pContext.BuildMessage += RaiseBuildMessage;
                 InternalBuildItem(item, outputDestination, iContext, pContext);
-                foreach (var error in CompileCachedSources())
+                try
                 {
-                    pContext.RaiseBuildMessage(error.FileName,error.ErrorText,error.IsWarning ? BuildMessageEventArgs.BuildMessageType.Warning : BuildMessageEventArgs.BuildMessageType.Error);
+                    if (rewriteAssembly)
+                    {
+                        File.Delete(createdContentAssemblyFile);
+                    }
+                    assemblyDefinition.Write(createdContentAssemblyFile);
+                }
+                catch (Exception ex)
+                {
+                    pContext.RaiseBuildMessage("<Module>", ex.Message, BuildMessageEventArgs.BuildMessageType.Error);
                 }
             }
 
-
-            
 
             _cache.Save();
         }
@@ -190,9 +158,8 @@ namespace engenious.ContentTool.Builder
             {
                 Directory.Delete(Path.Combine(Path.GetDirectoryName(Project.ContentProjectPath), "obj"), true);
             }
-            catch(Exception ex)//TODO perhaps other delete, to delete all possible files?
+            catch (Exception ex) //TODO perhaps other delete, to delete all possible files?
             {
-                
             }
         }
 
@@ -226,6 +193,7 @@ namespace engenious.ContentTool.Builder
                         new BuildMessageEventArgs(item.RelativePath, item.RelativePath + " skipped",
                             BuildMessageEventArgs.BuildMessageType.Information));
                 }
+
                 importerContext.Dependencies.Clear();
                 processorContext.Dependencies.Clear();
             }
@@ -258,9 +226,6 @@ namespace engenious.ContentTool.Builder
             var buildFile = new BuildFile(item.FilePath, destination);
 
             var importer = item.Importer;
-            buildFile.Sources.Clear();
-            importerContext.SourceFiles = buildFile.Sources;
-            processorContext.SourceFiles = buildFile.Sources;
             var importedFile = importer?.Import(item.FilePath, importerContext);
             if (importedFile == null) return null;
 
@@ -280,13 +245,19 @@ namespace engenious.ContentTool.Builder
 
             using (var fs = new FileStream(destination, FileMode.Create, FileAccess.Write))
             {
-                fs.Write(BitConverter.GetBytes(engenious.Helper.BitHelper.BitConverterToBigEndian(engenious.Content.ContentFile.MAGIC)), 0, sizeof(uint));
+                fs.Write(
+                    BitConverter.GetBytes(
+                        engenious.Helper.BitHelper.BitConverterToBigEndian(engenious.Content.ContentFile.MAGIC)), 0,
+                    sizeof(uint));
 
                 const byte writerVersion = 1;
                 fs.WriteByte(writerVersion);
 
                 var fileTypeBuffer = System.Text.Encoding.UTF8.GetBytes(outputContentFileWriter.FileType);
-                fs.Write(BitConverter.GetBytes(engenious.Helper.BitHelper.BitConverterToLittleEndian((uint)fileTypeBuffer.Length)), 0, sizeof(uint));
+                fs.Write(
+                    BitConverter.GetBytes(
+                        engenious.Helper.BitHelper.BitConverterToLittleEndian((uint) fileTypeBuffer.Length)), 0,
+                    sizeof(uint));
 
                 fs.Write(fileTypeBuffer, 0, fileTypeBuffer.Length);
 

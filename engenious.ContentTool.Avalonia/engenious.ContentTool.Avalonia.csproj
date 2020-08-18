@@ -1,0 +1,74 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Library</OutputType>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Update="**\*.xaml.cs">
+            <DependentUpon>%(Filename)</DependentUpon>
+        </Compile>
+        <AvaloniaResource Include="**\*.xaml">
+            <SubType>Designer</SubType>
+        </AvaloniaResource>
+        <AvaloniaResource Include="Resources\*" />
+        <AvaloniaResource Update="TreeView.xaml">
+          <SubType>Designer</SubType>
+        </AvaloniaResource>
+        <Compile Update="ProjectTreeView.xaml.cs">
+          <DependentUpon>ProjectTreeView.xaml</DependentUpon>
+        </Compile>
+        <AvaloniaResource Update="PropertyGrid.xaml">
+          <SubType>Designer</SubType>
+        </AvaloniaResource>
+        <AvaloniaResource Update="Viewer\PropertyGrid.xaml">
+          <SubType>Designer</SubType>
+        </AvaloniaResource>
+        <Compile Update="Viewer\BitmapViewer.xaml.cs">
+          <DependentUpon>BitmapViewer.xaml</DependentUpon>
+        </Compile>
+        <AvaloniaResource Update="Viewer\SpriteFontViewer.xaml">
+          <SubType>Designer</SubType>
+        </AvaloniaResource>
+        <Compile Update="Viewer\SpriteFontViewer.xaml.cs">
+          <DependentUpon>SpriteFontViewer.xaml</DependentUpon>
+        </Compile>
+        <AvaloniaResource Update="Controls\SpriteFontViewer.xaml">
+          <SubType>Designer</SubType>
+        </AvaloniaResource>
+        <Compile Update="Controls\GroupBox.xaml.cs">
+          <DependentUpon>GroupBox.xaml</DependentUpon>
+        </Compile>
+        <AvaloniaResource Update="Viewer\SpriteFontViewer - Copy.xaml">
+          <SubType>Designer</SubType>
+        </AvaloniaResource>
+        <Compile Update="Viewer\ModelEffectViewer.xaml.cs">
+          <DependentUpon>ModelEffectViewer.xaml</DependentUpon>
+        </Compile>
+        <AvaloniaResource Update="Controls\PropertyGrid.xaml">
+          <SubType>Designer</SubType>
+        </AvaloniaResource>
+        <Compile Update="Controls\PropertyGrid.xaml.cs">
+          <DependentUpon>PropertyGrid.xaml</DependentUpon>
+        </Compile>
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Avalonia" Version="0.10.0-preview2" />
+        <PackageReference Include="Avalonia.Desktop" Version="0.10.0-preview2" />
+        <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.0-preview2" />
+        <PackageReference Include="Dialogs.Avalonia" Version="0.1.28" />
+        <PackageReference Include="engenious.opentk" Version="4.0.0.2-pre" />
+        <PackageReference Include="MessageBox.Avalonia" Version="0.10.0-prev1" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\..\engenious.Avalonia\engenious.Avalonia.csproj" Condition="Exists('..\..\engenious.Avalonia\engenious.Avalonia.csproj')"/>
+      <ProjectReference Include="..\engenious.ContentTool\engenious.ContentTool.csproj" Condition="Exists('..\..\engenious.Avalonia\engenious.ContentTool.csproj')"/>
+    </ItemGroup>
+
+    <Target Name="CopyAssembly" AfterTargets="Build">
+        <Copy SourceFiles="bin\$(Configuration)\$(TargetFramework)\engenious.ContentTool.Avalonia.dll" DestinationFolder="..\bin\$(Configuration)\$(TargetFramework)\Plugins" />
+    </Target>
+    
+
+</Project>

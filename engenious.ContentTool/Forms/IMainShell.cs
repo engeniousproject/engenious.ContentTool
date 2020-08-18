@@ -1,55 +1,55 @@
 ﻿using System;
-using System.Drawing;
-using System.Windows.Forms;
+using System.Threading.Tasks;
 using engenious.ContentTool.Models;
 using engenious.ContentTool.Viewer;
 using engenious.Graphics;
-using static engenious.ContentTool.Delegates;
 
 namespace engenious.ContentTool.Forms
 {
-    public interface IMainShell
+    public interface IMainShell : IDisposable
     {
+        void Run();
+        
         IViewer CurrentViewer { get; }
         ContentProject Project { get; set; }
         bool IsRenderingSuspended { get; }
 
-        void Invoke(Delegate d);
-        void BeginInvoke(Delegate d);
+        void Invoke(Action d);
+        void BeginInvoke(Action d);
 
-        bool ShowCloseWithoutSavingConfirmation();
-        string ShowOpenDialog();
-        string ShowSaveAsDialog();
-        string ShowIntegrateDialog();
+        Task<bool> ShowCloseWithoutSavingConfirmation();
+        Task<string> ShowOpenDialog();
+        Task<string> ShowSaveAsDialog();
+        Task<string> ShowIntegrateDialog();
 
-        void WriteLog(string text, System.Drawing.Color color = default(System.Drawing.Color));
-        void WriteLineLog(string text, System.Drawing.Color color = default(System.Drawing.Color));
-        void ClearLog();
-        void ShowLog();
-        void HideLog();
+        Task WriteLog(string text, engenious.Color color = default(engenious.Color));
+        Task WriteLineLog(string text, engenious.Color color = default(engenious.Color));
+        Task ClearLog();
+        Task ShowLog();
+        Task HideLog();
 
-        void ShowLoading(string title = "Please wait...");
-        void HideLoading();
+        Task ShowLoading(string title = "Please wait...");
+        Task HideLoading();
 
-        void ShowViewer(IViewer viewer,ContentFile file);
-        void HideViewer();
+        Task ShowViewer(IViewer viewer,ContentFile file);
+        Task HideViewer();
 
-        void RenameItem(ContentItem item);
-        void RemoveItem(ContentItem item);
+        Task RenameItem(ContentItem item);
+        Task RemoveItem(ContentItem item);
 
-        void ShowAbout();
+        Task ShowAbout();
 
-        bool ShowNotFoundDelete();
+        Task<bool> ShowNotFoundDelete();
 
-        void ReloadView();
+        Task ReloadView();
 
-        void WaitProgress(int progress);
+        Task WaitProgress(int progress);
 
-        void SuspendRendering();
-        void ResumeRendering();
+        Task SuspendRendering();
+        Task ResumeRendering();
 
-        string ShowFolderSelectDialog();
-        string[] ShowFileSelectDialog();
+        Task<string> ShowFolderSelectDialog();
+        Task<string[]> ShowFileSelectDialog();
 
         event EventHandler ViewReloaded;
 

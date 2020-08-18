@@ -6,15 +6,12 @@ using System.Linq.Expressions;
 using System.Reflection;
 using engenious.Content.Pipeline;
 using engenious.ContentTool.Models;
-using engenious.Pipeline.Pipeline.Editors;
 
 namespace engenious.ContentTool
 {
     public static class PipelineHelper
     {
         private static IList<Type> _importers;
-        private static readonly List<Type> Editors = new List<Type>();
-        private static readonly Dictionary<string, ContentEditorWrapper> EditorsByType = new Dictionary<string, ContentEditorWrapper>();
         private static readonly Dictionary<string, Type> Processors = new Dictionary<string, Type>();
 
 
@@ -64,7 +61,6 @@ namespace engenious.ContentTool
             }
             ListImporters();
             ListProcessors();
-            ListEditors();
         }
 
         private static void ListImporters()
@@ -101,70 +97,7 @@ namespace engenious.ContentTool
             }
             return fitting;
         }
-
-        public static ContentEditorWrapper GetContentEditor(string extension, Type inputType, Type outputType)
-        {
-            if (EditorsByType == null)
-                DefaultInit();
-            var key = extension + "$" + inputType.FullName + "$" + outputType.FullName;
-            ContentEditorWrapper editorWrap;
-            // ReSharper disable once PossibleNullReferenceException
-            if (EditorsByType.TryGetValue(key, out editorWrap))
-                return editorWrap;
-            var genericType = typeof(IContentEditor<,>).MakeGenericType(inputType, outputType);
-
-            foreach (var type in Editors)
-            {
-                var attribute =
-                   (ContentEditorAttribute)type.GetCustomAttributes(typeof(ContentEditorAttribute), true).First();
-                if (attribute == null)
-                    continue;
-                if (attribute.SupportedFileExtensions.Contains(extension) && genericType.IsAssignableFrom(type))
-                {
-                    var editor = (IContentEditor)Activator.CreateInstance(type);
-                    if (editor == null)
-                        continue;
-                    var methodInfo = genericType.GetMethod("Open");
-                    if (methodInfo == null)
-                        continue;
-                    var inputOArg = Expression.Parameter(typeof (object));
-                    var outputOArg = Expression.Parameter(typeof (object));
-
-
-                    var openMethod = Expression.Lambda<Action<object, object>>(
-                        Expression.Call(Expression.Constant(editor), methodInfo,
-                            Expression.Convert(inputOArg, inputType), Expression.Convert(outputOArg, outputType)),
-                        inputOArg, outputOArg).Compile();
-
-                    editorWrap = new ContentEditorWrapper(editor,openMethod);
-                    foreach (var ext in attribute.SupportedFileExtensions)
-                        EditorsByType[ext + "$" + inputType.FullName + "$" + outputType.FullName] = editorWrap;
-                    
-                }
-            }
-
-            return editorWrap;
-            //editorsByType[key] = 
-        }
-
-        private static void ListEditors()
-        {
-            Editors.Clear();
-            foreach (var assembly in Assemblies)
-            {
-                foreach (var type in assembly.GetTypes())
-                {
-                    if (typeof(IContentEditor).IsAssignableFrom(type) && !(type.IsAbstract || type.IsInterface))
-                    {
-                        var attribute =
-                   (ContentEditorAttribute)type.GetCustomAttributes(typeof(ContentEditorAttribute), true).First();
-                        if (attribute == null)
-                            continue;
-                        Editors.Add(type);
-                    }
-                }
-            }
-        }
+        
         private static void ListProcessors()
         {
             Processors.Clear();

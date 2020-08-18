@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Windows.Forms;
 using engenious.ContentTool.Models;
 
 namespace engenious.ContentTool.Viewer
@@ -21,12 +20,15 @@ namespace engenious.ContentTool.Viewer
 
         private void LoadViewers()
         {
-            var types = Assembly.GetExecutingAssembly().GetTypes().Where(p => typeof(IViewer).IsAssignableFrom(p)).Where(c => c.GetCustomAttributes(typeof(ViewerInfo), true).Length > 0);//TODO load from project references as well
-
-            foreach(var type in types)
+            foreach (var assembly in ReferenceManager.References)
             {
-                foreach(var attr in type.GetCustomAttributes(typeof(ViewerInfo), true).Where(x=>x != null))
-                    _viewerTypes.Add(((ViewerInfo)attr).Extension, (type, ((ViewerInfo)attr).NeedsCompilation));
+                var types = assembly.GetTypes().Where(p => typeof(IViewer).IsAssignableFrom(p)).Where(c => c.GetCustomAttributes(typeof(ViewerInfo), true).Length > 0);//TODO load from project references as well
+
+                foreach(var type in types)
+                {
+                    foreach(var attr in type.GetCustomAttributes(typeof(ViewerInfo), true).Where(x=>x != null))
+                        _viewerTypes.Add(((ViewerInfo)attr).Extension, (type, ((ViewerInfo)attr).NeedsCompilation));
+                }
             }
         }
 

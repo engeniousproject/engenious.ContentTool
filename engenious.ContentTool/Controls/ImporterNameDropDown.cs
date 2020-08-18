@@ -1,10 +1,5 @@
-﻿using System;
-using System.ComponentModel;
-using System.Drawing;
-using System.Drawing.Design;
+﻿using System.ComponentModel;
 using System.IO;
-using System.Windows.Forms;
-using System.Windows.Forms.Design;
 using engenious.ContentTool.Models;
 
 namespace engenious.ContentTool.Controls

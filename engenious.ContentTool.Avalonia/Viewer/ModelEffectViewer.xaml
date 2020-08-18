@@ -1,0 +1,25 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml'
+             x:Class="engenious.ContentTool.Avalonia.ModelEffectViewer"
+             xmlns:ct="clr-namespace:engenious.ContentTool.Avalonia"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch"
+             xmlns:models="clr-namespace:engenious.ContentTool.Models;assembly=engenious.ContentTool"
+             xmlns:openGl="clr-namespace:Avalonia.OpenGL;assembly=Avalonia.OpenGL"
+             xmlns:avalonia="clr-namespace:engenious.Avalonia;assembly=engenious.Avalonia">
+    <Design.DataContext>
+        <ct:ModelEffectViewer />
+    </Design.DataContext>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            
+        </StackPanel>
+        <GridSplitter Grid.Column="1" Width="10"/>
+        <avalonia:AvaloniaRenderingSurface Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="renderingSurface"/>
+    </Grid>
+</UserControl>

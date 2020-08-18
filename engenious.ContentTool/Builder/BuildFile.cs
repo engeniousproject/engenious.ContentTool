@@ -15,13 +15,11 @@ namespace engenious.ContentTool.Builder
         public DateTime OutputFileModifiedTime { get; private set; }
 
         public List<string> Dependencies { get; }
-        public List<SourceFile> Sources { get; }
         public BuildFile(string inputFilePath, string outputFilePath)
         {
             InputFilePath = inputFilePath;
             OutputFilePath = outputFilePath;
             Dependencies = new List<string>();
-            Sources = new List<SourceFile>();
             RefreshModifiedTime();
         }
 

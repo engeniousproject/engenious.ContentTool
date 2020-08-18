@@ -1,0 +1,53 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml'
+             x:Class="engenious.ContentTool.Avalonia.PropertyGrid"
+             xmlns:ct="clr-namespace:engenious.ContentTool.Avalonia"
+             xmlns:models="clr-namespace:engenious.ContentTool.Models;assembly=engenious.ContentTool">
+
+    <ItemsControl HorizontalAlignment="Stretch" Items="{Binding Path=PropertyView}" x:Name="itemsControl">
+        <ItemsControl.DataTemplates>
+            <DataTemplate DataType="ct:PropertyView">
+                <Grid Margin="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition
+                            Width="{Binding Path=DataContext.Column1Width, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=ItemsControl}}" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Border BorderThickness="1 0 0 1" Margin="0" BorderBrush="{DynamicResource ThemeBorderMidBrush}"
+                            Padding="5 2 5 2">
+                        <TextBlock Text="{Binding Path=Name}" HorizontalAlignment="Stretch" />
+                    </Border>
+                    <GridSplitter Grid.Column="1" MaxWidth="1" Margin="0">
+                        <GridSplitter.Template>
+                            <ControlTemplate>
+                                <Grid>
+                                    <Rectangle Fill="{DynamicResource ThemeBorderMidBrush}" />
+                                </Grid>
+                            </ControlTemplate>
+                        </GridSplitter.Template>
+                    </GridSplitter>
+                    <Border Grid.Column="2" BorderThickness="0 0 1 1" Margin="0"
+                            BorderBrush="{DynamicResource ThemeBorderMidBrush}" Padding="5 2 5 2">
+                        <ContentControl Content="{Binding Path=PropertyEditor}">
+                            <ContentControl.DataTemplates>
+                                <DataTemplate DataType="ct:PrimitivePropertyEditor">
+                                    <TextBox Text="{Binding Path=Property.Value}" IsReadOnly="{Binding Path=IsReadOnly}"/>
+                                </DataTemplate>
+                                <DataTemplate DataType="ct:ChoicePropertyEditor">
+                                    <ComboBox Items="{Binding Path=Choices}" SelectedItem="{Binding Path=Value}" IsEnabled="{Binding !IsReadOnly}"/>
+                                </DataTemplate>
+                            </ContentControl.DataTemplates>
+                        </ContentControl>
+                    </Border>
+                </Grid>
+            </DataTemplate>
+            <DataTemplate DataType="ct:ComplexPropertyView">
+                <Expander Header="{Binding Path=Name}" IsVisible="{Binding !IsNull}">
+                    <ct:PropertyGrid PropertyView="{Binding}" Margin="10 0 0 0"/>
+                </Expander>
+            </DataTemplate>
+        </ItemsControl.DataTemplates>
+    </ItemsControl>
+</UserControl>
