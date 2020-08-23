@@ -136,30 +136,29 @@ namespace engenious.ContentTool
                 
                 project.OutputDirectory = arguments.OutputDirectory ?? project.OutputDirectory;
                 project.Configuration = arguments.Configuration ?? project.Configuration;
-                
-                var builder = new ContentBuilder(project);
 
-                builder.BuildMessage += eventArgs =>
+                using (var builder = new ContentBuilder(project))
                 {
-                    if (eventArgs.MessageType != BuildMessageEventArgs.BuildMessageType.Information)
-                        Console.Error.WriteLine(eventArgs.Message);
-                };
+                    builder.BuildMessage += eventArgs =>
+                    {
+                        if (eventArgs.MessageType != BuildMessageEventArgs.BuildMessageType.Information)
+                            Console.Error.WriteLine(eventArgs.Message);
+                    };
 
-                switch (arguments.BuildAction)
-                {
-                    case BuildAction.Clean:
-                        builder.Clean();
-                        break;
-                    case BuildAction.Build:
-                        builder.Build();
-                        break;
-                    case BuildAction.Rebuild:
-                        builder.Rebuild();
-                        break;
+                    switch (arguments.BuildAction)
+                    {
+                        case BuildAction.Clean:
+                            builder.Clean();
+                            break;
+                        case BuildAction.Build:
+                            builder.Build();
+                            break;
+                        case BuildAction.Rebuild:
+                            builder.Rebuild();
+                            break;
+                    }
                 }
-                
-                builder.Join();
-                
+
                 return 0;
             }
             catch (Exception ex)

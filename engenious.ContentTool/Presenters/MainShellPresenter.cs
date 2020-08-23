@@ -14,7 +14,7 @@ using engenious.Graphics;
 
 namespace engenious.ContentTool.Presenters
 {
-    internal class MainShellPresenter
+    internal class MainShellPresenter : IDisposable
     {
         private readonly IMainShell _shell;
         private readonly IPromptShell _promptShell;
@@ -430,6 +430,10 @@ namespace engenious.ContentTool.Presenters
         private async void Shell_CloseProjectClick(ContentItem item)
         {
             await CloseProject();
+        }
+
+        public void Dispose()
+        {
         }
     }
 }
