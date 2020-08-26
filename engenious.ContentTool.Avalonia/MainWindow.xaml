@@ -4,7 +4,7 @@
         x:Class="engenious.ContentTool.Avalonia.MainWindow"
         Title="engenious Content Tool"
         Width="800"
-        Height="600" Closing="FormClosing">
+        Height="600" Closing="FormClosing" Opened="FormLoading">
     <Design.DataContext>
         <ct:MainWindow />
     </Design.DataContext>

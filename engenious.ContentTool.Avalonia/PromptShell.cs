@@ -48,7 +48,7 @@ namespace engenious.ContentTool.Avalonia
         {
             var msg = MessageBox.Avalonia.MessageBoxManager.GetMessageBoxStandardWindow(title, text,
                 TranslateMessageBoxButtons(buttons), TranslateMessageBoxType(type));
-            var res = (parent is global::Avalonia.Controls.Window parentWindow) ? await msg.ShowDialog(parentWindow) : await msg.Show();
+            var res = (parent is global::Avalonia.Controls.Window parentWindow) ? await msg.ShowDialog(parentWindow).ConfigureAwait(false) : await msg.Show().ConfigureAwait(false);
             return TranslateMessageBoxResult(res);
         }
 

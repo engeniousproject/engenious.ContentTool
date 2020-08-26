@@ -32,6 +32,8 @@ namespace engenious.ContentTool.Presenters
             _promptShell = promptShell;
             _shell = shell;
             _arguments = arguments;
+            
+
 
             shell.CloseProjectClick += async i => await CloseProject();
 

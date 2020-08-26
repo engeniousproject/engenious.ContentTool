@@ -285,7 +285,7 @@ namespace engenious.ContentTool.Avalonia
 
         public void Discard()
         {
-            
+            UnsavedChanges = false;
         }
 
         public IHistory History { get; private set; }

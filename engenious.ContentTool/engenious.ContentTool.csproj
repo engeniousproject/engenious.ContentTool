@@ -106,7 +106,7 @@
         <PackageReference Include="engenious" Version="0.5.0.5-alpha" Condition="!Exists('..\engenious\engenious.csproj')" />
 
         <ProjectReference Include="..\..\engenious.Pipeline\engenious.Pipeline.csproj" Condition="Exists('..\..\engenious.Pipeline\engenious.Pipeline.csproj')" />
-        <PackageReference Include="engenious.Pipeline" Version="0.5.0.3-alpha" Condition="!Exists('..\..\engenious.Pipeline\engenious.Pipeline.csproj')" />
+        <PackageReference Include="engenious.Pipeline" Version="0.5.0.4-alpha" Condition="!Exists('..\..\engenious.Pipeline\engenious.Pipeline.csproj')" />
 
 
         <PackageReference Include="LitGit" Version="0.2.0.18-alpha" PrivateAssets="all" />

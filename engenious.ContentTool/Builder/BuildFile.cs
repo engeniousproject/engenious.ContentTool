@@ -13,21 +13,30 @@ namespace engenious.ContentTool.Builder
 
         public DateTime InputFileModifiedTime { get; private set; }
         public DateTime OutputFileModifiedTime { get; private set; }
+        
+        public List<string> OutputTypes { get; }
 
         public List<string> Dependencies { get; }
-        public BuildFile(string inputFilePath, string outputFilePath)
+        
+        public Guid BuildId { get; private set; }
+        
+        public bool CreatesUserContent { get; set; }
+        
+        public BuildFile(Guid buildId, string inputFilePath, string outputFilePath)
         {
             InputFilePath = inputFilePath;
             OutputFilePath = outputFilePath;
             Dependencies = new List<string>();
-            RefreshModifiedTime();
+            OutputTypes = new List<string>();
+            RefreshBuildCache(buildId);
         }
 
-        public BuildFile(string inputFilePath, string outputFileDirectory, string name)
-            : this(inputFilePath, Path.Combine(outputFileDirectory, name)){}
+        public BuildFile(Guid buildId, string inputFilePath, string outputFileDirectory, string name)
+            : this(buildId, inputFilePath, Path.Combine(outputFileDirectory, name)){}
 
-        public void RefreshModifiedTime()
+        public void RefreshBuildCache(Guid buildId)
         {
+            BuildId = buildId;
             InputFileModifiedTime = new FileInfo(InputFilePath).LastWriteTimeUtc;
 
             if(File.Exists(OutputFilePath))

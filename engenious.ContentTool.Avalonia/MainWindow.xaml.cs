@@ -61,6 +61,8 @@ namespace engenious.ContentTool.Avalonia
             DataContext = this;
             InitializeComponent();
 
+            
+            
             _projectTreeView = this.FindControl<ProjectTreeView>("projectTreeView");
             _projectTreeView.SelectedItemChanged +=
                 (sender, args) => OnItemSelect?.Invoke(_projectTreeView.SelectedItem);
@@ -482,7 +484,6 @@ namespace engenious.ContentTool.Avalonia
 
         public async Task ShowLog()
         {
-            Project.OutputDirectory = "bla";
             LogShown = true;
         }
 
@@ -553,6 +554,8 @@ namespace engenious.ContentTool.Avalonia
         private void OnRebuildButtonClick(object sender, RoutedEventArgs e) =>
             RebuildClick?.Invoke(sender, EventArgs.Empty);
 
+        private async void FormLoading(object sender, EventArgs e) =>
+            OnShellLoad?.Invoke(sender, EventArgs.Empty);
         private async void FormClosing(object sender, CancelEventArgs e)
         {
             if (Project == null ||

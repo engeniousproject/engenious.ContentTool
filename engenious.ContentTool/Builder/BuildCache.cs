@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using engenious.Content.Pipeline;
 
 namespace engenious.ContentTool.Builder
 {
@@ -9,12 +10,15 @@ namespace engenious.ContentTool.Builder
     public class BuildCache
     {
         public string CacheFilePath { get; private set; }
-
+        
+        [field: NonSerialized]
+        public AssemblyCreatedContent AssemblyCreatedContent { get; set; }
         public Dictionary<string, BuildFile> Files { get; } = new Dictionary<string, BuildFile>();
 
-        protected BuildCache(string cacheFilePath)
+        protected BuildCache(string cacheFilePath, AssemblyCreatedContent assemblyCreatedContent)
         {
             CacheFilePath = cacheFilePath;
+            AssemblyCreatedContent = assemblyCreatedContent;
             //Files
         }
 
@@ -23,31 +27,43 @@ namespace engenious.ContentTool.Builder
             Files[path] = file;
         }
 
-        public void AddDependencies(string importDir, IEnumerable<string> dependencies)
+        public BuildFile GetFile(string path)
+        {
+            return Files.TryGetValue(path, out var ret) ? ret : null;
+        }
+        
+
+        public void AddDependencies(Guid buildId, string importDir, IEnumerable<string> dependencies)
         {
             foreach (var dependency in dependencies)
             {
                 var absPath = Path.Combine(importDir, dependency);
                 if (Files.ContainsKey(absPath))
-                    Files[absPath].RefreshModifiedTime();
+                    Files[absPath].RefreshBuildCache(buildId);
                 else
-                    Files.Add(absPath, new BuildFile(absPath,null));
+                    Files.Add(absPath, new BuildFile(buildId, absPath,null));
 
             }
         }
 
-        public bool NeedsRebuild(string inputPath,DateTime? parentModifiedTime=null)
+        public bool NeedsRebuild(string relativePath, string inputPath, DateTime? parentModifiedTime=null)
         {
-            if(Files.TryGetValue(inputPath, out BuildFile val))
+            if(Files.TryGetValue(inputPath, out BuildFile buildFile))
             {
-                if (val.NeedsRebuild(parentModifiedTime))
+                if (buildFile.NeedsRebuild(parentModifiedTime))
                     return true;
-                foreach (var dependency in val.Dependencies)
+                foreach (var dependency in buildFile.Dependencies)
                 {
-                    if (NeedsRebuild(dependency,parentModifiedTime ?? val.OutputFileModifiedTime))
+                    if (NeedsRebuild(relativePath, dependency,parentModifiedTime ?? buildFile.OutputFileModifiedTime))
                         return true;
                 }
-                return false;
+
+                if (!AssemblyCreatedContent.MostRecentBuildFileBuildIdMapping.TryGetValue(relativePath,
+                    out var createdContentBuildId))
+                    return buildFile.CreatesUserContent;
+                if (createdContentBuildId == null)
+                    return true;
+                return buildFile.BuildId != createdContentBuildId;
             }
             return true;
         }
@@ -108,11 +124,11 @@ namespace engenious.ContentTool.Builder
         /// </summary>
         /// <param name="cacheFilePath">Location of the cache file</param>
         /// <returns>The build cache</returns>
-        public static BuildCache Load(string cacheFilePath)
+        public static BuildCache Load(string cacheFilePath, AssemblyCreatedContent assemblyCreatedContent)
         {
             if (!File.Exists(cacheFilePath))
             {
-                var cache = new BuildCache(cacheFilePath);
+                var cache = new BuildCache(cacheFilePath, assemblyCreatedContent);
 
                 return cache;
             }
@@ -122,7 +138,9 @@ namespace engenious.ContentTool.Builder
                 using (var fs = new FileStream(cacheFilePath, FileMode.Open, FileAccess.Read))
                 {
                     var formatter = new BinaryFormatter();
-                    return (BuildCache)formatter.Deserialize(fs);
+                    var cache = (BuildCache) formatter.Deserialize(fs);
+                    cache.AssemblyCreatedContent = assemblyCreatedContent;
+                    return cache;
                 }
             }
             catch
@@ -135,7 +153,7 @@ namespace engenious.ContentTool.Builder
                 {
                     // ignored
                 }
-                return Load(cacheFilePath);
+                return Load(cacheFilePath, assemblyCreatedContent);
             }
         }
     }

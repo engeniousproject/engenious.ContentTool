@@ -24,8 +24,6 @@ namespace engenious.ContentTool.Builder
 
         private readonly SynchronizationContext _syncContext;
 
-        private readonly BuildCache _cache;
-
         private readonly Thread _buildThread;
         private readonly ConcurrentQueue<BuildTask> _buildQueue;
         private readonly AutoResetEvent _startBuild;
@@ -62,14 +60,12 @@ namespace engenious.ContentTool.Builder
             RenderingSurface = renderingSurface;
             GraphicsDevice = graphicsDevice;
 
-            _cache = BuildCache.Load(Path.Combine(Path.GetDirectoryName(project.ContentProjectPath), "obj",
-                project.Configuration,
-                project.Name + ".dat"));
-            
-            
+
             _buildThreadCancellation = new CancellationTokenSource();
+            _startBuild = new AutoResetEvent(false);
             var buildThreadToken = _buildThreadCancellation.Token;
             buildThreadToken.Register(() => _startBuild.Set());
+            
             
             _buildQueue = new ConcurrentQueue<BuildTask>();
             
@@ -160,14 +156,33 @@ namespace engenious.ContentTool.Builder
             string createdContentAssemblyFile = Path.Combine(Path.GetDirectoryName(Project.ContentProjectPath),
                 moduleName + ".dll");
             bool rewriteAssembly = File.Exists(createdContentAssemblyFile);
+
+            Guid buildId = Guid.NewGuid();
             
-            AssemblyDefinition assemblyDefinition = rewriteAssembly ? 
-                AssemblyDefinition.ReadAssembly(createdContentAssemblyFile) : 
-                AssemblyDefinition.CreateAssembly(new AssemblyNameDefinition(moduleName, new Version()), moduleName,
+            AssemblyDefinition assemblyDefinition = null;
+            if (rewriteAssembly)
+            {
+                try
+                {
+                    assemblyDefinition = AssemblyDefinition.ReadAssembly(createdContentAssemblyFile);
+                }
+                catch (Exception e)
+                {
+                    rewriteAssembly = false;
+                }
+            }
+            if (!rewriteAssembly)
+                assemblyDefinition = AssemblyDefinition.CreateAssembly(new AssemblyNameDefinition(moduleName, new Version()), moduleName,
                     ModuleKind.Dll);
-            using (var iContext = new ContentImporterContext(assemblyDefinition))
-            using (var pContext = new ContentProcessorContext(_syncContext, assemblyDefinition, RenderingSurface, GraphicsDevice,
-                Path.GetDirectoryName(Project.ContentProjectPath)))
+            var asmCreatedContent = new AssemblyCreatedContent(assemblyDefinition, buildId);
+            
+            var cache = BuildCache.Load(Path.Combine(Path.GetDirectoryName(item.Project.ContentProjectPath), "obj",
+                item.Project.Configuration,
+                item.Project.Name + ".dat"), asmCreatedContent);
+            
+            using (var iContext = new ContentImporterContext(buildId, asmCreatedContent, item.Project.FilePath))
+            using (var pContext = new ContentProcessorContext(_syncContext, asmCreatedContent, RenderingSurface, GraphicsDevice,
+                buildId, Path.GetDirectoryName(Project.ContentProjectPath), item.Project.FilePath))
             {
                 //Console.WriteLine($"GL Version: {pContext.GraphicsDevice.DriverVersion.ToString()}");
                 //Console.WriteLine($"GLSL Version: {pContext.GraphicsDevice.GlslVersion.ToString()}");
@@ -175,7 +190,7 @@ namespace engenious.ContentTool.Builder
 
                 iContext.BuildMessage += RaiseBuildMessage;
                 pContext.BuildMessage += RaiseBuildMessage;
-                InternalBuildItem(item, outputDestination, iContext, pContext, cancellationToken);
+                InternalBuildItem(item, outputDestination, iContext, pContext, cancellationToken, cache);
                 try
                 {
                     if (rewriteAssembly)
@@ -184,19 +199,22 @@ namespace engenious.ContentTool.Builder
                     }
                     assemblyDefinition.Write(createdContentAssemblyFile);
                 }
-                catch (Exception ex)
+                catch (FileNotFoundException ex)
                 {
                     pContext.RaiseBuildMessage("<Module>", ex.Message, BuildMessageEventArgs.BuildMessageType.Error);
                 }
             }
 
 
-            _cache.Save();
+            cache.Save();
         }
 
         protected void CleanThread(CancellationToken cancellationToken)
         {
-            foreach (var item in _cache.Files)
+            var cache = BuildCache.Load(Path.Combine(Path.GetDirectoryName(Project.ContentProjectPath), "obj",
+                Project.Configuration,
+                Project.Name + ".dat"), null);
+            foreach (var item in cache.Files)
             {
                 if (cancellationToken.IsCancellationRequested)
                     return;
@@ -214,7 +232,7 @@ namespace engenious.ContentTool.Builder
         }
 
         private void InternalBuildItem(ContentItem item, string outputDestination,
-            ContentImporterContext importerContext, ContentProcessorContext processorContext, CancellationToken cancellationToken)
+            ContentImporterContext importerContext, ContentProcessorContext processorContext, CancellationToken cancellationToken, BuildCache cache)
         {
             if (cancellationToken.IsCancellationRequested)
                 return;
@@ -227,17 +245,17 @@ namespace engenious.ContentTool.Builder
             {
                 foreach (var child in folder.Content)
                 {
-                    InternalBuildItem(child, outputDestination, importerContext, processorContext, cancellationToken);
+                    InternalBuildItem(child, outputDestination, importerContext, processorContext, cancellationToken, cache);
                 }
             }
             else
             {
-                if (_cache.NeedsRebuild(item.FilePath))
+                if (cache.NeedsRebuild(importerContext.GetRelativePathToContentDirectory(item.FilePath), item.FilePath))
                 {
                     InternalBuildFile(item as ContentFile,
                         Path.Combine(Path.GetDirectoryName(outputDestination),
                             Path.GetFileNameWithoutExtension(item.Name) + FileExtension), importerContext,
-                        processorContext, cancellationToken);
+                        processorContext, cancellationToken, cache);
                     RaiseBuildMessage(this,
                         new BuildMessageEventArgs(item.RelativePath, item.RelativePath + " built",
                             BuildMessageEventArgs.BuildMessageType.Information));
@@ -257,9 +275,9 @@ namespace engenious.ContentTool.Builder
         protected void RaiseBuildMessage(object sender, BuildMessageEventArgs e) => BuildMessage?.Invoke(e);
 
         public object InternalBuildFile(ContentFile item, string destination, ContentImporterContext importerContext,
-            ContentProcessorContext processorContext, CancellationToken cancellationToken)
+            ContentProcessorContext processorContext, CancellationToken cancellationToken, BuildCache cache)
         {
-            return BuildFile(item, destination, importerContext, processorContext, cancellationToken, _cache);
+            return BuildFile(item, destination, importerContext, processorContext, cancellationToken, cache);
         }
 
         /// <summary>
@@ -267,8 +285,10 @@ namespace engenious.ContentTool.Builder
         /// </summary>
         /// <param name="item">ContentFile to build</param>
         /// <param name="destination">Location to save to</param>
+        /// <param name="cancellationToken"></param>
         /// <param name="importerContext"></param>
         /// <param name="processorContext"></param>
+        /// <param name="cache"></param>
         /// <returns></returns>
         public static object BuildFile(ContentFile item, string destination, ContentImporterContext importerContext,
             ContentProcessorContext processorContext, CancellationToken cancellationToken, BuildCache cache = null)
@@ -280,7 +300,7 @@ namespace engenious.ContentTool.Builder
             var dirName = Path.GetDirectoryName(destination);
             Directory.CreateDirectory(dirName);
 
-            var buildFile = new BuildFile(item.FilePath, destination);
+            var buildFile = new BuildFile(processorContext.BuildId, item.FilePath, destination);
             if (cancellationToken.IsCancellationRequested)
                 return null;
             var importer = item.Importer;
@@ -289,7 +309,7 @@ namespace engenious.ContentTool.Builder
             if (cancellationToken.IsCancellationRequested)
                 return null;
             buildFile.Dependencies.AddRange(importerContext.Dependencies);
-            cache?.AddDependencies(Path.GetDirectoryName(item.FilePath), importerContext.Dependencies);
+            cache?.AddDependencies(importerContext.BuildId, Path.GetDirectoryName(item.FilePath), importerContext.Dependencies);
 
             var processor = item.Processor;
 
@@ -298,7 +318,7 @@ namespace engenious.ContentTool.Builder
             if (cancellationToken.IsCancellationRequested)
                 return null;
             buildFile.Dependencies.AddRange(processorContext.Dependencies);
-            cache?.AddDependencies(Path.GetDirectoryName(item.FilePath), processorContext.Dependencies);
+            cache?.AddDependencies(processorContext.BuildId, Path.GetDirectoryName(item.FilePath), processorContext.Dependencies);
 
             var typeWriter = SerializationManager.Instance.GetWriter(processedFile.GetType());
             var outputContentFileWriter = new engenious.Content.ContentFile(typeWriter.RuntimeReaderName);
@@ -326,7 +346,8 @@ namespace engenious.ContentTool.Builder
             }
 
             cache?.AddFile(item.FilePath, buildFile);
-            buildFile.RefreshModifiedTime();
+            buildFile.RefreshBuildCache(processorContext.BuildId);
+            buildFile.CreatesUserContent = processorContext.CreatedContent.CreatesUserContent(processorContext.GetRelativePathToContentDirectory(item.FilePath));
 
             return processedFile;
         }
