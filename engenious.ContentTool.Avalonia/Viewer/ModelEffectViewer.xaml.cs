@@ -12,8 +12,8 @@ using engenious.ContentTool.Models;
 using engenious.ContentTool.Models.History;
 using engenious.ContentTool.Viewer;
 using engenious.Graphics;
-using OpenToolkit;
-using OpenToolkit.Graphics.OpenGL4;
+using OpenTK;
+using OpenTK.Graphics.OpenGL4;
 
 namespace engenious.ContentTool.Avalonia
 {

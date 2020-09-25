@@ -63,8 +63,8 @@
         <PackageReference Include="Avalonia.Desktop" Version="0.10.0-preview2" />
         <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.0-preview2" />
         <PackageReference Include="Dialogs.Avalonia" Version="0.1.28" />
-        <PackageReference Include="engenious.opentk" Version="4.0.0.3-pre" />
         <PackageReference Include="MessageBox.Avalonia" Version="0.10.0-prev1" />
+        <PackageReference Include="OpenTK" Version="4.0.0-pre9.7" />
     </ItemGroup>
     <ItemGroup>
       <PackageReference Include="engenious.Avalonia" Version="0.5.0.5-alpha" Condition="!Exists('..\..\engenious.Avalonia\engenious.Avalonia.csproj')" />

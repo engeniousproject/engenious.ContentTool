@@ -2,7 +2,7 @@ using System;
 using engenious.Avalonia;
 using engenious.Graphics;
 using engenious.Helper;
-using OpenToolkit.Graphics.OpenGL4;
+using OpenTK.Graphics.OpenGL4;
 using DrawElementsType = engenious.Graphics.DrawElementsType;
 
 namespace engenious.ContentTool.Avalonia
