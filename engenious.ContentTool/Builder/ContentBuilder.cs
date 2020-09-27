@@ -43,7 +43,10 @@ namespace engenious.ContentTool.Builder
                 BuildTaskType = buildTaskType;
                 BuildItem = buildItem;
                 CancellationTokenSource = new CancellationTokenSource();
+                CompletionHandle = new ManualResetEvent(false);
             }
+            
+            public ManualResetEvent CompletionHandle { get; }
 
             public BuildTaskType BuildTaskType { get; }
             
@@ -97,6 +100,8 @@ namespace engenious.ContentTool.Builder
                             default:
                                 throw new ArgumentOutOfRangeException();
                         }
+
+                        buildTask.CompletionHandle.Set();
                         IsBuilding = false;
                     }
                 }
@@ -105,9 +110,9 @@ namespace engenious.ContentTool.Builder
             _buildThread.Start(buildThreadToken);
         }
 
-        public void Build()
+        public BuildTask Build()
         {
-            Build(Project);
+            return Build(Project);
         }
 
         private BuildTask EnqueueBuildTask(BuildTask task)

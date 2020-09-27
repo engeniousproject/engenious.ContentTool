@@ -145,18 +145,23 @@ namespace engenious.ContentTool
                             Console.Error.WriteLine(eventArgs.Message);
                     };
 
+                    ContentBuilder.BuildTask buildTask;
                     switch (arguments.BuildAction)
                     {
                         case BuildAction.Clean:
-                            builder.Clean();
+                            buildTask = builder.Clean();
                             break;
                         case BuildAction.Build:
-                            builder.Build();
+                            buildTask = builder.Build();
                             break;
                         case BuildAction.Rebuild:
-                            builder.Rebuild();
+                            buildTask = builder.Rebuild();
                             break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
                     }
+
+                    buildTask.CompletionHandle.WaitOne();
                 }
 
                 return 0;
