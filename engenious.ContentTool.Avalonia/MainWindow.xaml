@@ -32,7 +32,7 @@
                 </Menu.Styles>
                 <MenuItem Header="_File">
                     <MenuItem Header="_New Project..." Click="OnNewProjectButtonClick" />
-                    <MenuItem Header="_Open Project..." Click="OnOpenProjectButtonClick" />
+                    <MenuItem Header="_Open Project..." Click="OnOpenProjectButtonClick"/>
                     <Separator />
                     <MenuItem Header="_Save Project..." Click="OnSaveProjectButtonClick" IsEnabled="{Binding Path=IsProjectOpen}" />
                     <MenuItem Header="Save Project _as..." Click="OnSaveProjectAsButtonClick" IsEnabled="{Binding Path=IsProjectOpen}" />
@@ -126,7 +126,7 @@
                     </Panel>
                     <GridSplitter Grid.Column="0" Grid.Row="1" />
                     <Panel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="0" Grid.Row="2">
-                        <ct:PropertyGrid x:Name="propertyGrid"></ct:PropertyGrid>
+                        <ScrollViewer><ct:PropertyGrid x:Name="propertyGrid"></ct:PropertyGrid></ScrollViewer>
                     </Panel>
                 </Grid>
 

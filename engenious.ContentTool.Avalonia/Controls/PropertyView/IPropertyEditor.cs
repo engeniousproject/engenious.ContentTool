@@ -6,12 +6,14 @@ namespace engenious.ContentTool.Avalonia
     {
         public bool IsReadOnly { get; }
         
-        PropertyView Property { get; set; }
+        PropertyViewBase Property { get; set; }
         
         object Value { get; set; }
 
         public object ConvertFromEditorToProperty(object editorValue);
         
         public object ConvertFromPropertyToEditor(object propertyValue);
+
+        PropertyViewBase CreatePropertyView(ComplexPropertyView parent, string name);
     }
 }

@@ -22,9 +22,9 @@ namespace engenious.ContentTool.Avalonia
 
             var parentParam = Expression.Parameter(typeof(object), "parent");
             var valueParam = Expression.Parameter(typeof(object), "value");
-            var parentCasted = Expression.Convert(parentParam, parent.Type);
+            var parentCasted = Expression.Convert(parentParam, parent.ActualType);
 
-            var propInfo = parent.Type.GetProperty(name, BindingFlags.Public | BindingFlags.Instance, null, type, Array.Empty<Type>(), Array.Empty<ParameterModifier>());
+            var propInfo = parent.ActualType.GetProperty(name, BindingFlags.Public | BindingFlags.Instance, null, type, Array.Empty<Type>(), Array.Empty<ParameterModifier>());
             
             var prop = Expression.Property(parentCasted, propInfo);
 
@@ -34,7 +34,7 @@ namespace engenious.ContentTool.Avalonia
             if (propInfo.CanWrite)
                 _setValue = Expression.Lambda<Action<object, object>>(Expression.Assign(prop, Expression.Convert(valueParam, prop.Type)), parentParam, valueParam).Compile();
         }
-        public virtual void BuildTree(){}
+        public virtual void BuildTree(int maxDepth = 1){}
 
         public string Name { get; }
         
@@ -53,11 +53,16 @@ namespace engenious.ContentTool.Avalonia
                 if (_setValue == null || Parent?.Value == null)
                     return;
                 _setValue(Parent.Value, value);
+                
+                BuildTree();
+                
                 OnPropertyChanged();
             }
         }
         
         public Type Type { get; protected set; }
+
+        public Type ActualType => Value?.GetType() ?? Type;
 
         public event PropertyChangedEventHandler PropertyChanged;
 

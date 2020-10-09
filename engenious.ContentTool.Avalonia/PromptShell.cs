@@ -28,7 +28,7 @@ namespace engenious.ContentTool.Avalonia
                 MessageBoxType.Info => Icon.Info,
                 MessageBoxType.None => Icon.None,
                 MessageBoxType.Warning => Icon.Warning,
-                MessageBoxType.Question => Icon.Buttery,
+                MessageBoxType.Question => Icon.Battery,
                 _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
             };
         }

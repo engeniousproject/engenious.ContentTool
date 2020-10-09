@@ -45,7 +45,7 @@ namespace engenious.ContentTool.Models
 
         /// <summary>
         /// Name of the processor
-        /// </summary
+        /// </summary>
         [RefreshProperties(RefreshProperties.All)]
         [TypeConverter(typeof(ProcessorNameDropDown))]
         public string ProcessorName { get => processorName;

@@ -44,7 +44,7 @@
                 </Grid>
             </DataTemplate>
             <DataTemplate DataType="ct:ComplexPropertyView">
-                <Expander Header="{Binding Path=Name}" IsVisible="{Binding !IsNull}">
+                <Expander Header="{Binding Path=Name}"> <!-- IsVisible="{Binding !IsNull}" -->
                     <ct:PropertyGrid PropertyView="{Binding}" Margin="10 0 0 0"/>
                 </Expander>
             </DataTemplate>

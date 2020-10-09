@@ -14,6 +14,11 @@ namespace engenious.ContentTool.Avalonia
 
         }
 
+        public virtual PropertyViewBase CreatePropertyView(ComplexPropertyView parent, string name)
+        {
+            return new PropertyView(parent, name, this);
+        }
+
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
@@ -21,7 +26,7 @@ namespace engenious.ContentTool.Avalonia
         }
 
         private bool _pauseUpdate = false;
-        private PropertyView _property;
+        private PropertyViewBase _property;
 
         public bool IsReadOnly
         {
@@ -33,7 +38,7 @@ namespace engenious.ContentTool.Avalonia
             }
         }
 
-        public PropertyView Property
+        public PropertyViewBase Property
         {
             get => _property;
             set

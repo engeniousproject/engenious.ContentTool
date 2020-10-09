@@ -64,8 +64,14 @@ namespace engenious.ContentTool.Avalonia
             
             
             _projectTreeView = this.FindControl<ProjectTreeView>("projectTreeView");
+            _propertyGrid = this.FindControl<PropertyGrid>("propertyGrid");
             _projectTreeView.SelectedItemChanged +=
-                (sender, args) => OnItemSelect?.Invoke(_projectTreeView.SelectedItem);
+                (sender, args) =>
+                {
+                    OnItemSelect?.Invoke(_projectTreeView.SelectedItem);
+                    var tmp = RootPropertyView.Create("Test", _projectTreeView.SelectedItem, 3);
+                    _propertyGrid.PropertyView = tmp;
+                };
             _logText = this.FindControl<TextBlock>("logText");
             _defaultTextBlockColorDummy = this.FindControl<TextBlock>("defaultTextBlockColorDummy");
 
@@ -92,8 +98,6 @@ namespace engenious.ContentTool.Avalonia
 
                 if (_project != null)
                 {
-                    var tmp = RootPropertyView.Create("Test", Project, 3);
-                    this.FindControl<PropertyGrid>("propertyGrid").PropertyView = tmp;
                     _project.History.HistoryChanged -= HistoryOnHistoryChanged;
                     _project.CollectionChanged -= ProjectOnCollectionChanged;
                 }
@@ -108,6 +112,9 @@ namespace engenious.ContentTool.Avalonia
 
                 if (_project != null)
                 {
+                    
+                    var tmp = RootPropertyView.Create("Test", Project, 3);
+                    _propertyGrid.PropertyView = tmp;
                     _project.History.HistoryChanged += HistoryOnHistoryChanged;
                     _project.CollectionChanged += ProjectOnCollectionChanged;
                 }
@@ -465,11 +472,12 @@ namespace engenious.ContentTool.Avalonia
             }
         }
 
-
+        
         private bool _logShown;
         private TextBlock _defaultTextBlockColorDummy;
         private Control _currentPreviewControl;
         private PropertyViewBase _contentProperties;
+        private PropertyGrid _propertyGrid;
 
         public bool LogShown
         {

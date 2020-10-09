@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 
 namespace engenious.ContentTool.Avalonia
 {
-    public abstract class ChoicePropertyEditor: PropertyEditorBase
+    public class ChoicePropertyEditor: PropertyEditorBase
     {
         public ChoicePropertyEditor()
         {

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Linq;
 using System.Reflection;
 using DynamicData.Binding;
 
@@ -18,30 +19,27 @@ namespace engenious.ContentTool.Avalonia
             _properties = new ObservableCollection<PropertyViewBase>();
         }
 
-        public void BuildTree(int maxDepth)
+        public override void BuildTree(int maxDepth = 1)
         {
             if (maxDepth == 0)
                 return;
             maxDepth--;
-            foreach (var prop in Type.GetProperties(BindingFlags.Instance | BindingFlags.Public))
+            _properties.Clear();
+            foreach (var prop in ActualType.GetProperties(BindingFlags.Instance | BindingFlags.Public))
             {
                 if (prop.GetIndexParameters().Length != 0)
                     continue;
 
                 if (!(prop.GetCustomAttribute<BrowsableAttribute>()?.Browsable ?? true))
                     continue;
+
+                var typeConverters = prop.GetCustomAttributes<TypeConverterAttribute>();
                 
-                var propEditor = PropertyEditorCache.CreatePropertyEditor(prop.PropertyType);
+                var propEditor = PropertyEditorCache.CreatePropertyEditor(typeConverters.FirstOrDefault(), prop.PropertyType, Value);
                 if (propEditor != null)
                 {
-                    var view = new PropertyView(this, prop.Name, propEditor);
+                    var view = propEditor.CreatePropertyView(this, prop.Name);
                     propEditor.Property = view;
-                    view.BuildTree();
-                    _properties.Add(view);
-                }
-                else if(maxDepth > 1)
-                {
-                    var view = new ComplexPropertyView(this, prop.Name, prop.PropertyType);
                     view.BuildTree(maxDepth);
                     _properties.Add(view);
                 }
