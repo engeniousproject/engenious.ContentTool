@@ -1,137 +1,137 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <OutputType>WinExe</OutputType>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
-        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 
-        <RuntimeIdentifiers>win10-x64;osx-x64;linux-x64</RuntimeIdentifiers>
+    <RuntimeIdentifiers>win10-x64;osx-x64;linux-x64</RuntimeIdentifiers>
 
-        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <Description>engenious content-tool for engenious content projects(.ecp).</Description>
-		
-		<GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Description>engenious content-tool for engenious content projects(.ecp).</Description>
 
-        <IncludeBuiltProjectOutputGroup>true</IncludeBuiltProjectOutputGroup>
-        <NuspecFile>engenious.ContentTool.Nuget.nuspec</NuspecFile>
-        <PackAsTool>true</PackAsTool>
-		<NuspecProperties>configuration=$(Configuration);framework=$(TargetFramework)</NuspecProperties>
-		<ApplicationIcon />
-        <StartupObject />
-        <LangVersion>7.3</LangVersion>
-        
-        <OutputPath>..\bin\$(Configuration)\</OutputPath>
-    </PropertyGroup>
-    <ItemGroup>
-      <None Remove="Resources\Add_folder.png" />
-      <None Remove="Resources\Close_file.png" />
-      <None Remove="Resources\Create.png" />
-      <None Remove="Resources\Equipment.png" />
-      <None Remove="Resources\Erase.png" />
-      <None Remove="Resources\Eraser.png" />
-      <None Remove="Resources\Folder.png" />
-      <None Remove="Resources\Import.png" />
-      <None Remove="Resources\New_file.png" />
-      <None Remove="Resources\Objects.png" />
-      <None Remove="Resources\Open_folder.png" />
-      <None Remove="Resources\Save.png" />
-      <None Remove="Resources\Transparency.png" />
-      <None Remove="Resources\Warning.png" />
-    </ItemGroup>
-    <ItemGroup>
-      <Content Include="Resources\Add_folder.png" />
-      <Content Include="Resources\Close_file.png" />
-      <Content Include="Resources\Create.png" />
-      <Content Include="Resources\Equipment.png" />
-      <Content Include="Resources\Erase.png" />
-      <Content Include="Resources\Eraser.png" />
-      <Content Include="Resources\Folder.png" />
-      <Content Include="Resources\Import.png" />
-      <Content Include="Resources\New_file.png" />
-      <Content Include="Resources\Objects.png" />
-      <Content Include="Resources\Open_folder.png" />
-      <Content Include="Resources\Save.png" />
-      <Content Include="Resources\Transparency.png" />
-      <Content Include="Resources\Warning.png" />
-    </ItemGroup>
-	<ItemGroup>
-		<Compile Update="Forms\Dialogs\LoadingDialog.cs">
-		  <SubType>Form</SubType>
-		</Compile>
-		<Compile Update="Forms\Dialogs\LoadingDialog.Designer.cs">
-		  <DependentUpon>LoadingDialog.cs</DependentUpon>
-		</Compile>
-		<Compile Update="Forms\Dialogs\OverwriteDialog.cs">
-		  <SubType>Form</SubType>
-		</Compile>
-		<Compile Update="Forms\Dialogs\OverwriteDialog.Designer.cs">
-		  <DependentUpon>OverwriteDialog.cs</DependentUpon>
-		</Compile>
-		<Compile Update="Viewer\Viewers\BitmapViewer.cs">
-		  <SubType>UserControl</SubType>
-		</Compile>
-		<Compile Update="Viewer\Viewers\SpriteFontViewer.cs">
-		  <SubType>UserControl</SubType>
-		</Compile>
-		<Compile Update="Viewer\Viewers\SpriteFontViewer.Designer.cs">
-		  <DependentUpon>SpriteFontViewer.cs</DependentUpon>
-		</Compile>
-		<Compile Update="Viewer\Viewers\TextViewer.cs">
-		  <SubType>UserControl</SubType>
-		</Compile>
-		<Compile Update="Viewer\Viewers\TextViewer.Designer.cs">
-		  <DependentUpon>TextViewer.cs</DependentUpon>
-		</Compile>
-		<EmbeddedResource Update="Forms\Dialogs\LoadingDialog.resx">
-		  <DependentUpon>LoadingDialog.cs</DependentUpon>
-		</EmbeddedResource>
-		<EmbeddedResource Update="Forms\Dialogs\OverwriteDialog.resx">
-		  <DependentUpon>OverwriteDialog.cs</DependentUpon>
-		</EmbeddedResource>
-		<EmbeddedResource Update="Viewer\Viewers\SpriteFontViewer.resx">
-		  <DependentUpon>SpriteFontViewer.cs</DependentUpon>
-		</EmbeddedResource>
-		<EmbeddedResource Update="Viewer\Viewers\TextViewer.resx">
-		  <DependentUpon>TextViewer.cs</DependentUpon>
-		</EmbeddedResource>
-		<Compile Update="Viewer\Viewers\EffectModelViewer.Designer.cs">
-		  <DependentUpon>ModelEffectViewer.cs</DependentUpon>
-		</Compile>
-	</ItemGroup>
-    <ItemGroup>
-        <PackageReference Include="Mono.Cecil" Version="0.11.2" />
-        <PackageReference Include="SharpFont.Dependencies" Version="2.6.0" ExcludeAssets="build" />
-        <PackageReference Include="System.Resources.Extensions" Version="4.6.0" />
-        <ProjectReference Include="..\..\engenious\engenious.csproj" Condition="Exists('..\..\engenious\engenious.csproj')" />
-        <PackageReference Include="engenious" Version="0.5.0.10-alpha" Condition="!Exists('..\engenious\engenious.csproj')" />
+    <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
 
-        <ProjectReference Include="..\..\engenious.Pipeline\engenious.Pipeline.csproj" Condition="Exists('..\..\engenious.Pipeline\engenious.Pipeline.csproj')" />
-        <PackageReference Include="engenious.Pipeline" Version="0.5.0.7-alpha" Condition="!Exists('..\..\engenious.Pipeline\engenious.Pipeline.csproj')" />
+    <IncludeBuiltProjectOutputGroup>true</IncludeBuiltProjectOutputGroup>
+    <NuspecFile>engenious.ContentTool.Nuget.nuspec</NuspecFile>
+    <PackAsTool>true</PackAsTool>
+    <NuspecProperties>configuration=$(Configuration);framework=$(TargetFramework)</NuspecProperties>
+    <ApplicationIcon />
+    <StartupObject />
+    <LangVersion>7.3</LangVersion>
+
+    <OutputPath>..\bin\$(Configuration)\</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Resources\Add_folder.png" />
+    <None Remove="Resources\Close_file.png" />
+    <None Remove="Resources\Create.png" />
+    <None Remove="Resources\Equipment.png" />
+    <None Remove="Resources\Erase.png" />
+    <None Remove="Resources\Eraser.png" />
+    <None Remove="Resources\Folder.png" />
+    <None Remove="Resources\Import.png" />
+    <None Remove="Resources\New_file.png" />
+    <None Remove="Resources\Objects.png" />
+    <None Remove="Resources\Open_folder.png" />
+    <None Remove="Resources\Save.png" />
+    <None Remove="Resources\Transparency.png" />
+    <None Remove="Resources\Warning.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Add_folder.png" />
+    <Content Include="Resources\Close_file.png" />
+    <Content Include="Resources\Create.png" />
+    <Content Include="Resources\Equipment.png" />
+    <Content Include="Resources\Erase.png" />
+    <Content Include="Resources\Eraser.png" />
+    <Content Include="Resources\Folder.png" />
+    <Content Include="Resources\Import.png" />
+    <Content Include="Resources\New_file.png" />
+    <Content Include="Resources\Objects.png" />
+    <Content Include="Resources\Open_folder.png" />
+    <Content Include="Resources\Save.png" />
+    <Content Include="Resources\Transparency.png" />
+    <Content Include="Resources\Warning.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Forms\Dialogs\LoadingDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Forms\Dialogs\LoadingDialog.Designer.cs">
+      <DependentUpon>LoadingDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Forms\Dialogs\OverwriteDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Forms\Dialogs\OverwriteDialog.Designer.cs">
+      <DependentUpon>OverwriteDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Viewer\Viewers\BitmapViewer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Viewer\Viewers\SpriteFontViewer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Viewer\Viewers\SpriteFontViewer.Designer.cs">
+      <DependentUpon>SpriteFontViewer.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Viewer\Viewers\TextViewer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Viewer\Viewers\TextViewer.Designer.cs">
+      <DependentUpon>TextViewer.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="Forms\Dialogs\LoadingDialog.resx">
+      <DependentUpon>LoadingDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Forms\Dialogs\OverwriteDialog.resx">
+      <DependentUpon>OverwriteDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Viewer\Viewers\SpriteFontViewer.resx">
+      <DependentUpon>SpriteFontViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Viewer\Viewers\TextViewer.resx">
+      <DependentUpon>TextViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <Compile Update="Viewer\Viewers\EffectModelViewer.Designer.cs">
+      <DependentUpon>ModelEffectViewer.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Mono.Cecil" Version="0.11.2" />
+    <PackageReference Include="SharpFont.Dependencies" Version="2.6.0" ExcludeAssets="build" />
+    <PackageReference Include="System.Resources.Extensions" Version="4.6.0" />
+    <ProjectReference Include="..\..\engenious\engenious.csproj" Condition="Exists('..\..\engenious\engenious.csproj')" />
+    <PackageReference Include="engenious" Version="0.5.0.10-alpha" Condition="!Exists('..\engenious\engenious.csproj')" />
+
+    <ProjectReference Include="..\..\engenious.Pipeline\engenious.Pipeline.csproj" Condition="Exists('..\..\engenious.Pipeline\engenious.Pipeline.csproj')" />
+    <PackageReference Include="engenious.Pipeline" Version="0.5.0.8-alpha" Condition="!Exists('..\..\engenious.Pipeline\engenious.Pipeline.csproj')" />
 
 
-        <PackageReference Include="LitGit" Version="0.2.0.18-alpha" PrivateAssets="all" />
-    </ItemGroup>
-    <ItemGroup>
-        <LitGitTemplateReference Include="engenious.ContentTool.Nuget.nuspec.template" />
+    <PackageReference Include="LitGit" Version="0.2.0.18-alpha" PrivateAssets="all" />
+  </ItemGroup>
+  <ItemGroup>
+    <LitGitTemplateReference Include="engenious.ContentTool.Nuget.nuspec.template" />
 
-        <None Update="engenious.ContentTool.Nuget.nuspec" Condition="Exists('engenious.ContentTool.Nuget.nuspec')">
-            <DependentUpon>engenious.ContentTool.Nuget.nuspec.template</DependentUpon>
-        </None>
-        
-    </ItemGroup>
-    <ItemGroup>
-        <SharpFontNativeFilesWin64 Include="$(NuGetPackageRoot)sharpfont.dependencies/2.6.0/bin/msvc12/x64/*.*" Condition="Exists('$(NuGetPackageRoot)sharpfont.dependencies/2.6.0/bin/msvc12/')" Visible="false"/>
-        <SharpFontNativeFilesWin32 Include="$(NuGetPackageRoot)sharpfont.dependencies/2.6.0/bin/msvc12/x86/*.*" Condition="Exists('$(NuGetPackageRoot)sharpfont.dependencies/2.6.0/bin/msvc12/')" Visible="false" />
+    <None Update="engenious.ContentTool.Nuget.nuspec" Condition="Exists('engenious.ContentTool.Nuget.nuspec')">
+      <DependentUpon>engenious.ContentTool.Nuget.nuspec.template</DependentUpon>
+    </None>
 
-        <None Include="@(SharpFontNativeFilesWin64)">
-            <Link>runtimes/win-x64/native/%(FileName)%(Extension)</Link>
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <Visible>false</Visible>
-        </None>
-        <None Include="@(SharpFontNativeFilesWin32)">
-            <Link>runtimes/win-x86/native/%(FileName)%(Extension)</Link>
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <Visible>false</Visible>
-        </None>
-    </ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    <SharpFontNativeFilesWin64 Include="$(NuGetPackageRoot)sharpfont.dependencies/2.6.0/bin/msvc12/x64/*.*" Condition="Exists('$(NuGetPackageRoot)sharpfont.dependencies/2.6.0/bin/msvc12/')" Visible="false"/>
+    <SharpFontNativeFilesWin32 Include="$(NuGetPackageRoot)sharpfont.dependencies/2.6.0/bin/msvc12/x86/*.*" Condition="Exists('$(NuGetPackageRoot)sharpfont.dependencies/2.6.0/bin/msvc12/')" Visible="false" />
+
+    <None Include="@(SharpFontNativeFilesWin64)">
+      <Link>runtimes/win-x64/native/%(FileName)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>false</Visible>
+    </None>
+    <None Include="@(SharpFontNativeFilesWin32)">
+      <Link>runtimes/win-x86/native/%(FileName)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>false</Visible>
+    </None>
+  </ItemGroup>
 </Project>

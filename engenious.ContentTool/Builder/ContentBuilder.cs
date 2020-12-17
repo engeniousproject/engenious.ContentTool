@@ -45,13 +45,13 @@ namespace engenious.ContentTool.Builder
                 CancellationTokenSource = new CancellationTokenSource();
                 CompletionHandle = new ManualResetEvent(false);
             }
-            
+
             public ManualResetEvent CompletionHandle { get; }
 
             public BuildTaskType BuildTaskType { get; }
-            
+
             public ContentItem BuildItem { get; }
-            
+
             public CancellationTokenSource CancellationTokenSource { get; }
         }
 
@@ -68,14 +68,14 @@ namespace engenious.ContentTool.Builder
             _startBuild = new AutoResetEvent(false);
             var buildThreadToken = _buildThreadCancellation.Token;
             buildThreadToken.Register(() => _startBuild.Set());
-            
-            
+
+
             _buildQueue = new ConcurrentQueue<BuildTask>();
-            
+
             _buildThread = new Thread((cancellationObj) =>
             {
                 var cancellationToken = (CancellationToken)(cancellationObj ?? throw new InvalidCastException());
-                while(!cancellationToken.IsCancellationRequested)
+                while (!cancellationToken.IsCancellationRequested)
                 {
                     _startBuild.WaitOne();
                     if (cancellationToken.IsCancellationRequested)
@@ -120,7 +120,7 @@ namespace engenious.ContentTool.Builder
             _buildQueue.Enqueue(task);
 
             _startBuild.Set();
-            
+
             return task;
         }
 
@@ -163,28 +163,31 @@ namespace engenious.ContentTool.Builder
             bool rewriteAssembly = File.Exists(createdContentAssemblyFile);
 
             Guid buildId = Guid.NewGuid();
-            
+
             AssemblyDefinition assemblyDefinition = null;
             if (rewriteAssembly)
             {
                 try
                 {
-                    assemblyDefinition = AssemblyDefinition.ReadAssembly(createdContentAssemblyFile);
+                        var memStream = new MemoryStream(File.ReadAllBytes(createdContentAssemblyFile));
+                        assemblyDefinition = AssemblyDefinition.ReadAssembly(memStream);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     rewriteAssembly = false;
                 }
             }
             if (!rewriteAssembly)
+            {
                 assemblyDefinition = AssemblyDefinition.CreateAssembly(new AssemblyNameDefinition(moduleName, new Version()), moduleName,
                     ModuleKind.Dll);
+            }
             var asmCreatedContent = new AssemblyCreatedContent(assemblyDefinition, buildId);
-            
+
             var cache = BuildCache.Load(Path.Combine(Path.GetDirectoryName(item.Project.ContentProjectPath), "obj",
                 item.Project.Configuration,
                 item.Project.Name + ".dat"), asmCreatedContent);
-            
+
             using (var iContext = new ContentImporterContext(buildId, asmCreatedContent, item.Project.FilePath))
             using (var pContext = new ContentProcessorContext(_syncContext, asmCreatedContent, RenderingSurface, GraphicsDevice,
                 buildId, Path.GetDirectoryName(Project.ContentProjectPath), item.Project.FilePath))
@@ -241,7 +244,7 @@ namespace engenious.ContentTool.Builder
         {
             if (cancellationToken.IsCancellationRequested)
                 return;
-            
+
             if (!(item is ContentProject))
                 outputDestination = Path.Combine(outputDestination, item.Name);
 
@@ -341,7 +344,7 @@ namespace engenious.ContentTool.Builder
                 var fileTypeBuffer = System.Text.Encoding.UTF8.GetBytes(outputContentFileWriter.FileType);
                 fs.Write(
                     BitConverter.GetBytes(
-                        engenious.Helper.BitHelper.BitConverterToLittleEndian((uint) fileTypeBuffer.Length)), 0,
+                        engenious.Helper.BitHelper.BitConverterToLittleEndian((uint)fileTypeBuffer.Length)), 0,
                     sizeof(uint));
 
                 fs.Write(fileTypeBuffer, 0, fileTypeBuffer.Length);
