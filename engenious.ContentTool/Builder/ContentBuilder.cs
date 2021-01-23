@@ -215,6 +215,9 @@ namespace engenious.ContentTool.Builder
 
 
             cache.Save();
+            
+            
+            RaiseBuildMessage(this, new BuildMessageEventArgs(string.Empty, "Building done.", BuildMessageEventArgs.BuildMessageType.Information));
         }
 
         protected void CleanThread(CancellationToken cancellationToken)
@@ -237,6 +240,8 @@ namespace engenious.ContentTool.Builder
             catch (Exception ex) //TODO perhaps other delete, to delete all possible files?
             {
             }
+            
+            RaiseBuildMessage(this, new BuildMessageEventArgs(string.Empty, "Cleaning done.", BuildMessageEventArgs.BuildMessageType.Information));
         }
 
         private void InternalBuildItem(ContentItem item, string outputDestination,
