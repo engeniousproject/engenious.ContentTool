@@ -104,9 +104,11 @@ namespace engenious.ContentTool.Avalonia
                     t = typeof(Vector4);
                     break;
                 case EffectParameterType.Sampler2D:
+                case EffectParameterType.Sampler2DShadow:
                     t = typeof(Texture2D);
                     break;
                 case EffectParameterType.Sampler2DArray:
+                case EffectParameterType.Sampler2DArrayShadow:
                     t = typeof(Texture2DArray);
                     break;
                 case EffectParameterType.Int:
