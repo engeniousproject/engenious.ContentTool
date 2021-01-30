@@ -10,7 +10,7 @@
         <description>engenious content-tool for engenious content projects(.ecp).</description>
     </metadata>
     <files>
-        <file src="..\\bin\\$configuration$\\netcoreapp3.1\\*.config" target="content" />
+        <file src="..\\bin\\$configuration$\\net5.0\\*.config" target="content" />
         
         <file src="engenious.ContentTool.targets" target="build" />
         
