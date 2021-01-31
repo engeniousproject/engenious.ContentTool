@@ -106,7 +106,7 @@ namespace engenious.ContentTool.Builder
                     }
                 }
             });
-
+            _buildThread.IsBackground = true;
             _buildThread.Start(buildThreadToken);
         }
 

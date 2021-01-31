@@ -95,7 +95,7 @@ namespace engenious.ContentTool
 
                     using (var mainShell = shellFactory.CreateMainShell())
                     {
-                        var mainShellPresenter = new MainShellPresenter(mainShell, promptShell, arguments);
+                        using var mainShellPresenter = new MainShellPresenter(mainShell, promptShell, arguments);
                         mainShell.Run();
                     }
                     

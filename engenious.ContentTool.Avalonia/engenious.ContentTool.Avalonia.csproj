@@ -67,7 +67,7 @@
         <PackageReference Include="OpenTK" Version="4.0.0-pre9.7" />
     </ItemGroup>
     <ItemGroup>
-      <PackageReference Include="engenious.Avalonia" Version="0.5.0.9-alpha" Condition="!Exists('..\..\engenious.Avalonia\engenious.Avalonia.csproj')" />
+      <PackageReference Include="engenious.Avalonia" Version="0.5.0.10-alpha" Condition="!Exists('..\..\engenious.Avalonia\engenious.Avalonia.csproj')" />
         
       <ProjectReference Include="..\..\engenious.Avalonia\engenious.Avalonia.csproj" Condition="Exists('..\..\engenious.Avalonia\engenious.Avalonia.csproj')" />
       <ProjectReference Include="..\engenious.ContentTool\engenious.ContentTool.csproj" Condition="Exists('..\engenious.ContentTool\engenious.ContentTool.csproj')" />
