@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using Avalonia.Threading;
 using engenious.ContentTool.Forms;
 using MessageBox.Avalonia.Enums;
 
@@ -55,6 +56,11 @@ namespace engenious.ContentTool.Avalonia
         public async Task<FileAction> ShowOverwriteDialog(string fileName)
         {
             throw new NotImplementedException();
+        }
+
+        public void Invoke(Action action)
+        {
+            Dispatcher.UIThread.Post(action);
         }
     }
 }

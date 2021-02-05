@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection.Emit;
 using Avalonia.Controls;
+using Avalonia.LogicalTree;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 using engenious.Avalonia;
@@ -38,6 +39,7 @@ namespace engenious.ContentTool.Avalonia
             _avaloniaRenderingSurface = this.FindControl<AvaloniaRenderingSurface>("renderingSurface");
 
             _game = new EffectModelViewerGame(_avaloniaRenderingSurface, effectView);
+            
 
             _game.EffectLoaded += GameOnEffectLoaded;
             _game.UpdateBindings += GameOnUpdateBindings;
@@ -296,5 +298,11 @@ namespace engenious.ContentTool.Avalonia
         public IHistory History { get; private set; }
         public bool UnsavedChanges { get; }
         public ContentFile ContentFile { get; private set; }
+
+        public void Dispose()
+        {
+            _avaloniaRenderingSurface?.Dispose();
+            _game?.Dispose();
+        }
     }
 }

@@ -34,5 +34,7 @@ namespace engenious.ContentTool.Forms
             MessageBoxType type = MessageBoxType.None, object parent = null);
         
         Task<FileAction> ShowOverwriteDialog(string fileName);
+
+        void Invoke(Action action);
     }
 }

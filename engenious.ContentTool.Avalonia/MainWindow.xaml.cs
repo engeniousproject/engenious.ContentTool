@@ -13,6 +13,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.Threading;
 using Dialogs.Avalonia;
+using engenious.Avalonia;
 using engenious.ContentTool.Forms;
 using engenious.ContentTool.Models;
 using engenious.ContentTool.Viewer;
@@ -68,9 +69,19 @@ namespace engenious.ContentTool.Avalonia
             _projectTreeView.SelectedItemChanged +=
                 (sender, args) =>
                 {
-                    OnItemSelect?.Invoke(_projectTreeView.SelectedItem);
-                    var tmp = RootPropertyView.Create("Test", _projectTreeView.SelectedItem, 3);
-                    _propertyGrid.PropertyView = tmp;
+                    if (!(args is SelectionChangedEventArgs selArgs))
+                        return;
+                    var selectedItem = selArgs.AddedItems.Count == 0 ? null : selArgs.AddedItems[0] as ContentItem;
+                    OnItemSelect?.Invoke(selectedItem);
+                    if (selectedItem == null)
+                    {
+                        _propertyGrid.PropertyView = null;
+                    }
+                    else
+                    {
+                        var tmp = RootPropertyView.Create("Test", selectedItem, 3);
+                        _propertyGrid.PropertyView = tmp;
+                    }
                 };
             _logText = this.FindControl<TextBlock>("logText");
             _defaultTextBlockColorDummy = this.FindControl<TextBlock>("defaultTextBlockColorDummy");
@@ -144,6 +155,7 @@ namespace engenious.ContentTool.Avalonia
 
         public void Dispose()
         {
+            CurrentViewer?.Dispose();
         }
 
         public void Run()
@@ -308,6 +320,7 @@ namespace engenious.ContentTool.Avalonia
                 {
                     _project.History.Remove(CurrentViewer.History);
                 }
+                CurrentViewer.Dispose();
             }
 
             CurrentViewer = viewer?.GetViewerControl(file) as IViewer;
@@ -397,9 +410,6 @@ namespace engenious.ContentTool.Avalonia
         public event EventHandler IntegrateCSClick;
         public event EventHandler OnAboutClick;
         public event EventHandler OnHelpClick;
-
-        public event EventHandler<(GraphicsDevice graphicsDevice, IRenderingSurface renderingSurface)>
-            CreateGraphicsContext;
 
 
         public struct LogItem

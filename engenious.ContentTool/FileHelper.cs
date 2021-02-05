@@ -100,9 +100,11 @@ namespace engenious.ContentTool
                     if (next)
                         continue;
                 }
-
-                if (!fld.Content.Any(x => x.Name == filename && x is ContentFile))
-                    fld.Content.Add(new ContentFile(filename, fld));
+                promptShell.Invoke(() =>
+                {
+                    if (!fld.Content.Any(x => x.Name == filename && x is ContentFile))
+                        fld.Content.Add(new ContentFile(filename, fld));
+                });
             }
             return action;
         }

@@ -20,8 +20,13 @@
                 </ProgressBar>
             </StackPanel>
         </Grid>
-        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ColumnDefinitions="*"
-              RowDefinitions="Auto, Auto, *">
+        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
             <Menu Grid.Row="0" Grid.Column="0" BorderBrush="Gray" BorderThickness="0,0,0,1" Padding="0">
                 <Menu.Styles>
                     <Style Selector="Menu > MenuItem">
@@ -45,7 +50,7 @@
                     <MenuItem Header="Redo" Click="OnRedoButtonClick" />
                     <Separator />
                     <MenuItem Header="Add">
-                        <MenuItem Header="New Item" Click="OnNewItemButtonClick" />
+                        <MenuItem Header="New Item" Click="OnNewItemButtonClick" IsEnabled="False" />
                         <MenuItem Header="New Folder" Click="OnNewFolderButtonClick" />
                         <MenuItem Header="Existing Item" Click="OnExistingItemButtonClick" />
                         <MenuItem Header="Existing Folder" Click="OnExistingFolderButtonClick" />
@@ -116,10 +121,20 @@
             </Border>
 
 
-            <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" ColumnDefinitions="200, Auto, *"
-                  RowDefinitions="*" Grid.Row="2" Grid.Column="0">
-
-                <Grid Grid.Row="0" Grid.Column="0" RowDefinitions="*, Auto, 200" ColumnDefinitions="*">
+            <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Row="2" Grid.Column="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions><RowDefinition Height="*"/></Grid.RowDefinitions>
+                <Grid Grid.Row="0" Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="200" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
                     <Panel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="0" Grid.Row="0">
                         <ct:ProjectTreeView HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                                             x:Name="projectTreeView" />
@@ -132,7 +147,13 @@
 
                 <GridSplitter Grid.Row="0" Grid.Column="1"/>
 
-                <Grid Grid.Row="0" Grid.Column="2" RowDefinitions="*, Auto, 200" ColumnDefinitions="*">
+                <Grid Grid.Row="0" Grid.Column="2">
+                    <Grid.ColumnDefinitions><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="200" />
+                    </Grid.RowDefinitions>
                     <Border Child="{Binding Path=CurrentPreviewControl}"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="0" Grid.Row="0" Grid.RowSpan="{Binding Path=LogRowSpan}">
                         
                     </Border>

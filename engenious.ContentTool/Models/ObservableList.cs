@@ -60,7 +60,7 @@ namespace engenious.ContentTool.Models
             if (item == null)
                 return;
 
-            item.CollectionChanged += Item_CollectionChanged;
+            item.CollectionChanged +=(s,e) =>Item_CollectionChanged(s,e);
         }
 
         private void RemoveCollectionChanged(INotifyCollectionChanged item)
@@ -94,7 +94,7 @@ namespace engenious.ContentTool.Models
         {
             _list.Insert(index, item);
             AddChangedEvents(item);
-            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item));
+            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, index));
         }
 
         public void RemoveAt(int index)
@@ -102,7 +102,7 @@ namespace engenious.ContentTool.Models
             var old = _list[index];
             _list.RemoveAt(index);
             RemoveChangedEvents(old);
-            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, old));
+            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, old, index));
         }
 
         public T this [int index]
@@ -129,7 +129,7 @@ namespace engenious.ContentTool.Models
         {
             _list.Add(item);
             AddChangedEvents(item);
-            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item));
+            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, _list.Count - 1));
         }
 
         public void Clear()

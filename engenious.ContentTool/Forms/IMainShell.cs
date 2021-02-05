@@ -82,7 +82,5 @@ namespace engenious.ContentTool.Forms
 
         event EventHandler OnAboutClick;
         event EventHandler OnHelpClick;
-
-        event EventHandler<(GraphicsDevice graphicsDevice, IRenderingSurface renderingSurface)> CreateGraphicsContext;
     }
 }

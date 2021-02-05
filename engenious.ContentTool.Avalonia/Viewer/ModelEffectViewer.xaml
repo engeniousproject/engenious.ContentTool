@@ -12,14 +12,16 @@
     </Design.DataContext>
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
             <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="10"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            
+            <TextBox />
         </StackPanel>
         <GridSplitter Grid.Column="1" Width="10"/>
-        <avalonia:AvaloniaRenderingSurface Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="renderingSurface"/>
+        <Panel Grid.Column="2">
+            <avalonia:AvaloniaRenderingSurface HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="renderingSurface"/>
+        </Panel>
     </Grid>
 </UserControl>

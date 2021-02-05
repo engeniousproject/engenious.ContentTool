@@ -1,9 +1,10 @@
-﻿using engenious.ContentTool.Models;
+﻿using System;
+using engenious.ContentTool.Models;
 using engenious.ContentTool.Models.History;
 
 namespace engenious.ContentTool.Viewer
 {
-    public interface IViewer
+    public interface IViewer : IDisposable
     {
         object GetViewerControl(ContentFile file);
         void Save();

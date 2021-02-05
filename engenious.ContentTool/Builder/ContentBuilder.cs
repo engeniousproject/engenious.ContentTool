@@ -54,14 +54,13 @@ namespace engenious.ContentTool.Builder
 
             public CancellationTokenSource CancellationTokenSource { get; }
         }
+        
 
-        public ContentBuilder(ContentProject project, IRenderingSurface renderingSurface = null,
-            GraphicsDevice graphicsDevice = null)
+        public ContentBuilder(ContentProject project)
         {
             Project = project;
+            Game = new ContentBuilderGame();
             _syncContext = SynchronizationContext.Current;
-            RenderingSurface = renderingSurface;
-            GraphicsDevice = graphicsDevice;
 
 
             _buildThreadCancellation = new CancellationTokenSource();
@@ -144,9 +143,17 @@ namespace engenious.ContentTool.Builder
             if (IsBuilding)
                 _buildThread.Abort();
         }
+        
+        private class ContentBuilderGame : Game
+        {
+            public ContentBuilderGame()
+                : base(new GameSettings(){Offscreen = true})
+            {
+                
+            }
+        }
 
-        internal IRenderingSurface RenderingSurface { get; }
-        internal GraphicsDevice GraphicsDevice { get; }
+        internal IGame Game { get; }
 
         protected void BuildThread(ContentItem item, CancellationToken cancellationToken)
         {
@@ -189,7 +196,7 @@ namespace engenious.ContentTool.Builder
                 item.Project.Name + ".dat"), asmCreatedContent);
 
             using (var iContext = new ContentImporterContext(buildId, asmCreatedContent, item.Project.FilePath))
-            using (var pContext = new ContentProcessorContext(_syncContext, asmCreatedContent, RenderingSurface, GraphicsDevice,
+            using (var pContext = new ContentProcessorContext(_syncContext, asmCreatedContent, Game,
                 buildId, Path.GetDirectoryName(Project.ContentProjectPath), item.Project.FilePath))
             {
                 //Console.WriteLine($"GL Version: {pContext.GraphicsDevice.DriverVersion.ToString()}");
@@ -384,6 +391,7 @@ namespace engenious.ContentTool.Builder
 
         public void Dispose()
         {
+            Game.Dispose();
             _buildThreadCancellation.Cancel();
             _startBuild.Set();
             _buildThread.Join();

@@ -291,5 +291,9 @@ namespace engenious.ContentTool.Avalonia
         public IHistory History { get; private set; }
         public bool UnsavedChanges { get; private set; }
         public ContentFile ContentFile { get; private set; }
+
+        public void Dispose()
+        {
+        }
     }
 }

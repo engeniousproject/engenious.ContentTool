@@ -24,9 +24,6 @@ namespace engenious.ContentTool.Presenters
         private ViewerManager _viewerManager;
         private readonly Arguments _arguments;
 
-        private GraphicsDevice _graphicsDevice;
-        private IRenderingSurface _renderingSurface;
-
         public MainShellPresenter(IMainShell shell, IPromptShell promptShell, Arguments arguments)
         {
             _promptShell = promptShell;
@@ -66,8 +63,6 @@ namespace engenious.ContentTool.Presenters
             shell.OnShellLoad += Shell_OnShellLoad;
 
             shell.IntegrateCSClick += ShellOnIntegrateCsClick;
-
-            shell.CreateGraphicsContext += (sender, renderingContext) => (_graphicsDevice, _renderingSurface) = renderingContext;
 
             _viewerManager = new ViewerManager();
         }
@@ -234,9 +229,12 @@ namespace engenious.ContentTool.Presenters
             }).ToArray();
             var max = numbers.Length == 0 ? -1 : numbers.Max();
             var newFolder = new ContentFolder("New Folder" + (max == -1 ? string.Empty : $" {max + 1}"), folder);
-            Directory.CreateDirectory(newFolder.FilePath);
-            folder.Content.Add(newFolder);
-            _shell.RenameItem(newFolder);
+            _shell.BeginInvoke(() =>
+            {
+                Directory.CreateDirectory(newFolder.FilePath);
+                folder.Content.Add(newFolder);
+                _shell.RenameItem(newFolder);
+            });
         }
 
 
@@ -251,9 +249,9 @@ namespace engenious.ContentTool.Presenters
             await _shell.SuspendRendering();
 
             var progress = new Action<int>(i => _shell.Invoke(() => _shell.WaitProgress(i)));
-            var t = new Thread(() =>
+            var t = new Thread(async () =>
             {
-                FileHelper.CopyDirectory(src, dest, fld, _promptShell, FileAction.Ask, progress);
+                await FileHelper.CopyDirectory(src, dest, fld, _promptShell, FileAction.Ask, progress);
                 _shell.Invoke(() =>
                 {
                     _shell.ResumeRendering();
@@ -275,7 +273,7 @@ namespace engenious.ContentTool.Presenters
 
             var dir = fld.FilePath;
             await _shell.SuspendRendering();
-            FileHelper.CopyFiles(files, dir, fld, _promptShell);
+            await FileHelper.CopyFiles(files, dir, fld, _promptShell);
             await _shell.ResumeRendering();
         }
 
@@ -313,7 +311,7 @@ namespace engenious.ContentTool.Presenters
         {
             if (_builder == null)
             {
-                _builder = new ContentBuilder(_shell.Project, _renderingSurface, _graphicsDevice);
+                _builder = new ContentBuilder(_shell.Project);
                 _builder.BuildMessage += a => _shell.Invoke(() => _shell.WriteLineLog(a.Message));
             }
             _shell.ShowLog();
@@ -327,7 +325,7 @@ namespace engenious.ContentTool.Presenters
         {
             if (_builder == null)
             {
-                _builder = new ContentBuilder(_shell.Project, _renderingSurface, _graphicsDevice);
+                _builder = new ContentBuilder(_shell.Project);
                 _builder.BuildMessage += a => _shell.Invoke(() => _shell.WriteLineLog(a.Message));
             }
             _shell.ShowLog();
@@ -339,7 +337,7 @@ namespace engenious.ContentTool.Presenters
         {
             if (_builder == null)
             {
-                _builder = new ContentBuilder(_shell.Project, _renderingSurface, _graphicsDevice);
+                _builder = new ContentBuilder(_shell.Project);
                 _builder.BuildMessage += a => _shell.Invoke(() => _shell.WriteLineLog(a.Message));
             }
             _shell.ShowLog();
@@ -436,6 +434,7 @@ namespace engenious.ContentTool.Presenters
 
         public void Dispose()
         {
+            _builder?.Dispose();
         }
     }
 }
