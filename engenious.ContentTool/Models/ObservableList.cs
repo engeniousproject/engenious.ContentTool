@@ -93,16 +93,16 @@ namespace engenious.ContentTool.Models
         public void Insert(int index, T item)
         {
             _list.Insert(index, item);
-            AddChangedEvents(item);
             CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, index));
+            AddChangedEvents(item);
         }
 
         public void RemoveAt(int index)
         {
             var old = _list[index];
+            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, old, index));
             _list.RemoveAt(index);
             RemoveChangedEvents(old);
-            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, old, index));
         }
 
         public T this [int index]
@@ -115,9 +115,9 @@ namespace engenious.ContentTool.Models
             {
                 var old = _list[index];
                 _list[index] = value;
+                CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, value, old));
                 RemoveChangedEvents(old);
                 AddChangedEvents(value);
-                CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, value, old));
             }
         }
 
@@ -128,8 +128,8 @@ namespace engenious.ContentTool.Models
         public void Add(T item)
         {
             _list.Add(item);
-            AddChangedEvents(item);
             CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, _list.Count - 1));
+            AddChangedEvents(item);
         }
 
         public void Clear()
@@ -153,10 +153,11 @@ namespace engenious.ContentTool.Models
 
         public bool Remove(T item)
         {
-            var removed = _list.Remove(item);
-            RemoveChangedEvents(item);
-            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item));
-            return removed;
+            var index = IndexOf(item);
+            if (index == -1)
+                return false;
+            RemoveAt(index);
+            return true;
         }
 
         public int Count => _list.Count;

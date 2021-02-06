@@ -4,10 +4,17 @@
         x:Class="engenious.ContentTool.Avalonia.MainWindow"
         Title="engenious Content Tool"
         Width="800"
-        Height="600" Closing="FormClosing" Opened="FormLoading">
+        Height="600" Opened="FormLoading">
     <Design.DataContext>
         <ct:MainWindow />
     </Design.DataContext>
+    <Window.Styles>
+        <Style>
+            <Style.Resources>
+                <ct:LogTypeConverter x:Key="LogTypeConverter"/>
+            </Style.Resources>
+        </Style>
+    </Window.Styles>
     <Panel>
         <Grid x:Name="Overlay" ZIndex="1000" IsVisible="{Binding Path=LoadingShown}">
             <Grid.Background>
@@ -137,7 +144,14 @@
                     <Grid.ColumnDefinitions><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
                     <Panel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="0" Grid.Row="0">
                         <ct:ProjectTreeView HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                                            x:Name="projectTreeView" />
+                                            x:Name="projectTreeView"
+                                            BuildItemClicked="OnBuildItemButtonClick"
+                                            RenameItemClicked="OnRenameItemButtonClick"
+                                            RemoveItemClicked="OnRemoveItemButtonClick"
+                                            AddExistingFileClicked="OnExistingItemButtonClick"
+                                            AddNewFileClicked="OnNewItemButtonClick"
+                                            AddExistingFolderClicked="OnExistingFolderButtonClick"
+                                            AddNewFolderClicked="OnNewFolderButtonClick"/>
                     </Panel>
                     <GridSplitter Grid.Column="0" Grid.Row="1" />
                     <Panel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="0" Grid.Row="2">
@@ -163,7 +177,10 @@
                         <ListBox Items="{Binding Path=LogItems}">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
-                                    <TextBlock Foreground="{Binding Color}" Text="{Binding Text}" />
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="{Binding LogType, Converter={StaticResource LogTypeConverter}}" Margin="0 0 3 0" Width="15" Height="15"></Image>
+                                        <TextBlock Name="tb" Foreground="{Binding Color}" Text="{Binding Text}" />
+                                    </StackPanel>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>

@@ -22,8 +22,8 @@ namespace engenious.ContentTool.Forms
         Task<string> ShowSaveAsDialog();
         Task<string> ShowIntegrateDialog();
 
-        Task WriteLog(string text, engenious.Color color = default(engenious.Color));
-        Task WriteLineLog(string text, engenious.Color color = default(engenious.Color));
+        Task WriteLog(string text, LogType logType = LogType.Information, engenious.Color color = default(engenious.Color));
+        Task WriteLineLog(string text, LogType logType = LogType.Information, engenious.Color color = default(engenious.Color));
         Task ClearLog();
         Task ShowLog();
         Task HideLog();

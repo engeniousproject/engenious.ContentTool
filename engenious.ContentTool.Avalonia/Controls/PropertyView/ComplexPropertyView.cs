@@ -17,6 +17,26 @@ namespace engenious.ContentTool.Avalonia
         public ComplexPropertyView(ComplexPropertyView parent, string name, Type type) : base(parent, name, type)
         {
             _properties = new ObservableCollection<PropertyViewBase>();
+            PropertyChanged += OnPropertyChanged;
+        }
+
+        private void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "Value")
+            {
+                ValueChanged();
+            }
+        }
+
+        private void ValueChanged()
+        {
+            foreach(var prop in _properties)
+                prop.OnParentChanged();
+        }
+        internal override void OnParentChanged()
+        {
+            base.OnParentChanged();
+            ValueChanged();
         }
 
         public override void BuildTree(int maxDepth = 1)
@@ -32,7 +52,7 @@ namespace engenious.ContentTool.Avalonia
 
                 if (!(prop.GetCustomAttribute<BrowsableAttribute>()?.Browsable ?? true))
                     continue;
-
+                
                 var typeConverters = prop.GetCustomAttributes<TypeConverterAttribute>();
                 
                 var propEditor = PropertyEditorCache.CreatePropertyEditor(typeConverters.FirstOrDefault(), prop.PropertyType, Value);
@@ -52,7 +72,7 @@ namespace engenious.ContentTool.Avalonia
             remove => _properties.CollectionChanged -= value;
         }
 
-        public event PropertyChangedEventHandler PropertyChanged
+        public new event PropertyChangedEventHandler PropertyChanged
         {
             add => ((INotifyPropertyChanged) _properties).PropertyChanged += value;
             remove => ((INotifyPropertyChanged) _properties).PropertyChanged -= value;

@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using engenious.Content.Pipeline;
 using engenious.ContentTool.Builder;
 using engenious.ContentTool.Forms;
 using engenious.ContentTool.Models;
@@ -21,7 +22,7 @@ namespace engenious.ContentTool.Presenters
 
         private ContentBuilder _builder;
 
-        private ViewerManager _viewerManager;
+        private readonly ViewerManager _viewerManager;
         private readonly Arguments _arguments;
 
         public MainShellPresenter(IMainShell shell, IPromptShell promptShell, Arguments arguments)
@@ -52,7 +53,7 @@ namespace engenious.ContentTool.Presenters
             shell.UndoClick += ShellOnUndoClick;
             shell.RedoClick += ShellOnRedoClick;
 
-            shell.RenameItemClick += i => shell.RenameItem(i);
+            shell.RenameItemClick += async i => await shell.RenameItem(i);
             shell.RemoveItemClick += Shell_RemoveItemClick;
             shell.OnAboutClick += (s, e) => shell.ShowAbout();
 
@@ -195,14 +196,15 @@ namespace engenious.ContentTool.Presenters
             doc.Save(csproj);//TODO remove empty namespaces?
         }
 
-        private async void Shell_RemoveItemClick(ContentItem item)
+        private async Task Shell_RemoveItemClick(ContentItem item)
         {
-            if (await _promptShell.ShowMessageBox($"Do you really want to remove {item.Name}?", "Remove Item", MessageBoxButtons.YesNo,
-                    MessageBoxType.Warning) != MessageBoxResult.Yes)
+            if (await _promptShell.ShowMessageBox($"Do you really want to remove {item.Name}?", "Remove Item",
+                MessageBoxButtons.YesNo,
+                MessageBoxType.Warning, this) != MessageBoxResult.Yes)
                 return;
             var folder = item.Parent as ContentFolder;
             //TODO remove from disk
-            folder?.Content.Remove(item);
+            _shell.BeginInvoke(() => folder?.Content.Remove(item));
         }
 
         private async void Shell_OnShellLoad(object sender, EventArgs e)
@@ -213,7 +215,7 @@ namespace engenious.ContentTool.Presenters
                 await OpenProject(_arguments.ContentProject);
         }
 
-        private void Shell_AddNewFolderClick(ContentFolder folder)
+        private async Task Shell_AddNewFolderClick(ContentFolder folder)
         {
             if (folder == null)
                 return;
@@ -238,7 +240,7 @@ namespace engenious.ContentTool.Presenters
         }
 
 
-        private async void Shell_AddExistingFolderClick(ContentFolder fld)
+        private async Task Shell_AddExistingFolderClick(ContentFolder fld)
         {
             var dest = fld.FilePath;
             var src = await _shell.ShowFolderSelectDialog();
@@ -262,7 +264,7 @@ namespace engenious.ContentTool.Presenters
         }
 
 
-        private async void Shell_AddExistingItemClick(ContentItem item)
+        private async Task Shell_AddExistingItemClick(ContentItem item)
         {
             var fld = (item as ContentFolder) ?? (item?.Parent as ContentFolder) ?? _shell.Project;
 
@@ -293,7 +295,7 @@ namespace engenious.ContentTool.Presenters
             history.Undo();
         }
 
-        private async void Shell_OnItemSelect(ContentItem item)
+        private async Task Shell_OnItemSelect(ContentItem item)
         {
             if (item != null && item.Error.HasFlag(ContentErrorType.NotFound) && await _shell.ShowNotFoundDelete())
             {
@@ -307,14 +309,27 @@ namespace engenious.ContentTool.Presenters
                 await _shell.HideViewer();
         }
 
-        private void Shell_BuildItemClick(ContentItem item)
+        private LogType TranslateLogType(BuildMessageEventArgs args)
+        {
+            return args.MessageType switch
+            {
+                BuildMessageEventArgs.BuildMessageType.None => LogType.None,
+                BuildMessageEventArgs.BuildMessageType.Success => LogType.Success,
+                BuildMessageEventArgs.BuildMessageType.Warning => LogType.Warning,
+                BuildMessageEventArgs.BuildMessageType.Error => LogType.Error,
+                BuildMessageEventArgs.BuildMessageType.Information => LogType.Information,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+        }
+
+        private async Task Shell_BuildItemClick(ContentItem item)
         {
             if (_builder == null)
             {
                 _builder = new ContentBuilder(_shell.Project);
-                _builder.BuildMessage += a => _shell.Invoke(() => _shell.WriteLineLog(a.Message));
+                _builder.BuildMessage += a => _shell.Invoke(() => _shell.WriteLineLog(a.Message, TranslateLogType(a)));
             }
-            _shell.ShowLog();
+            await _shell.ShowLog();
 
             if (_shell.CurrentViewer != null && _shell.CurrentViewer.UnsavedChanges)
                 _shell.CurrentViewer.Save(); //TODO: always save together with project?
@@ -326,7 +341,7 @@ namespace engenious.ContentTool.Presenters
             if (_builder == null)
             {
                 _builder = new ContentBuilder(_shell.Project);
-                _builder.BuildMessage += a => _shell.Invoke(() => _shell.WriteLineLog(a.Message));
+                _builder.BuildMessage += a => _shell.Invoke(() => _shell.WriteLineLog(a.Message, TranslateLogType(a)));
             }
             _shell.ShowLog();
 
@@ -338,7 +353,7 @@ namespace engenious.ContentTool.Presenters
             if (_builder == null)
             {
                 _builder = new ContentBuilder(_shell.Project);
-                _builder.BuildMessage += a => _shell.Invoke(() => _shell.WriteLineLog(a.Message));
+                _builder.BuildMessage += a => _shell.Invoke(() => _shell.WriteLineLog(a.Message, TranslateLogType(a)));
             }
             _shell.ShowLog();
 
@@ -370,7 +385,7 @@ namespace engenious.ContentTool.Presenters
             _shell.Project = new ContentProject("Content", path, Path.GetDirectoryName(path));
             _shell.Project.Configuration = "Debug";
             _shell.Project.OutputDirectory = "bin/{Configuration}";
-            SaveProject();
+            await SaveProject();
         }
 
         public async Task OpenProject(string path = null)
@@ -406,7 +421,7 @@ namespace engenious.ContentTool.Presenters
             t.Start();
         }
 
-        public void SaveProject(string path = null)
+        public async Task SaveProject(string path = null)
         {
             if (path == null)
                 _shell.Project.Save();
@@ -414,7 +429,7 @@ namespace engenious.ContentTool.Presenters
                 _shell.Project.Save(path);
         }
 
-        private void Shell_ShowInExplorerItemClick(Models.ContentItem item)
+        private async Task Shell_ShowInExplorerItemClick(Models.ContentItem item)
         {
             var path = item.FilePath;
             if (item is ContentFile)
@@ -434,6 +449,7 @@ namespace engenious.ContentTool.Presenters
 
         public void Dispose()
         {
+            _viewerManager.Dispose();
             _builder?.Dispose();
         }
     }

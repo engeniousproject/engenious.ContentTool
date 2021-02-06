@@ -276,9 +276,21 @@ namespace engenious.ContentTool.Builder
                         Path.Combine(Path.GetDirectoryName(outputDestination),
                             Path.GetFileNameWithoutExtension(item.Name) + FileExtension), importerContext,
                         processorContext, cancellationToken, cache);
-                    RaiseBuildMessage(this,
-                        new BuildMessageEventArgs(item.RelativePath, item.RelativePath + " built",
-                            BuildMessageEventArgs.BuildMessageType.Information));
+                    if (cache.NeedsRebuild(importerContext.GetRelativePathToContentDirectory(item.FilePath),
+                        item.FilePath))
+                    {
+                        RaiseBuildMessage(this,
+                            new BuildMessageEventArgs(item.RelativePath, item.RelativePath + " build failed",
+                                BuildMessageEventArgs.BuildMessageType.Error));
+                    }
+                    else
+                    {
+                        if (cache.NeedsRebuild(importerContext.GetRelativePathToContentDirectory(item.FilePath),
+                            item.FilePath))
+                            RaiseBuildMessage(this,
+                                new BuildMessageEventArgs(item.RelativePath, item.RelativePath + " built",
+                                    BuildMessageEventArgs.BuildMessageType.Success));
+                    }
                 }
                 else
                 {

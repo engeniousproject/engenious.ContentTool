@@ -8,7 +8,7 @@ using engenious.ContentTool.Observer;
 
 namespace engenious.ContentTool.Models
 {
-    public abstract class ContentItem : INotifyPropertyValueChanged,INotifyCollectionChanged
+    public abstract class ContentItem : INotifyPropertyValueChanged, INotifyPropertyChanged,INotifyCollectionChanged
     {
         /// <summary>
         /// The name of the content item
@@ -19,7 +19,7 @@ namespace engenious.ContentTool.Models
                 if (_name == value) return;
                 var old = _name;
                 _name = value;
-                OnPropertyChanged(_name,value);
+                OnPropertyChanged(old,value);
             }
         }
 
@@ -101,7 +101,8 @@ namespace engenious.ContentTool.Models
         protected virtual void OnPropertyChanged(object sender,PropertyValueChangedEventArgs args)
         {
             if (SupressChangedEvent) return;
-            PropertyChanged?.Invoke(sender, args);
+            PropertyValueChanged?.Invoke(sender, args);
+            _notifyPropertyChanged?.Invoke(sender, new PropertyChangedEventArgs(args.PropertyName));
         }
         protected virtual void OnPropertyChanged(object sender,object oldValue,object newValue,[CallerMemberName] string propertyName = null)
         {
@@ -126,7 +127,14 @@ namespace engenious.ContentTool.Models
              OnCollectionChanged(sender,new NotifyCollectionChangedEventArgs(action,element));
         }
         public event NotifyCollectionChangedEventHandler CollectionChanged;
-        public event NotifyPropertyValueChangedHandler PropertyChanged;
+        public event NotifyPropertyValueChangedHandler PropertyValueChanged;
+
+        private event PropertyChangedEventHandler? _notifyPropertyChanged;
+        event PropertyChangedEventHandler? INotifyPropertyChanged.PropertyChanged
+        {
+            add => _notifyPropertyChanged += value;
+            remove => _notifyPropertyChanged -= value;
+        }
     }
 
     [Flags]

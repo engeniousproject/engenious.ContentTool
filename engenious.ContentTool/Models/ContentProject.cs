@@ -117,7 +117,7 @@ namespace engenious.ContentTool.Models
 
 
             //ContentItemChanged += (a, b) => HasUnsavedChanges = true;
-            PropertyChanged += OnPropertyChangedT;
+            PropertyValueChanged += OnPropertyChangedT;
             CollectionChanged += OnCollectionChangedT;
         }
 

@@ -34,6 +34,40 @@ namespace engenious.ContentTool.Avalonia
             if (propInfo.CanWrite)
                 _setValue = Expression.Lambda<Action<object, object>>(Expression.Assign(prop, Expression.Convert(valueParam, prop.Type)), parentParam, valueParam).Compile();
         }
+
+        internal virtual void OnParentChanged()
+        {
+            RegisterBinding();
+        }
+
+        private INotifyPropertyChanged _oldPropChange;
+        private void RegisterBinding()
+        {
+            var newPropChange = Parent?.Value as INotifyPropertyChanged;
+
+            //TODO: deabbo
+
+            if (_oldPropChange != null)
+            {
+                _oldPropChange.PropertyChanged -= NewPropChangeOnPropertyChanged;
+            }
+            
+            if (newPropChange == null)
+            {
+                return;
+            }
+            
+            newPropChange.PropertyChanged += NewPropChangeOnPropertyChanged;
+            
+            _oldPropChange = newPropChange;
+        }
+
+        private void NewPropChangeOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == Name)
+                OnPropertyChanged(new PropertyChangedEventArgs("Value"));
+        }
+
         public virtual void BuildTree(int maxDepth = 1){}
 
         public string Name { get; }
@@ -56,6 +90,7 @@ namespace engenious.ContentTool.Avalonia
                 
                 BuildTree();
                 
+                RegisterBinding();
                 OnPropertyChanged();
             }
         }
@@ -69,7 +104,11 @@ namespace engenious.ContentTool.Avalonia
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            OnPropertyChanged( new PropertyChangedEventArgs(propertyName));
+        }
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
+        {
+            PropertyChanged?.Invoke(this, e);
         }
     }
 }

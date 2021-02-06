@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Xml.Linq;
 
@@ -39,9 +40,9 @@ namespace engenious.ContentTool.Models
         /// <param name="parent">Parent item</param>
         public ContentFolder(string name, ContentItem parent) : base(name, parent)
         {
-            _content = new ContentItemCollection();
+            _content = new ();
             _content.CollectionChanged += OnCollectionChanged;
-            _content.PropertyChanged += OnPropertyChanged;
+            _content.PropertyValueChanged += OnPropertyChanged;
         }
 
         public override ContentItem Deserialize(XElement element)

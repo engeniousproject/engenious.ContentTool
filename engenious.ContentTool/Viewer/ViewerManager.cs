@@ -7,7 +7,7 @@ using engenious.ContentTool.Models;
 
 namespace engenious.ContentTool.Viewer
 {
-    public class ViewerManager
+    public class ViewerManager : IDisposable
     {
 
         private readonly Dictionary<string, (Type type, bool needsCompilation)> _viewerTypes = new Dictionary<string, (Type, bool)>();
@@ -58,5 +58,12 @@ namespace engenious.ContentTool.Viewer
         }
 
 
+        public void Dispose()
+        {
+            foreach (var (key, viewer) in _viewers)
+            {
+                viewer.viewer?.Dispose();
+            }
+        }
     }
 }

@@ -40,6 +40,7 @@ namespace engenious.ContentTool.Avalonia
             {
                 ButtonResult.Ok => MessageBoxResult.Ok,
                 ButtonResult.Cancel => MessageBoxResult.Cancel,
+                ButtonResult.No => MessageBoxResult.No,
                 ButtonResult.Yes => MessageBoxResult.Yes,
                 _ => MessageBoxResult.Cancel
             };

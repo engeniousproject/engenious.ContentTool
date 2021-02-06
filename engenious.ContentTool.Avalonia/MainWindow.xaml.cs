@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia;
@@ -83,6 +84,20 @@ namespace engenious.ContentTool.Avalonia
                         _propertyGrid.PropertyView = tmp;
                     }
                 };
+
+            _projectTreeView.SelectedItemPropertyChanged += (sender, args) =>
+            {
+                var item = sender as ContentItem;
+                if (item != null && args.PropertyName == "Name")
+                {
+                    var dir = Path.GetDirectoryName(item.FilePath);
+                    var oldPath = Path.Combine(dir ?? string.Empty, (string) args.OldValue);
+                    if (Directory.Exists(oldPath))
+                        Directory.Move(oldPath, item.FilePath);
+                    else
+                        File.Move(oldPath, item.FilePath);
+                }
+            };
             _logText = this.FindControl<TextBlock>("logText");
             _defaultTextBlockColorDummy = this.FindControl<TextBlock>("defaultTextBlockColorDummy");
 
@@ -155,7 +170,7 @@ namespace engenious.ContentTool.Avalonia
 
         public void Dispose()
         {
-            CurrentViewer?.Dispose();
+            
         }
 
         public void Run()
@@ -174,8 +189,7 @@ namespace engenious.ContentTool.Avalonia
 
         public void Invoke(Action d)
         {
-            using var t = Dispatcher.UIThread.InvokeAsync(d);
-            t.Wait();
+            Dispatcher.UIThread.InvokeAsync(d).GetAwaiter().GetResult();
         }
 
         public void BeginInvoke(Action d)
@@ -194,7 +208,7 @@ namespace engenious.ContentTool.Avalonia
             if (CurrentViewer != null && CurrentViewer.UnsavedChanges)
                 CurrentViewer.Save();
             if (_project.HasUnsavedChanges)
-                SaveProjectClick?.Invoke(Project);
+                await SaveProjectClick?.Invoke(Project)!;
 
             return true;
         }
@@ -320,7 +334,6 @@ namespace engenious.ContentTool.Avalonia
                 {
                     _project.History.Remove(CurrentViewer.History);
                 }
-                CurrentViewer.Dispose();
             }
 
             CurrentViewer = viewer?.GetViewerControl(file) as IViewer;
@@ -335,7 +348,8 @@ namespace engenious.ContentTool.Avalonia
 
         public async Task RenameItem(ContentItem item)
         {
-            throw new NotImplementedException();
+            _projectTreeView.SelectedItem = item;
+            _projectTreeView.IsInEditMode = true;
         }
 
         public async Task RemoveItem(ContentItem item)
@@ -414,13 +428,15 @@ namespace engenious.ContentTool.Avalonia
 
         public struct LogItem
         {
-            public LogItem(string text, IBrush color)
+            public LogItem(string text, LogType logType, IBrush color)
             {
                 Text = text;
                 Color = color;
+                LogType = logType;
             }
             public string Text { get; }
             public IBrush Color { get; }
+            public LogType LogType { get; }
         }
         
         public ObservableList<LogItem> LogItems { get; }
@@ -437,14 +453,14 @@ namespace engenious.ContentTool.Avalonia
                     (byte) Math.Clamp((int) color.B * 255, 0, 255)));
         }
 
-        public async Task WriteLineLog(string text, Color color = default)
+        public async Task WriteLineLog(string text, LogType logType = LogType.Information, Color color = default)
         {
-            LogItems.Add(new LogItem(text, ToBrush(color)));
+            LogItems.Add(new LogItem(text, logType, ToBrush(color)));
         }
 
-        public async Task WriteLog(string text, Color color = default)
+        public async Task WriteLog(string text, LogType logType = LogType.Information, Color color = default)
         {
-            LogItems.Add(new LogItem(text, ToBrush(color)));
+            LogItems.Add(new LogItem(text, logType, ToBrush(color)));
         }
 
         public async Task ClearLog()
@@ -521,18 +537,18 @@ namespace engenious.ContentTool.Avalonia
         private void OnNewProjectButtonClick(object sender, RoutedEventArgs e) =>
             NewProjectClick?.Invoke(sender, EventArgs.Empty);
 
-        private void OnSaveProjectButtonClick(object sender, RoutedEventArgs e) =>
-            SaveProjectClick?.Invoke(Project);
+        private async void OnSaveProjectButtonClick(object sender, RoutedEventArgs e) =>
+            await SaveProjectClick?.Invoke(Project)!;
 
-        private void OnSaveProjectAsButtonClick(object sender, RoutedEventArgs e) =>
-            SaveProjectAsClick?.Invoke(Project);
+        private async void OnSaveProjectAsButtonClick(object sender, RoutedEventArgs e) =>
+            await SaveProjectAsClick?.Invoke(Project)!;
 
-        private void OnCloseProjectButtonClick(object sender, RoutedEventArgs e) =>
-            CloseProjectClick?.Invoke(Project);
+        private async void OnCloseProjectButtonClick(object sender, RoutedEventArgs e) =>
+            await CloseProjectClick?.Invoke(Project)!;
 
-        private void OnExitButtonClick(object sender, RoutedEventArgs e)
+        private async void OnExitButtonClick(object sender, RoutedEventArgs e)
         {
-            CloseProjectClick?.Invoke(Project);
+            await CloseProjectClick?.Invoke(Project)!;
             Close();
             _cts.Cancel();
         }
@@ -564,8 +580,9 @@ namespace engenious.ContentTool.Avalonia
             RemoveItemClick?.Invoke(_projectTreeView.SelectedItem);
 
         private void OnBuildButtonClick(object sender, RoutedEventArgs e) =>
+            BuildItemClick?.Invoke(Project);
+        private void OnBuildItemButtonClick(object sender, RoutedEventArgs e) =>
             BuildItemClick?.Invoke(_projectTreeView.SelectedItem ?? Project);
-
         private void OnCleanButtonClick(object sender, RoutedEventArgs e) =>
             CleanClick?.Invoke(sender, EventArgs.Empty);
 
@@ -574,12 +591,22 @@ namespace engenious.ContentTool.Avalonia
 
         private async void FormLoading(object sender, EventArgs e) =>
             OnShellLoad?.Invoke(sender, EventArgs.Empty);
-        private async void FormClosing(object sender, CancelEventArgs e)
+
+        private bool _ignoreUnsavedChanges;
+
+        protected override async void OnClosing(CancelEventArgs e)
         {
+            base.OnClosing(e);
             if (Project == null ||
-                !Project.HasUnsavedChanges && !(CurrentViewer != null && CurrentViewer.UnsavedChanges)) return;
-            if (!await ShowCloseWithoutSavingConfirmation())
-                e.Cancel = true;
+                !Project.HasUnsavedChanges && !(CurrentViewer != null && CurrentViewer.UnsavedChanges) ||
+                _ignoreUnsavedChanges)
+                return;
+            e.Cancel = true;
+            if (await ShowCloseWithoutSavingConfirmation())
+            {
+                _ignoreUnsavedChanges = true;
+                Close();
+            }
         }
     }
 }

@@ -5,25 +5,119 @@
              xmlns:models="clr-namespace:engenious.ContentTool.Models;assembly=engenious.ContentTool">
     <Design.DataContext>
         <ct:ProjectTreeView />
+
     </Design.DataContext>
-    <TreeView x:Name="treeView" Items="{Binding Path=ProjectContainer.Content}" SelectionChanged="OnSelectedItemChanged">
+    <UserControl.Resources>
+        <!-- <ControlTemplate x:Key="ItemContext"> -->
+        <!--     <ContextMenu x:Name="ProjectContextMenu"> -->
+        <!--         <MenuItem Header="Add"> -->
+        <!--             <MenuItem Header="New file..." IsEnabled="False" Click="AddNewFile_OnClick"></MenuItem> -->
+        <!--             <MenuItem Header="Existing file..." Click="AddExistingFile_OnClick"></MenuItem> -->
+        <!--             <MenuItem Header="New folder" Click="AddNewFolder_OnClick"></MenuItem> -->
+        <!--             <MenuItem Header="Existing folder..." Click="AddExistingFolder_OnClick"></MenuItem> -->
+        <!--         </MenuItem> -->
+        <!--         <Separator /> -->
+        <!--         <MenuItem Header="Remove" Click="RemoveItem_OnClick" IsVisible="{Binding DataContext, RelativeSource={RelativeSource AncestorType=StackPanel}, Converter={StaticResource TopLevelConverter}}" /> -->
+        <!--         <MenuItem Header="Rename" Click="RenameItem_OnClick"/> -->
+        <!--         <Separator /> -->
+        <!--         <MenuItem Header="Build selected" Click="BuildItem_OnClick"></MenuItem> -->
+        <!--     </ContextMenu> -->
+        <!-- </ControlTemplate> -->
+
+
+    </UserControl.Resources>
+    <UserControl.Styles>
+        <!-- <Style> -->
+        <!--     <Style.Resources> -->
+        <!--         <ct:IsContentProjectConverter x:Key="TopLevelConverter"/> -->
+        <!--     </Style.Resources> -->
+        <!-- </Style> -->
+        <Style Selector="ContentControl">
+            <Setter Property="ContentTemplate">
+                <DataTemplate DataType="models:ContentItem">
+                    <Panel>
+                        <TextBlock Text="{Binding Path=Name, Mode=OneWay}" VerticalAlignment="Center"
+                                   IsVisible="{Binding !#editField.IsVisible, Mode=OneWay}" />
+                        <TextBox Text="{Binding Path=Name, Mode=OneWay}" VerticalAlignment="Center" Name="editField"
+                                 PropertyChanged="EditField_OnPropertyChanged" LostFocus="EditField_OnLostFocus"
+                                 KeyUp="EditField_OnKeyUp" Focusable="{Binding #editField.IsVisible, Mode=OneWay}">
+                            <TextBox.IsVisible>
+                                <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                    <Binding RelativeSource="{RelativeSource AncestorType=TreeViewItem}"
+                                             Path="IsSelected" />
+                                    <Binding RelativeSource="{RelativeSource AncestorType=ct:ProjectTreeView}"
+                                             Path="IsInEditMode" />
+                                </MultiBinding>
+                            </TextBox.IsVisible>
+                        </TextBox>
+                    </Panel>
+                </DataTemplate>
+            </Setter>
+        </Style>
+    </UserControl.Styles>
+    <TreeView x:Name="treeView" Items="{Binding Path=ProjectContainer.Content, Mode=TwoWay}"
+              SelectionChanged="OnSelectedItemChanged" DoubleTapped="TreeView_OnDoubleTapped">
         <TreeView.DataTemplates>
-            <TreeDataTemplate DataType="models:ContentProject" ItemsSource="{Binding Path=Content}">
+            <TreeDataTemplate DataType="models:ContentProject" ItemsSource="{Binding Path=Content, Mode=TwoWay}">
                 <StackPanel Orientation="Horizontal">
-                    <Image Source="/Resources/Objects.png" Width="15" Height="15" Margin="0 2 2 2"></Image>
-                    <TextBlock Text="{Binding Path=Name}" VerticalAlignment="Center"/>
+                    <StackPanel.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Add">
+                                <MenuItem Header="New file..." IsEnabled="False" Click="AddNewFile_OnClick" />
+                                <MenuItem Header="Existing file..." Click="AddExistingFile_OnClick" />
+                                <MenuItem Header="New folder" Click="AddNewFolder_OnClick" />
+                                <MenuItem Header="Existing folder..." Click="AddExistingFolder_OnClick" />
+                            </MenuItem>
+                            <Separator />
+                            <MenuItem Header="Rename" Click="RenameItem_OnClick" />
+                            <Separator />
+                            <MenuItem Header="Build selected" Click="BuildItem_OnClick" />
+                        </ContextMenu>
+                    </StackPanel.ContextMenu>
+                    <Image Source="/Resources/Objects.png" Width="15" Height="15" Margin="0 2 2 2" />
+                    <ContentControl Content="{Binding}" />
                 </StackPanel>
             </TreeDataTemplate>
-            <TreeDataTemplate DataType="models:ContentFolder" ItemsSource="{Binding Path=Content}">
+            <TreeDataTemplate DataType="models:ContentFolder" ItemsSource="{Binding Path=Content, Mode=TwoWay}">
                 <StackPanel Orientation="Horizontal">
-                    <Image Source="/Resources/Folder.png" Width="15" Height="15" Margin="0 2 2 2"></Image>
-                    <TextBlock Text="{Binding Path=Name}" VerticalAlignment="Center"/>
+                    <StackPanel.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Add">
+                                <MenuItem Header="New file..." IsEnabled="False" Click="AddNewFile_OnClick" />
+                                <MenuItem Header="Existing file..." Click="AddExistingFile_OnClick" />
+                                <MenuItem Header="New folder" Click="AddNewFolder_OnClick" />
+                                <MenuItem Header="Existing folder..." Click="AddExistingFolder_OnClick" />
+                            </MenuItem>
+                            <Separator />
+                            <MenuItem Header="Remove" Click="RemoveItem_OnClick" />
+                            <MenuItem Header="Rename" Click="RenameItem_OnClick" />
+                            <Separator />
+                            <MenuItem Header="Build selected" Click="BuildItem_OnClick" />
+                        </ContextMenu>
+                    </StackPanel.ContextMenu>
+                    <Image Source="/Resources/Folder.png" Width="15" Height="15" Margin="0 2 2 2" />
+                    <ContentControl Content="{Binding}" />
                 </StackPanel>
             </TreeDataTemplate>
             <DataTemplate DataType="models:ContentFile">
                 <StackPanel Orientation="Horizontal">
-                    <Image Source="/Resources/New_file.png" Width="15" Height="15" Margin="0 2 2 2"></Image>
-                    <TextBlock Text="{Binding Path=Name}" VerticalAlignment="Center"/>
+                    <StackPanel.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Add">
+                                <MenuItem Header="New file..." IsEnabled="False" Click="AddNewFile_OnClick" />
+                                <MenuItem Header="Existing file..." Click="AddExistingFile_OnClick" />
+                                <MenuItem Header="New folder" Click="AddNewFolder_OnClick" />
+                                <MenuItem Header="Existing folder..." Click="AddExistingFolder_OnClick" />
+                            </MenuItem>
+                            <Separator />
+                            <MenuItem Header="Remove" Click="RemoveItem_OnClick" />
+                            <MenuItem Header="Rename" Click="RenameItem_OnClick" />
+                            <Separator />
+                            <MenuItem Header="Build selected" Click="BuildItem_OnClick" />
+                        </ContextMenu>
+                    </StackPanel.ContextMenu>
+                    <Image Source="/Resources/New_file.png" Width="15" Height="15" Margin="0 2 2 2" />
+                    <ContentControl Content="{Binding}" />
                 </StackPanel>
             </DataTemplate>
         </TreeView.DataTemplates>
