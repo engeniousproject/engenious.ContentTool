@@ -272,12 +272,11 @@ namespace engenious.ContentTool.Builder
             {
                 if (cache.NeedsRebuild(importerContext.GetRelativePathToContentDirectory(item.FilePath), item.FilePath))
                 {
-                    InternalBuildFile(item as ContentFile,
+                    var res = InternalBuildFile(item as ContentFile,
                         Path.Combine(Path.GetDirectoryName(outputDestination),
                             Path.GetFileNameWithoutExtension(item.Name) + FileExtension), importerContext,
                         processorContext, cancellationToken, cache);
-                    if (cache.NeedsRebuild(importerContext.GetRelativePathToContentDirectory(item.FilePath),
-                        item.FilePath))
+                    if (res == null)
                     {
                         RaiseBuildMessage(this,
                             new BuildMessageEventArgs(item.RelativePath, item.RelativePath + " build failed",
@@ -285,9 +284,7 @@ namespace engenious.ContentTool.Builder
                     }
                     else
                     {
-                        if (cache.NeedsRebuild(importerContext.GetRelativePathToContentDirectory(item.FilePath),
-                            item.FilePath))
-                            RaiseBuildMessage(this,
+                        RaiseBuildMessage(this,
                                 new BuildMessageEventArgs(item.RelativePath, item.RelativePath + " built",
                                     BuildMessageEventArgs.BuildMessageType.Success));
                     }
@@ -359,7 +356,7 @@ namespace engenious.ContentTool.Builder
             {
                 fs.Write(
                     BitConverter.GetBytes(
-                        engenious.Helper.BitHelper.BitConverterToBigEndian(engenious.Content.ContentFile.MAGIC)), 0,
+                        engenious.Helper.BitHelper.BitConverterToBigEndian(engenious.Content.ContentFile.Magic)), 0,
                     sizeof(uint));
 
                 const byte writerVersion = 1;

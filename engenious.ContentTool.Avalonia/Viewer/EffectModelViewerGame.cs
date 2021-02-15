@@ -1,4 +1,5 @@
 using System;
+using System.Net;
 using engenious.Avalonia;
 using engenious.Graphics;
 using engenious.Helper;
@@ -39,17 +40,20 @@ namespace engenious.ContentTool.Avalonia
 
             if (_effectView)
             {
-                Model = new Model(GraphicsDevice);
-                var mesh = new MeshIndexed(GraphicsDevice);
+                
                 PrimitiveModels.CreateUVSphere(out var vertices, out var indices);
-                mesh.VB = new VertexBuffer(GraphicsDevice, VertexPositionNormalTexture.VertexDeclaration,
-                    vertices.Length);
+
+                var mesh = new MeshIndexed(
+                    GraphicsDevice,
+                    indices.Length / 3,
+                    new VertexBuffer(GraphicsDevice, VertexPositionNormalTexture.VertexDeclaration, vertices.Length),
+                    new IndexBuffer(GraphicsDevice, DrawElementsType.UnsignedInt, indices.Length)
+                );
                 mesh.VB.SetData(vertices);
-                mesh.IB = new IndexBuffer(GraphicsDevice, DrawElementsType.UnsignedInt, indices.Length);
                 mesh.IB.SetData(indices);
-                mesh.PrimitiveCount = mesh.IB.IndexCount / 3;
                 mesh.BoundingBox = new BoundingBox(-Vector3.One, Vector3.One);
-                Model.Meshes = new IMesh[] {mesh};
+                Model = new Model(GraphicsDevice, 1);
+                Model.Meshes[0] = mesh;
             }
             else
             {
@@ -60,7 +64,9 @@ namespace engenious.ContentTool.Avalonia
 
             _batch = new SpriteBatch(GraphicsDevice);
 
-            _texture = Texture2D.FromFile(GraphicsDevice, "/home/julian/Bilder/landmass.png");
+            var tmpTextPath = "/home/julian/Bilder/landmass.png";
+            if (System.IO.File.Exists(tmpTextPath))
+                _texture = Texture2D.FromFile(GraphicsDevice, tmpTextPath);
             //NightSky = Texture2D.FromFile(GraphicsDevice,
             //    "/home/julian/Projects/octoawesome/OctoAwesome/OctoAwesome.Client/Content/Textures/skymap.png");
 
@@ -78,7 +84,7 @@ namespace engenious.ContentTool.Avalonia
                 try
                 {
                     Content.RootDirectory = outputDir;
-                    Model = Content.Load<Model>(assetPath);
+                    Model = Content.Load<Model>(assetPath, false);
                 }
                 catch (Exception ex)
                 {
@@ -129,23 +135,42 @@ namespace engenious.ContentTool.Avalonia
             var maxD = Math.Max(d.X, Math.Max(d.Y, d.Z)) * 2;
             GL.Viewport(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
             float minScreen = Math.Min(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
-            World = Matrix.CreateRotationX(-MathHelper.PiOver4) *
-                    Matrix.CreateRotationZ((float) gameTime.TotalGameTime.TotalSeconds) *
-                    Matrix.CreateScaling(minScreen / maxD, minScreen / maxD, minScreen / maxD);
-            Projection = Matrix.CreateOrthographic(this.GraphicsDevice.Viewport.Width,
-                this.GraphicsDevice.Viewport.Height, 1000, -1000);
-            View = Matrix.Identity;
+            //Matrix.CreateRotationY((float) gameTime.TotalGameTime.TotalSeconds) * 
+            World =
+                Matrix.CreateScaling(new Vector3(0.1f)) * Matrix.CreateScaling(minScreen / maxD, minScreen / maxD, minScreen / maxD);
+            View = Matrix.CreateLookAt(Vector3.Zero,-Vector3.UnitZ, Vector3.UnitY);
+            Projection = Matrix.CreateOrthographicOffCenter(-GraphicsDevice.Viewport.Width/2, this.GraphicsDevice.Viewport.Width/2,
+                this.GraphicsDevice.Viewport.Height/2,-GraphicsDevice.Viewport.Height/2 , 100000, -100000);
 
-            foreach (var p in Effect.CurrentTechnique.Passes)
+            UpdateBindings?.Invoke(this, EventArgs.Empty);
+
+
+            Effect.Parameters["World"].SetValue(World);
+            Effect.Parameters["View"].SetValue(View);
+            Effect.Parameters["Proj"].SetValue(Projection);
+            if (Model.Animations.Count > 0)
             {
-                p.Apply();
-                
-                Effect.Parameters["World"].SetValue(World);
-                Effect.Parameters["View"].SetValue(View);
-                Effect.Parameters["Proj"].SetValue(Projection);
+                int index = (int) ((gameTime.TotalGameTime.TotalSeconds / 10.0) % Model.Animations.Count);
+                Model.CurrentAnimation = Model.Animations[index];
+            }
 
-                UpdateBindings?.Invoke(this, EventArgs.Empty);
-                Model.Draw();
+            if (Effect is BasicEffect basic)
+            {
+                basic.TextureEnabled = true;
+                Model.Transform = World;
+                if (Model.CurrentAnimation != null)
+                    Model.UpdateAnimation((float)gameTime.TotalGameTime.TotalSeconds);
+                // Model.UpdateAnimation(null, Model.RootNode);
+                Model.Draw(basic, _texture);
+            }
+            else
+            {
+                foreach (var p in Effect.CurrentTechnique.Passes)
+                {
+                    p.Apply();
+               
+                    Model.Draw();
+                }
             }
         }
     }
