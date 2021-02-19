@@ -60,6 +60,7 @@ namespace engenious.ContentTool.Builder
         {
             Project = project;
             Game = new ContentBuilderGame();
+            Game.GraphicsDevice.RemoveFromUiThread();
             _syncContext = SynchronizationContext.Current;
 
 
