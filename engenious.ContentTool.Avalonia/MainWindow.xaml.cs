@@ -1,13 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
+using Avalonia.Data;
 using Avalonia.Dialogs;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
@@ -59,9 +62,14 @@ namespace engenious.ContentTool.Avalonia
         public MainWindow()
         {
 
-            LogItems =  new ObservableList<LogItem>();
+            LogItems =  new ObservableCollection<LogItem>();
             DataContext = this;
             InitializeComponent();
+            var logListBox = this.FindControl<ListBox>("LogListBox");
+            LogItems.CollectionChanged += (sender, args) => logListBox.ScrollIntoView(LogItems.Count - 1);
+#if DEBUG
+            this.AttachDevTools();
+#endif
 
             
             
@@ -439,7 +447,7 @@ namespace engenious.ContentTool.Avalonia
             public LogType LogType { get; }
         }
         
-        public ObservableList<LogItem> LogItems { get; }
+        public ObservableCollection<LogItem> LogItems { get; }
 
         private IBrush ToBrush(Color color)
         {

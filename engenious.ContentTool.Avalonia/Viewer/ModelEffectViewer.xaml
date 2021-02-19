@@ -5,23 +5,135 @@
              HorizontalAlignment="Stretch"
              VerticalAlignment="Stretch"
              xmlns:models="clr-namespace:engenious.ContentTool.Models;assembly=engenious.ContentTool"
-             xmlns:openGl="clr-namespace:Avalonia.OpenGL;assembly=Avalonia.OpenGL"
+             xmlns:graphics="clr-namespace:engenious.Graphics;assembly=engenious"
              xmlns:avalonia="clr-namespace:engenious.Avalonia;assembly=engenious.Avalonia">
     <Design.DataContext>
         <ct:ModelEffectViewer />
     </Design.DataContext>
-    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+    <UserControl.Resources>
+        <ct:BindingConverter x:Key="EffectBindingConverter"/>
+        <ct:ParameterConverter x:Key="EffectParameterConverter"/>
+    </UserControl.Resources>
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="mainGrid">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="10"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="2*" />
         </Grid.ColumnDefinitions>
-        <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            <TextBox />
-        </StackPanel>
-        <GridSplitter Grid.Column="1" Width="10"/>
+        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Expander>
+                <Expander.Header><TextBlock Text="Effect"/></Expander.Header>
+                <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="Current Technique:" />
+                        <ComboBox x:Name="techniqueCombo" SelectionChanged="TechniqueCombo_OnSelectionChanged"></ComboBox>
+                    </StackPanel>
+                    <ListBox x:Name="paramList" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                        <ListBox.DataTemplates>
+                            <DataTemplate x:DataType="ct:IEffectParameterBinding">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Name}" />
+                                    <TextBlock Text=": " />
+                                    <ComboBox Items="{Binding Converter={StaticResource EffectBindingConverter}, ConverterParameter={Binding #mainGrid.DataContext}}" SelectionChanged="Parameter_OnSelectionChanged"></ComboBox>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.DataTemplates>
+                    </ListBox>
+                </StackPanel>
+            </Expander>
+            <Expander Grid.Row="1">
+                <Expander.Header><TextBlock Text="Nodes"/></Expander.Header>
+                <ct:SingleRootTreeView x:Name="nodeTree" Root="{Binding Game.Model.RootNode}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <TreeView.DataTemplates>
+                        <TreeDataTemplate DataType="graphics:Node" ItemsSource="{Binding Children}">
+
+                            <Border BorderBrush="Green" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" BorderThickness="1">
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Name}"></TextBlock>
+                                    <Expander>
+                                        <Expander.Header>
+                                            <TextBlock>Transformation</TextBlock>
+                                        </Expander.Header>
+                                        <StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock>Location: </TextBlock>
+                                                <TextBlock Text="{Binding Transformation.Translation}" />
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock>Rotation: </TextBlock>
+                                                <TextBlock Text="{Binding Transformation.Rotation}" />
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock>Scaling: </TextBlock>
+                                                <TextBlock Text="{Binding Transformation.Scaling}" />
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Expander>
+                                    <Expander>
+                                        <Expander.Header>
+                                            <TextBlock>Local</TextBlock>
+                                        </Expander.Header>
+                                        <StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock>Location: </TextBlock>
+                                                <TextBlock Text="{Binding LocalTransform.Translation}" />
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock>Rotation: </TextBlock>
+                                                <TextBlock Text="{Binding LocalTransform.Rotation}" />
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock>Scaling: </TextBlock>
+                                                <TextBlock Text="{Binding LocalTransform.Scaling}" />
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Expander>
+                                    <Expander>
+                                        <Expander.Header>
+                                            <TextBlock>Global</TextBlock>
+                                        </Expander.Header>
+                                        <StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock>Location: </TextBlock>
+                                                <TextBlock Text="{Binding GlobalTransform.Translation}" />
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock>Rotation: </TextBlock>
+                                                <TextBlock Text="{Binding GlobalTransform.Rotation}" />
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock>Scaling: </TextBlock>
+                                                <TextBlock Text="{Binding GlobalTransform.Scaling}" />
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Expander>
+                                </StackPanel>
+
+                            </Border>
+                        </TreeDataTemplate>
+                        <DataTemplate>
+                            <StackPanel Background="Green"></StackPanel>
+                        </DataTemplate>
+                    </TreeView.DataTemplates>
+                </ct:SingleRootTreeView>
+            </Expander>
+            <StackPanel Orientation="Horizontal" Grid.Row="2">
+                <TextBlock>Frame:</TextBlock>
+                <NumericUpDown Value="{Binding Game.Frame}"></NumericUpDown>
+            </StackPanel>
+        </Grid>
+        <GridSplitter Grid.Column="1" Width="10" />
         <Panel Grid.Column="2">
-            <avalonia:AvaloniaRenderingSurface HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="renderingSurface"/>
+            <avalonia:AvaloniaRenderingSurface HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                               x:Name="renderingSurface" 
+                                               PointerMoved="RenderingSurface_OnPointerMoved" PointerPressed="RenderingSurface_OnPointerPressed"
+                                               PointerReleased="RenderingSurface_OnPointerReleased"
+                                               MouseWheel="RenderingSurface_OnMouseWheel"/>
         </Panel>
     </Grid>
 </UserControl>

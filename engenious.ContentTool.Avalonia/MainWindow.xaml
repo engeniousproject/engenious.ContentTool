@@ -174,7 +174,7 @@
                     <GridSplitter Grid.Column="0" Grid.Row="1"  IsVisible="{Binding Path=LogShown}"/>
                     <TextBlock x:Name="defaultTextBlockColorDummy" IsVisible="False"></TextBlock>
                     <Panel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="0" Grid.Row="2" IsVisible="{Binding Path=LogShown}">
-                        <ListBox Items="{Binding Path=LogItems}">
+                        <ListBox Items="{Binding Path=LogItems}" x:Name="LogListBox">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">

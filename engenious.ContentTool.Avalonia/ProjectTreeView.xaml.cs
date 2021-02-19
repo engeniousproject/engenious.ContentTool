@@ -52,11 +52,6 @@ namespace engenious.ContentTool.Avalonia
                 nameof(Project),
                 o => o.Project,
                 (o, v) => o.Project = v);
-
-        public static readonly DirectProperty<ProjectTreeView, ContentFolder> ProjectContainerProperty =
-            AvaloniaProperty.RegisterDirect<ProjectTreeView, ContentFolder>(
-                nameof(ProjectContainer),
-                o => o.ProjectContainer, (o, v) => o.ProjectContainer = v);
         public static readonly DirectProperty<ProjectTreeView, bool> IsInEditModeProperty =
             AvaloniaProperty.RegisterDirect<ProjectTreeView, bool>(
                 nameof(IsInEditMode),
@@ -68,7 +63,6 @@ namespace engenious.ContentTool.Avalonia
 
         private ContentProject _project;
         private List<Tuple<object, NotifyCollectionChangedEventArgs>> _changes;
-        private ContentFolder _projectContainer;
         
 
         private bool _isInEditMode;
@@ -93,33 +87,10 @@ namespace engenious.ContentTool.Avalonia
             set => _treeView.SelectedItem = value;
         }
 
-        public ContentFolder ProjectContainer
-        {
-            get => _projectContainer;
-            set => SetAndRaise(ProjectContainerProperty, ref _projectContainer, value);
-        }
-
         public ContentProject Project
         {
             get => _project;
-            set
-            {
-                if (_project == value)
-                    return;
-
-                if (value != null)
-                {
-                    var dummy = new ContentFolder("Project Container Dummy", null);
-                    dummy.Content.Add(value);
-                    ProjectContainer = dummy;
-                }
-                else
-                {
-                    ProjectContainer.Content.Clear();
-                }
-                
-                SetAndRaise(ProjectProperty, ref _project, value);
-            }
+            set => SetAndRaise(ProjectProperty, ref _project, value);
         }
 
         public ProjectTreeView()

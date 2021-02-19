@@ -1,0 +1,5 @@
+<TreeView xmlns="https://github.com/avaloniaui"
+          xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml'
+          xmlns:avalonia="clr-namespace:engenious.ContentTool.Avalonia"
+          x:Class="engenious.ContentTool.Avalonia.SingleRootTreeView">
+</TreeView>

@@ -34,8 +34,6 @@ namespace engenious.ContentTool
         [STAThread]
         static async Task<int> Main(string[] args)
         {
-            //Console.WriteLine(@"D:\Projects\engenious\Sample\Content\simple.glsl(13) : error C2143: syntax error : missing';' before '}'");
-
             var arguments = new Arguments();
             arguments.ParseArguments(args);
 

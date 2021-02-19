@@ -55,7 +55,7 @@
             </Setter>
         </Style>
     </UserControl.Styles>
-    <TreeView x:Name="treeView" Items="{Binding Path=ProjectContainer.Content, Mode=TwoWay}"
+    <ct:SingleRootTreeView x:Name="treeView" Root="{Binding Path=Project, Mode=TwoWay}"
               SelectionChanged="OnSelectedItemChanged" DoubleTapped="TreeView_OnDoubleTapped">
         <TreeView.DataTemplates>
             <TreeDataTemplate DataType="models:ContentProject" ItemsSource="{Binding Path=Content, Mode=TwoWay}">
@@ -121,5 +121,5 @@
                 </StackPanel>
             </DataTemplate>
         </TreeView.DataTemplates>
-    </TreeView>
+    </ct:SingleRootTreeView>
 </UserControl>

@@ -8,7 +8,7 @@ using engenious.ContentTool.Observer;
 
 namespace engenious.ContentTool.Models
 {
-    public abstract class ContentItem : INotifyPropertyValueChanged, INotifyPropertyChanged,INotifyCollectionChanged
+    public abstract class ContentItem : INotifyPropertyValueChanged, INotifyPropertyChanged,INotifyCollectionChanged, IEquatable<ContentItem>
     {
         /// <summary>
         /// The name of the content item
@@ -126,7 +126,9 @@ namespace engenious.ContentTool.Models
         {
              OnCollectionChanged(sender,new NotifyCollectionChangedEventArgs(action,element));
         }
+
         public event NotifyCollectionChangedEventHandler CollectionChanged;
+
         public event NotifyPropertyValueChangedHandler PropertyValueChanged;
 
         private event PropertyChangedEventHandler? _notifyPropertyChanged;
@@ -134,6 +136,31 @@ namespace engenious.ContentTool.Models
         {
             add => _notifyPropertyChanged += value;
             remove => _notifyPropertyChanged -= value;
+        }
+
+        public bool Equals(ContentItem other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return FilePath == other.FilePath;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((ContentItem) obj);
+        }
+
+        public override string ToString()
+        {
+            return FilePath ?? string.Empty;
+        }
+
+        public override int GetHashCode()
+        {
+            return (FilePath != null ? FilePath.GetHashCode() : 0);
         }
     }
 

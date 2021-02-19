@@ -1,21 +1,42 @@
 using System;
+using System.ComponentModel;
 using System.Net;
+using System.Runtime.CompilerServices;
+using Avalonia;
 using engenious.Avalonia;
 using engenious.Graphics;
 using engenious.Helper;
+using JetBrains.Annotations;
 using OpenTK.Graphics.OpenGL4;
 using DrawElementsType = engenious.Graphics.DrawElementsType;
 
 namespace engenious.ContentTool.Avalonia
 {
-    internal class EffectModelViewerGame : AvaloniaGame
+    public class EffectModelViewerGame : AvaloniaGame, INotifyPropertyChanged
     {
         public event EventHandler UpdateBindings;
         public event EventHandler EffectLoaded;
         public Texture2D _texture;
         private SpriteBatch _batch;
-        public Effect Effect { get; private set; }
-        public Model Model { get; set; }
+        private Effect _effect;
+        public Effect Effect        {
+            get => _effect;
+            private set
+            {
+                _effect = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public Model Model
+        {
+            get => _model;
+            set
+            {
+                _model = value;
+                OnPropertyChanged();
+            }
+        }
 
         public Matrix World { get; private set; }
         public Matrix View { get; private set; }
@@ -27,12 +48,14 @@ namespace engenious.ContentTool.Avalonia
         public Matrix WorldViewProjection => World * View * Projection;
 
         private readonly bool _effectView;
+        public float RotationX, RotationY, Scaling = 1;
 
         public EffectModelViewerGame(AvaloniaRenderingSurface control, bool effectView) : base(control)
         {
             _effectView = effectView;
             World = View = Projection = Matrix.Identity;
         }
+
 
         public override void LoadContent()
         {
@@ -94,6 +117,8 @@ namespace engenious.ContentTool.Avalonia
         }
 
         private Action _lateInit;
+        private Model _model;
+        private int _frame;
 
         public void SetEffect(string outputDir, string assetPath)
         {
@@ -117,6 +142,26 @@ namespace engenious.ContentTool.Avalonia
             }
         }
 
+        public int Frame
+        {
+            get => _frame;
+            set
+            {
+                _frame = Math.Min(-1, value);
+
+                if (value == -1)
+                {
+                    
+                }
+                else
+                {
+                }
+                
+                OnPropertyChanged();
+            }
+        }
+        
+
         public override void Draw(GameTime gameTime)
         {
             base.Draw(gameTime);
@@ -136,8 +181,8 @@ namespace engenious.ContentTool.Avalonia
             GL.Viewport(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
             float minScreen = Math.Min(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
             //Matrix.CreateRotationY((float) gameTime.TotalGameTime.TotalSeconds) * 
-            World =
-                Matrix.CreateScaling(new Vector3(0.1f)) * Matrix.CreateScaling(minScreen / maxD, minScreen / maxD, minScreen / maxD);
+            World = Matrix.CreateRotationX(RotationX) * Matrix.CreateRotationY(RotationY) *
+                Matrix.CreateScaling(new Vector3(Scaling*100)) * Matrix.CreateScaling(minScreen / maxD, minScreen / maxD, minScreen / maxD);
             View = Matrix.CreateLookAt(Vector3.Zero,-Vector3.UnitZ, Vector3.UnitY);
             Projection = Matrix.CreateOrthographicOffCenter(-GraphicsDevice.Viewport.Width/2, this.GraphicsDevice.Viewport.Width/2,
                 this.GraphicsDevice.Viewport.Height/2,-GraphicsDevice.Viewport.Height/2 , 100000, -100000);
@@ -145,9 +190,7 @@ namespace engenious.ContentTool.Avalonia
             UpdateBindings?.Invoke(this, EventArgs.Empty);
 
 
-            Effect.Parameters["World"].SetValue(World);
-            Effect.Parameters["View"].SetValue(View);
-            Effect.Parameters["Proj"].SetValue(Projection);
+
             if (Model.Animations.Count > 0)
             {
                 int index = (int) ((gameTime.TotalGameTime.TotalSeconds / 10.0) % Model.Animations.Count);
@@ -156,15 +199,19 @@ namespace engenious.ContentTool.Avalonia
 
             if (Effect is BasicEffect basic)
             {
+                Effect.Parameters["World"].SetValue(World);
+                Effect.Parameters["View"].SetValue(View);
+                Effect.Parameters["Proj"].SetValue(Projection);
                 basic.TextureEnabled = true;
                 Model.Transform = World;
                 if (Model.CurrentAnimation != null)
                     Model.UpdateAnimation((float)gameTime.TotalGameTime.TotalSeconds);
-                // Model.UpdateAnimation(null, Model.RootNode);
+                //Model.UpdateAnimation(null, Model.RootNode);
                 Model.Draw(basic, _texture);
             }
             else
             {
+                
                 foreach (var p in Effect.CurrentTechnique.Passes)
                 {
                     p.Apply();
@@ -172,6 +219,14 @@ namespace engenious.ContentTool.Avalonia
                     Model.Draw();
                 }
             }
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

@@ -5,6 +5,8 @@ using engenious.ContentTool.Viewer;
 namespace engenious.ContentTool.Avalonia
 {
     [ViewerInfo(".fbx", true)]
+    [ViewerInfo(".glft", true)]
+    [ViewerInfo(".glb", true)]
     [ViewerInfo(".blend", true)]
     public class ModelViewer : ModelEffectViewer
     {

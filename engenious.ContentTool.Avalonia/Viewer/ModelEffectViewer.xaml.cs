@@ -1,10 +1,18 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection.Emit;
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Data;
+using Avalonia.Data.Converters;
+using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
@@ -13,63 +21,66 @@ using engenious.ContentTool.Models;
 using engenious.ContentTool.Models.History;
 using engenious.ContentTool.Viewer;
 using engenious.Graphics;
+using engenious.Pipeline.Collada;
+using JetBrains.Annotations;
 using OpenTK;
 using OpenTK.Graphics.OpenGL4;
+using OpenTK.Windowing.Common;
 
 namespace engenious.ContentTool.Avalonia
 {
     public abstract class ModelEffectViewer : UserControl, IViewer
     {
-        private readonly Dictionary<Type, List<string>> _properties = new Dictionary<Type, List<string>>();
-        private readonly Dictionary<Type, List<string>> _fields = new Dictionary<Type, List<string>>();
+        internal readonly Dictionary<Type, List<string>> _properties = new Dictionary<Type, List<string>>();
+        internal readonly Dictionary<Type, List<string>> _fields = new Dictionary<Type, List<string>>();
         private readonly bool _isEffectView;
         private readonly AvaloniaRenderingSurface _avaloniaRenderingSurface;
-        private readonly EffectModelViewerGame _game;
+
+        private readonly List<Control> _dynamicControls = new List<Control>();
+
+        internal readonly List<IEffectParameterBinding> _bindings = new List<IEffectParameterBinding>();
+
+        public static readonly DirectProperty<ModelEffectViewer, EffectModelViewerGame> GameProperty =
+            AvaloniaProperty.RegisterDirect<ModelEffectViewer, EffectModelViewerGame>(
+                nameof(Game),
+                o => o.Game);
+        public static readonly DirectProperty<ModelEffectViewer, EffectTechnique> CurrentTechniqueProperty =
+            AvaloniaProperty.RegisterDirect<ModelEffectViewer, EffectTechnique>(
+                nameof(CurrentTechnique),
+                o => o.CurrentTechnique, (viewer, technique) => viewer.CurrentTechnique = technique);
+        private EffectModelViewerGame _game;
+
+        public EffectModelViewerGame Game
+        {
+            get => _game;
+            set => SetAndRaise(GameProperty, ref _game, value);
+        }
+
+        public EffectTechnique CurrentTechnique
+        {
+            get => _currentTechnique;
+            private set
+            {
+                if (_currentTechnique == null && value != null)
+                    SetAndRaise(CurrentTechniqueProperty, ref _currentTechnique, value);
+            }
+        }
+
 
         public ModelEffectViewer()
             : this(false)
         {
-            
         }
+
         public ModelEffectViewer(bool effectView)
         {
             _isEffectView = effectView;
+
             InitializeComponent();
 
             _avaloniaRenderingSurface = this.FindControl<AvaloniaRenderingSurface>("renderingSurface");
-
-            _game = new EffectModelViewerGame(_avaloniaRenderingSurface, effectView);
             
-
-            _game.EffectLoaded += GameOnEffectLoaded;
-            _game.UpdateBindings += GameOnUpdateBindings;
-
-            foreach (var p in typeof(EffectModelViewerGame).GetProperties())
-            {
-                if (p.GetMethod.IsStatic)
-                    continue;
-                if (!_properties.TryGetValue(p.PropertyType, out var lst))
-                {
-                    lst = new List<string>();
-                    _properties.Add(p.PropertyType, lst);
-                }
-
-                lst.Add(p.Name);
-            }
-
-            foreach (var p in typeof(EffectModelViewerGame).GetFields())
-            {
-                if (p.IsStatic)
-                    continue;
-                if (!_fields.TryGetValue(p.FieldType, out var lst))
-                {
-                    lst = new List<string>();
-
-                    _fields.Add(p.FieldType, lst);
-                }
-
-                lst.Add(p.Name);
-            }
+            
         }
 
         private void GameOnUpdateBindings(object? sender, EventArgs e)
@@ -79,112 +90,24 @@ namespace engenious.ContentTool.Avalonia
         }
 
 
-        private static Type GetType(EffectParameterType type)
+        private string[] bla = new[] {"asdf", "bbq"};
+        private void TechniqueCombo_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
-            Type t;
-            switch (type)
+            if (e.AddedItems != null && e.AddedItems.Count > 0 && e.AddedItems[0] is EffectTechnique technique)
             {
-                case EffectParameterType.Bool:
-                    t = typeof(bool);
-                    break;
-                case EffectParameterType.Double:
-                    t = typeof(double);
-                    break;
-                case EffectParameterType.Float:
-                    t = typeof(float);
-                    break;
-                case EffectParameterType.FloatMat4:
-                    t = typeof(Matrix);
-                    break;
-                case EffectParameterType.FloatVec2:
-                    t = typeof(Vector2);
-                    break;
-                case EffectParameterType.FloatVec3:
-                    t = typeof(Vector3);
-                    break;
-                case EffectParameterType.FloatVec4:
-                    t = typeof(Vector4);
-                    break;
-                case EffectParameterType.Sampler2D:
-                case EffectParameterType.Sampler2DShadow:
-                    t = typeof(Texture2D);
-                    break;
-                case EffectParameterType.Sampler2DArray:
-                case EffectParameterType.Sampler2DArrayShadow:
-                    t = typeof(Texture2DArray);
-                    break;
-                case EffectParameterType.Int:
-                    t = typeof(int);
-                    break;
-                case EffectParameterType.IntVec2:
-                    t = typeof(Point);
-                    break;
-                case EffectParameterType.UnsignedInt:
-                    t = typeof(uint);
-                    break;
-                default:
-                    t = typeof(EffectPassParameter);
-                    break;
-            }
-            return t;
-        }
-
-        private readonly List<Control> _dynamicControls = new List<Control>();
-
-        interface IEffectParameterBinding
-        {
-            void BindTo(object baseParam, string name, bool isField);
-            void Update();
-        }
-        private static IEffectParameterBinding CreateBinding(EffectPassParameter p, Type type)
-        {
-            return (IEffectParameterBinding)Activator.CreateInstance(typeof(EffectParameterBinding<>).MakeGenericType(type), p);
-        }
-        class EffectParameterBinding<T> : IEffectParameterBinding
-        {
-
-            private Func<T> _getValue;
-            private readonly EffectPassParameter _p;
-            private Action<EffectPassParameter, T> _setValue;
-            public EffectParameterBinding(EffectPassParameter p)
-            {
-                _p = p;
-            }
-
-            private void BindToPropertyProvider(IPropertyProvider propertyProvider, string name)
-            {
-                
-            }
-
-            public void BindTo(object baseParam, string name, bool isField)
-            {
-                if (isField)
-                    _getValue = () => (T)baseParam.GetType().GetField(name).GetValue(baseParam);
-                else
-                    _getValue = () => (T)baseParam.GetType().GetProperty(name)?.GetValue(baseParam);
-
-                var setValueMeth = typeof(EffectPassParameter).GetMethods().First(x => x.Name == "SetValue" && !x.IsStatic && x.GetParameters().Length == 1 && x.GetParameters()[0].ParameterType.IsAssignableFrom(typeof(T)));
-
-                var p1 = Expression.Parameter(typeof(EffectPassParameter));
-                var p2 = Expression.Parameter(typeof(T));
-                _setValue = Expression.Lambda<Action<EffectPassParameter, T>>
-                    (
-                    Expression.Call(p1, setValueMeth, p2)
-                    , p1, p2).Compile();
-            }
-
-            public void Update()
-            {
-                if (_getValue == null || _setValue == null)
-                    return;
-                _setValue(_p, _getValue());
+                var paramList = this.FindControl<ItemsControl>("paramList");
+                CurrentTechnique = technique;
+                paramList.Items = new ParameterConverter().Convert(CurrentTechnique, this);
+                // paramList.ItemContainerGenerator.ContainerFromIndex(0).FindCon
+                //RaisePropertyChanged(CurrentTechniqueProperty, Optional<EffectTechnique>.Empty, CurrentTechnique);
             }
         }
 
-        private struct BindingItem
+        public struct BindingItem
         {
             public string Name { get; }
             public bool IsField { get; }
+
             public BindingItem(string name, bool isField)
             {
                 Name = name;
@@ -196,32 +119,7 @@ namespace engenious.ContentTool.Avalonia
                 return Name;
             }
         }
-        private void AddItems(ComboBox comboBox,Type type)
-        {
-            if (_properties.TryGetValue(type, out var props))
-            {
-                foreach (var p in props)
-                {
-                    //comboBox.Items.Add(new BindingItem(p, false));
-                }
-            }
-            if (_fields.TryGetValue(type, out var fields))
-            {
-                foreach (var p in fields)
-                {
-                    //comboBox.Items.Add(new BindingItem(p, true));
-                }
-            }
 
-            if (_properties.TryGetValue(typeof(IPropertyProvider), out var propProviders))
-            {
-                foreach (var p in propProviders)
-                {
-                    
-                }
-            }
-        }
-        private readonly List<IEffectParameterBinding> _bindings = new List<IEffectParameterBinding>();
         private void GameOnEffectLoaded(object sender, EventArgs e)
         {
             /*techniquesComboBox.Items.Clear();
@@ -263,20 +161,75 @@ namespace engenious.ContentTool.Avalonia
             AvaloniaXamlLoader.Load(this);
         }
 
+        private void ReInit()
+        {
+            Game?.Dispose();
+            Game = new EffectModelViewerGame(_avaloniaRenderingSurface, _isEffectView);
+
+
+            Game.EffectLoaded += GameOnEffectLoaded;
+            Game.UpdateBindings += GameOnUpdateBindings;
+
+            foreach (var p in typeof(EffectModelViewerGame).GetProperties())
+            {
+                if (p.GetMethod == null || p.GetMethod.IsStatic)
+                    continue;
+                if (!_properties.TryGetValue(p.PropertyType, out var lst))
+                {
+                    lst = new List<string>();
+                    _properties.Add(p.PropertyType, lst);
+                }
+
+                lst.Add(p.Name);
+            }
+
+            foreach (var p in typeof(EffectModelViewerGame).GetFields())
+            {
+                if (p.IsStatic)
+                    continue;
+                if (!_fields.TryGetValue(p.FieldType, out var lst))
+                {
+                    lst = new List<string>();
+
+                    _fields.Add(p.FieldType, lst);
+                }
+
+                lst.Add(p.Name);
+            }
+
+            var nodeTree = this.FindControl<SingleRootTreeView>("nodeTree");
+            var techniqueCombo = this.FindControl<ComboBox>("techniqueCombo");
+
+            Game.PropertyChanged += (sender, args) =>
+            {
+                nodeTree.Root = Game.Model?.RootNode;
+                techniqueCombo.Items = Game.Effect?.Techniques;
+                techniqueCombo.SelectedItem = Game.Effect?.CurrentTechnique;
+                CurrentTechnique = Game.Effect?.CurrentTechnique;
+            };
+            this.PropertyChanged += (sender, args) =>
+            {
+                CurrentTechnique = Game.Effect?.CurrentTechnique;
+            };
+        }
+
+        
+        
         public object GetViewerControl(ContentFile file)
         {
             History = new History();
             ContentFile = file;
             try
             {
+                ReInit();
                 var egoFileName = Path.GetFileNameWithoutExtension(file.RelativePath);
                 var egoPathRel = Path.Combine(Path.GetDirectoryName(file.RelativePath), egoFileName);
                 var outputDir = Path.Combine(file.Project.FilePath, file.Project.ConfiguredOutputDirectory);
 
                 if (_isEffectView)
-                    _game.SetEffect(outputDir, egoPathRel);
+                    Game.SetEffect(outputDir, egoPathRel);
                 else
-                    _game.SetModel(outputDir, egoPathRel);
+                    Game.SetModel(outputDir, egoPathRel);
             }
             catch (FileNotFoundException)
             {
@@ -302,7 +255,66 @@ namespace engenious.ContentTool.Avalonia
         public void Dispose()
         {
             _avaloniaRenderingSurface?.Dispose();
-            _game?.Dispose();
+            Game?.Dispose();
+        }
+
+        private bool _isMouseDown;
+        private global::Avalonia.Point _oldPos;
+        private EffectTechnique _currentTechnique;
+
+        private void RenderingSurface_OnPointerMoved(object? sender, PointerEventArgs e)
+        {
+            if (!_isMouseDown)
+                return;
+
+            var point = e.GetCurrentPoint(this);
+
+
+            if (point.Properties.IsLeftButtonPressed)
+            {
+                var diff = _oldPos - point.Position;
+
+                Game.RotationY += (float) (diff.X / 15);
+                Game.RotationX += (float) (diff.Y / 15);
+
+                _oldPos = point.Position;
+            }
+        }
+
+        private void RenderingSurface_OnPointerPressed(object? sender, PointerPressedEventArgs e)
+        {
+            var point = e.GetCurrentPoint(this);
+            if (point.Properties.PointerUpdateKind == PointerUpdateKind.LeftButtonPressed)
+            {
+                _isMouseDown = true;
+                _oldPos = point.Position;
+            }
+        }
+
+        private void RenderingSurface_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
+        {
+            var point = e.GetCurrentPoint(this);
+            if (point.Properties.PointerUpdateKind == PointerUpdateKind.LeftButtonReleased)
+            {
+                _isMouseDown = false;
+            }
+        }
+
+        private void RenderingSurface_OnMouseWheel(MouseWheelEventArgs obj)
+        {
+            var currentScaleT = MathF.Log(Game.Scaling);
+
+            currentScaleT = Math.Clamp(currentScaleT + obj.OffsetY/10f, -10, 10);
+
+            Game.Scaling = MathF.Pow(MathF.E, currentScaleT);
+        }
+
+        private void Parameter_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
+        {
+            if (e.AddedItems != null && e.AddedItems.Count > 1 && e.AddedItems[0] is BindingItem bindingItem && sender is ComboBox cmb && cmb.DataContext is IEffectParameterBinding paramBinding)
+            {
+                paramBinding.BindTo(_game, bindingItem.ToString(), bindingItem.IsField);
+            }
         }
     }
 }
