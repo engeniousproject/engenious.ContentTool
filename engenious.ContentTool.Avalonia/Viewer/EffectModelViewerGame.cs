@@ -90,8 +90,10 @@ namespace engenious.ContentTool.Avalonia
             var tmpTextPath = "/home/julian/Bilder/landmass.png";
             if (System.IO.File.Exists(tmpTextPath))
                 _texture = Texture2D.FromFile(GraphicsDevice, tmpTextPath);
-            //NightSky = Texture2D.FromFile(GraphicsDevice,
-            //    "/home/julian/Projects/octoawesome/OctoAwesome/OctoAwesome.Client/Content/Textures/skymap.png");
+            tmpTextPath = "/home/julian/Bilder/water.png";
+
+            if (System.IO.File.Exists(tmpTextPath))
+                NightSky = Texture2D.FromFile(GraphicsDevice, tmpTextPath);
 
             _lateInit?.Invoke();
         }
@@ -199,15 +201,15 @@ namespace engenious.ContentTool.Avalonia
 
             if (Effect is BasicEffect basic)
             {
-                Effect.Parameters["World"].SetValue(World);
-                Effect.Parameters["View"].SetValue(View);
-                Effect.Parameters["Proj"].SetValue(Projection);
+                // Effect.Parameters["World"].SetValue(World);
+                // Effect.Parameters["View"].SetValue(View);
+                // Effect.Parameters["Proj"].SetValue(Projection);
                 basic.TextureEnabled = true;
                 Model.Transform = World;
                 if (Model.CurrentAnimation != null)
                     Model.UpdateAnimation((float)gameTime.TotalGameTime.TotalSeconds);
                 //Model.UpdateAnimation(null, Model.RootNode);
-                Model.Draw(basic, _texture);
+                Model.Draw(basic);
             }
             else
             {

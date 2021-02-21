@@ -1,4 +1,5 @@
 using System;
+using System.Collections.ObjectModel;
 
 namespace engenious.ContentTool.Avalonia
 {
@@ -8,5 +9,7 @@ namespace engenious.ContentTool.Avalonia
         void Update();
         public Type UnderlyingType { get; }
         public string Name { get; }
+        
+        public ObservableCollection<BindingItem> PossibleValues { get; }
     }
 }

@@ -31,15 +31,21 @@
                 <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                     <StackPanel Orientation="Vertical">
                         <TextBlock Text="Current Technique:" />
-                        <ComboBox x:Name="techniqueCombo" SelectionChanged="TechniqueCombo_OnSelectionChanged"></ComboBox>
+                        <ComboBox Items="{Binding Game.Effect.Techniques}" SelectedItem="{Binding Game.Effect.CurrentTechnique}" SelectionChanged="SelectingItemsControl_OnSelectionChanged"></ComboBox>
                     </StackPanel>
-                    <ListBox x:Name="paramList" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                    <ListBox x:Name="paramList" Items="{Binding ParameterBindings}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                         <ListBox.DataTemplates>
-                            <DataTemplate x:DataType="ct:IEffectParameterBinding">
+                            <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="{Binding Name}" />
                                     <TextBlock Text=": " />
-                                    <ComboBox Items="{Binding Converter={StaticResource EffectBindingConverter}, ConverterParameter={Binding #mainGrid.DataContext}}" SelectionChanged="Parameter_OnSelectionChanged"></ComboBox>
+                                    <ComboBox Items="{Binding PossibleValues}" SelectionChanged="Parameter_OnSelectionChanged">
+                                        <ComboBox.DataTemplates>
+                                            <DataTemplate x:DataType="ct:BindingItem">
+                                                <TextBlock Text="{Binding Name}" />
+                                            </DataTemplate>
+                                        </ComboBox.DataTemplates>
+                                    </ComboBox>
                                 </StackPanel>
                             </DataTemplate>
                         </ListBox.DataTemplates>
@@ -48,7 +54,7 @@
             </Expander>
             <Expander Grid.Row="1">
                 <Expander.Header><TextBlock Text="Nodes"/></Expander.Header>
-                <ct:SingleRootTreeView x:Name="nodeTree" Root="{Binding Game.Model.RootNode}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <ct:SingleRootTreeView Root="{Binding Game.Model.RootNode}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                     <TreeView.DataTemplates>
                         <TreeDataTemplate DataType="graphics:Node" ItemsSource="{Binding Children}">
 

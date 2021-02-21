@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
@@ -12,8 +13,11 @@ namespace engenious.ContentTool.Avalonia
 {
     internal class ParameterConverter : IValueConverter
     {
+        private static ParameterConverter _instance;
+        public static ParameterConverter Instance => _instance ??= new ParameterConverter();
         private readonly Dictionary<ModelEffectViewer, Dictionary<EffectTechnique, List<IEffectParameterBinding>>>
             _caches;
+
 
         public ParameterConverter()
         {
@@ -45,9 +49,13 @@ namespace engenious.ContentTool.Avalonia
                 {
                     var type = GetParamType(param.Type);
                     var binding = CreateBinding(param, type);
-                    effectViewer._bindings.Add(binding);
-                    // cont.SelectedIndexChanged += (o, args) => binding.BindTo(_game, cont.SelectedItem.ToString(),
-                    //     ((BindingItem) cont.SelectedItem).IsField);
+
+
+                    binding.PossibleValues.Clear();
+                    var possibleBindings = BindingConverter.Instance.Convert(binding, effectViewer).Bindings;
+                    foreach (var possibleBinding in possibleBindings)
+                        binding.PossibleValues.Add(possibleBinding);
+
                     availableParams.Add(binding);
                 }
             }
@@ -81,9 +89,11 @@ namespace engenious.ContentTool.Avalonia
             private Action<EffectPassParameter, T> _setValue;
 
             public string Name => _p.Name;
+            public ObservableCollection<BindingItem> PossibleValues { get; }
 
             public EffectParameterBinding(EffectPassParameter p)
             {
+                PossibleValues = new ObservableCollection<BindingItem>();
                 _p = p;
             }
 
@@ -169,18 +179,37 @@ namespace engenious.ContentTool.Avalonia
         }
     }
 
+    
+    public struct BindingItem
+    {
+        public string Name { get; }
+        public bool IsField { get; }
+
+        public BindingItem(string name, bool isField)
+        {
+            Name = name;
+            IsField = isField;
+        }
+
+        public override string ToString()
+        {
+            return Name;
+        }
+    }
     public class BindingConverter : IValueConverter
     {
+        private static BindingConverter _instance;
+        public static BindingConverter Instance => _instance ??= new BindingConverter();
         public class BindingUpdatable
         {
             public BindingUpdatable()
             {
-                Bindings = new List<ModelEffectViewer.BindingItem>();
+                Bindings = new List<BindingItem>();
             }
 
-            public List<ModelEffectViewer.BindingItem> Bindings { get; }
+            public List<BindingItem> Bindings { get; }
 
-            public void Add(ModelEffectViewer.BindingItem i) => Bindings.Add(i);
+            public void Add(BindingItem i) => Bindings.Add(i);
         }
 
         private readonly Dictionary<ModelEffectViewer, Dictionary<IEffectParameterBinding, BindingUpdatable>> _caches;
@@ -210,28 +239,23 @@ namespace engenious.ContentTool.Avalonia
 
             cache.Add(parameterBinding, bindingItems);
 
-            if (effectViewer._properties.TryGetValue(parameterBinding.UnderlyingType, out var props))
+            if (effectViewer.Properties.TryGetValue(parameterBinding.UnderlyingType, out var props))
             {
                 foreach (var p in props)
                 {
-                    bindingItems.Add(new ModelEffectViewer.BindingItem(p, false));
+                    bindingItems.Add(new BindingItem(p, false));
                 }
             }
 
-            if (effectViewer._fields.TryGetValue(parameterBinding.UnderlyingType, out var fields))
+            if (effectViewer.Fields.TryGetValue(parameterBinding.UnderlyingType, out var fields))
             {
                 foreach (var p in fields)
                 {
-                    bindingItems.Add(new ModelEffectViewer.BindingItem(p, true));
+                    bindingItems.Add(new BindingItem(p, true));
                 }
             }
 
             return bindingItems;
-            // parameterBinding.BindTo();
-            // var binding = CreateBinding(param, type);
-            // _effectViewer._bindings.Add(binding);
-            // cont.SelectedIndexChanged += (o, args) => binding.BindTo(_game, cont.SelectedItem.ToString(),
-            //     ((BindingItem) cont.SelectedItem).IsField);
         }
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
