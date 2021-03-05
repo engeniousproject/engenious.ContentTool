@@ -20,6 +20,10 @@
     <StartupObject />
 
     <OutputPath>..\bin\$(Configuration)\</OutputPath>
+
+    <PipelineCollectFilesPhaseDependsOn>
+      WorkaroundThirdParty;$(PipelineCollectFilesPhaseDependsOn);;
+    </PipelineCollectFilesPhaseDependsOn>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Resources\Add_folder.png" />
@@ -134,4 +138,16 @@
       <Visible>false</Visible>
     </None>
   </ItemGroup>
+  <Target Name="WorkaroundThirdParty" BeforeTargets="Publish">
+    <CallTarget Targets="CreateThirdPartyNotice" />
+    <ItemGroup>
+      <LiCoOutputFile Include="$(LiCoOutput)" />
+    </ItemGroup>
+    <PropertyGroup>
+      <LiCoOutputFileName>@(LiCoOutputFile->'%(filename)')</LiCoOutputFileName>
+      <LiCoOutputFileExtension>@(LiCoOutputFile->'%(extension)')</LiCoOutputFileExtension>
+    </PropertyGroup>
+    <Copy SourceFiles="$(LiCoOutput)" DestinationFiles="$(PublishDir)/$(LiCoOutputFileName)$(LiCoOutputFileExtension)" />
+    <Copy SourceFiles="$(LiCoOutput)" DestinationFiles="$(OutDir)/$(LiCoOutputFileName)$(LiCoOutputFileExtension)" />
+  </Target>
 </Project>

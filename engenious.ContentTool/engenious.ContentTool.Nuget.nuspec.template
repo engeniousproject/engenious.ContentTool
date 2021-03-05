@@ -23,5 +23,6 @@
         <file src="..\\bin\\$configuration$\\$framework$\\publish\\*.json" target="tools" />
         <file src="..\\bin\\$configuration$\\$framework$\\publish\\*.exe" target="tools" />
         <file src="..\\bin\\$configuration$\\$framework$\\publish\\*.config" target="tools" />
+        <file src="..\\bin\\$configuration$\\$framework$\\publish\\ThirdPartyNotice.txt" target="tools" />
     </files>
 </package>
