@@ -330,7 +330,7 @@ namespace engenious.ContentTool.Builder
             var dirName = Path.GetDirectoryName(destination);
             Directory.CreateDirectory(dirName);
 
-            var buildFile = new BuildFile(processorContext.BuildId, item.FilePath, destination);
+            var buildFile = new BuildFile(processorContext.BuildId, item.FilePath, destination, cache?.ContentManager);
             if (cancellationToken.IsCancellationRequested)
                 return null;
             var importer = item.Importer;
@@ -351,7 +351,7 @@ namespace engenious.ContentTool.Builder
             cache?.AddDependencies(processorContext.BuildId, Path.GetDirectoryName(item.FilePath), processorContext.Dependencies);
 
             var typeWriter = SerializationManager.Instance.GetWriter(processedFile.GetType());
-            var outputContentFileWriter = new engenious.Content.ContentFile(typeWriter.RuntimeReaderName);
+            var outputContentFileWriter = new engenious.Content.ContentFile(typeWriter.RuntimeReaderName, typeWriter.ContentVersion);
 
             using (var fs = new FileStream(destination, FileMode.Create, FileAccess.Write))
             {
@@ -360,7 +360,7 @@ namespace engenious.ContentTool.Builder
                         engenious.Helper.BitHelper.BitConverterToBigEndian(engenious.Content.ContentFile.Magic)), 0,
                     sizeof(uint));
 
-                const byte writerVersion = 1;
+                const byte writerVersion = 2;
                 fs.WriteByte(writerVersion);
 
                 var fileTypeBuffer = System.Text.Encoding.UTF8.GetBytes(outputContentFileWriter.FileType);
@@ -370,13 +370,15 @@ namespace engenious.ContentTool.Builder
                     sizeof(uint));
 
                 fs.Write(fileTypeBuffer, 0, fileTypeBuffer.Length);
+                
+                fs.Write(BitConverter.GetBytes(engenious.Helper.BitHelper.BitConverterToLittleEndian(outputContentFileWriter.ContentVersion)));
 
                 var writer = new ContentWriter(fs);
                 writer.WriteObject(processedFile, typeWriter);
             }
 
             cache?.AddFile(item.FilePath, buildFile);
-            buildFile.RefreshBuildCache(processorContext.BuildId);
+            buildFile.RefreshBuildCache(processorContext.BuildId, cache?.ContentManager);
             buildFile.CreatesUserContent = processorContext.CreatedContent.CreatesUserContent(processorContext.GetRelativePathToContentDirectory(item.FilePath));
 
             return processedFile;

@@ -4,11 +4,11 @@
              xmlns:ct="clr-namespace:engenious.ContentTool.Avalonia"
              HorizontalAlignment="Stretch"
              VerticalAlignment="Stretch"
-             xmlns:models="clr-namespace:engenious.ContentTool.Models;assembly=engenious.ContentTool">
+             xmlns:models="clr-namespace:engenious.ContentTool.Models;assembly=engenious.ContentTool"
+             xmlns:System="clr-namespace:System;assembly=System.Runtime">
     <Design.DataContext>
         <ct:SpriteFontViewer />
     </Design.DataContext>
-
     <StackPanel>
         <ct:GroupBox Header="Basic settings" HorizontalAlignment="Stretch">
             <StackPanel>
@@ -19,6 +19,10 @@
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Font Type: " VerticalAlignment="Center"/>
+                    <ComboBox Items="{Binding AvailableSpriteFontTypes, Mode=OneTime}" SelectedItem="{Binding SpriteFontType}"/>
+                </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="5">
                     <CheckBox IsChecked="{Binding Path=IsBold}" Content="Bold" Margin="10" HorizontalAlignment="Center" />
                     <CheckBox IsChecked="{Binding Path=IsItalic}" Content="Italic"  Margin="10" HorizontalAlignment="Center" />

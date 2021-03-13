@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using engenious.Content;
 using engenious.Content.Pipeline;
 
 namespace engenious.ContentTool.Builder
@@ -15,8 +16,11 @@ namespace engenious.ContentTool.Builder
         public AssemblyCreatedContent AssemblyCreatedContent { get; set; }
         public Dictionary<string, BuildFile> Files { get; } = new Dictionary<string, BuildFile>();
 
+        [field: NonSerialized]
+        internal ContentManagerBase ContentManager;
         protected BuildCache(string cacheFilePath, AssemblyCreatedContent assemblyCreatedContent)
         {
+            ContentManager = new AggregateContentManager(null!, string.Empty);
             CacheFilePath = cacheFilePath;
             AssemblyCreatedContent = assemblyCreatedContent;
             //Files
@@ -39,9 +43,9 @@ namespace engenious.ContentTool.Builder
             {
                 var absPath = Path.Combine(importDir, dependency);
                 if (Files.ContainsKey(absPath))
-                    Files[absPath].RefreshBuildCache(buildId);
+                    Files[absPath].RefreshBuildCache(buildId, ContentManager);
                 else
-                    Files.Add(absPath, new BuildFile(buildId, absPath,null));
+                    Files.Add(absPath, new BuildFile(buildId, absPath,null, ContentManager));
 
             }
         }
@@ -50,7 +54,7 @@ namespace engenious.ContentTool.Builder
         {
             if(Files.TryGetValue(inputPath, out BuildFile buildFile))
             {
-                if (buildFile.NeedsRebuild(parentModifiedTime))
+                if (buildFile.NeedsRebuild(ContentManager, parentModifiedTime))
                     return true;
                 foreach (var dependency in buildFile.Dependencies)
                 {
@@ -63,7 +67,9 @@ namespace engenious.ContentTool.Builder
                     return buildFile.CreatesUserContent;
                 if (createdContentBuildId == null)
                     return true;
-                return buildFile.BuildId != createdContentBuildId;
+                if (buildFile.BuildId != createdContentBuildId)
+                    return true;
+
             }
             return true;
         }
@@ -140,6 +146,7 @@ namespace engenious.ContentTool.Builder
                     var formatter = new BinaryFormatter();
                     var cache = (BuildCache) formatter.Deserialize(fs);
                     cache.AssemblyCreatedContent = assemblyCreatedContent;
+                    cache.ContentManager = new AggregateContentManager(null!, string.Empty);
                     return cache;
                 }
             }
