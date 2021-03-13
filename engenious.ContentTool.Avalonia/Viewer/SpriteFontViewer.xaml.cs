@@ -22,6 +22,7 @@ using engenious.ContentTool.Models;
 using engenious.ContentTool.Models.History;
 using engenious.ContentTool.Observer;
 using engenious.ContentTool.Viewer;
+using engenious.Graphics;
 using engenious.Pipeline;
 using JetBrains.Annotations;
 using ReactiveUI;
@@ -62,6 +63,11 @@ namespace engenious.ContentTool.Avalonia
                 nameof(SpriteFontFamily),
                 o => o.SpriteFontFamily,
                 (o, v) => o.SpriteFontFamily = v);
+        public static readonly DirectProperty<SpriteFontViewer, SpriteFontType> SpriteFontTypeProperty =
+            AvaloniaProperty.RegisterDirect<SpriteFontViewer, SpriteFontType>(
+                nameof(SpriteFontType),
+                o => o.SpriteFontType,
+                (o, v) => o.SpriteFontType = v);
 
         private int _spacing;
         private bool _isBold,_isItalic, _useKerning;
@@ -81,6 +87,23 @@ namespace engenious.ContentTool.Avalonia
                 _spf.FontName = value.Name;
 
                 History.Push(new HistoryPropertyChange(_spf, nameof(_spf.FontName), old, _spf.FontName));
+            }
+        }
+        
+        public List<SpriteFontType> AvailableSpriteFontTypes { get; }
+        
+        public SpriteFontType SpriteFontType
+        {
+            get => _spriteFontType;
+            set
+            {
+                var old = _spriteFontFamily?.Name;
+                SetAndRaise(SpriteFontTypeProperty, ref _spriteFontType, value);
+
+                if (_isLoading) return;
+                _spf.FontType = value;
+
+                History.Push(new HistoryPropertyChange(_spf, nameof(_spf.FontType), old, _spf.FontType));
             }
         }
 
@@ -204,6 +227,7 @@ namespace engenious.ContentTool.Avalonia
         
         private SpriteFontContent _spf;
         private readonly Dictionary<CharacterRegion, string> _specialRegions;
+        private SpriteFontType _spriteFontType;
 
         public ObservableCollection<FontFamily> FamilyNames { get; }
         
@@ -219,6 +243,8 @@ namespace engenious.ContentTool.Avalonia
 
         public SpriteFontViewer()
         {
+            AvailableSpriteFontTypes = Enum.GetValues<SpriteFontType>().Distinct().ToList();
+                
             CharacterRegions = new ObservableCollection<string>();
             FamilyNames = new ObservableCollection<FontFamily>();
             LoadFonts();
@@ -257,6 +283,7 @@ namespace engenious.ContentTool.Avalonia
             _isLoading = true;
 
             SpriteFontFamily = FontFamily.Parse(_spf.FontName);
+            SpriteFontType = _spf.FontType;
             IsItalic = _spf.Style.HasFlag(System.Drawing.FontStyle.Italic);
             IsBold = _spf.Style.HasFlag(System.Drawing.FontStyle.Bold);
             SpriteFontSize = _spf.Size;
