@@ -24,6 +24,8 @@
     <PipelineCollectFilesPhaseDependsOn>
       WorkaroundThirdParty;$(PipelineCollectFilesPhaseDependsOn);;
     </PipelineCollectFilesPhaseDependsOn>
+
+    <CopyAllFilesToSingleFolderForPackageDependsOn>true</CopyAllFilesToSingleFolderForPackageDependsOn>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Resources\Add_folder.png" />
@@ -110,7 +112,7 @@
     <PackageReference Include="engenious" Version="0.5.1.1-alpha" Condition="!Exists('..\engenious\engenious.csproj')" />
 
     <ProjectReference Include="..\..\engenious.Pipeline\engenious.Pipeline.csproj" Condition="Exists('..\..\engenious.Pipeline\engenious.Pipeline.csproj')" />
-    <PackageReference Include="engenious.Pipeline" Version="0.5.1.4-alpha" Condition="!Exists('..\..\engenious.Pipeline\engenious.Pipeline.csproj')" />
+    <PackageReference Include="engenious.Pipeline" Version="0.5.1.5-alpha" Condition="!Exists('..\..\engenious.Pipeline\engenious.Pipeline.csproj')" />
 
 
     <PackageReference Include="LitGit" Version="0.2.0.18-alpha" PrivateAssets="all" />
@@ -124,20 +126,17 @@
 
   </ItemGroup>
   <ItemGroup>
-    <SharpFontNativeFilesWin64 Include="$(NuGetPackageRoot)sharpfont.dependencies/2.6.0/bin/msvc12/x64/*.*" Condition="Exists('$(NuGetPackageRoot)sharpfont.dependencies/2.6.0/bin/msvc12/')" Visible="false" />
-    <SharpFontNativeFilesWin32 Include="$(NuGetPackageRoot)sharpfont.dependencies/2.6.0/bin/msvc12/x86/*.*" Condition="Exists('$(NuGetPackageRoot)sharpfont.dependencies/2.6.0/bin/msvc12/')" Visible="false" />
+    <SharpFontNativeFiles Visible="False" Include="$(NuGetPackageRoot)sharpfont.dependencies/2.6.0/bin/msvc12/**/*.*" Condition="Exists('$(NuGetPackageRoot)sharpfont.dependencies/2.6.0/bin/msvc12/')" />
 
-    <None Include="@(SharpFontNativeFilesWin64)">
-      <Link>runtimes/win-x64/native/%(FileName)%(Extension)</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Visible>false</Visible>
-    </None>
-    <None Include="@(SharpFontNativeFilesWin32)">
-      <Link>runtimes/win-x86/native/%(FileName)%(Extension)</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Visible>false</Visible>
-    </None>
+    <SharpFontTransformedNativeFiles Include="@(SharpFontNativeFiles)">
+      <OriginalPath>%(Identity)</OriginalPath>
+      <TrimmedName>$([System.String]::Copy('%(Filename)').TrimEnd('6'))</TrimmedName>
+      <SavedRecursiveDir>runtimes/win-%(RecursiveDir)native/</SavedRecursiveDir>
+      <SavedExtension>%(Extension)</SavedExtension>
+    </SharpFontTransformedNativeFiles>
+    <None Include="@(SharpFontTransformedNativeFiles->'%(OriginalPath)')" Link="%(SavedRecursiveDir)%(TrimmedName)%(SavedExtension)" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+
   <Target Name="WorkaroundThirdParty" BeforeTargets="Publish">
     <CallTarget Targets="CreateThirdPartyNotice" />
     <ItemGroup>
