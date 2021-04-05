@@ -45,12 +45,12 @@
                 <MenuItem Header="_File">
                     <MenuItem Header="_New Project..." Command="{Binding NewProjectCommand}" HotKey="Ctrl+N" InputGesture="Ctrl+N" />
                     <MenuItem Header="_Open Project..." Command="{Binding OpenProjectCommand}" HotKey="Ctrl+O" InputGesture="Ctrl+O" />
-                    <MenuItem Header="Open _Recent..." Items="{Binding RecentFiles}">
+                    <MenuItem Header="Open _Recent..." Items="{Binding RecentFiles}" IsVisible="{Binding !!RecentFiles.Count}">
                         <MenuItem.DataTemplates>
                             <DataTemplate>
                                 <MenuItem Header="{Binding FileName}"
                                           Command="{Binding $parent[Grid].DataContext.OpenRecentCommand}" CommandParameter="{Binding FileName}"
-                                          HotKey="{Binding HotKey}" InputGesture="{Binding HotKey}"></MenuItem>
+                                          InputGesture="{Binding HotKey}"></MenuItem>
                             </DataTemplate>
                         </MenuItem.DataTemplates>
                     </MenuItem>
@@ -107,7 +107,7 @@
                     <Button Command="{Binding NewProjectCommand}">
                         <Image Source="/Resources/Objects.png" />
                     </Button>
-                    <Button Command="{Binding OpenProjectButtonCommand}">
+                    <Button Command="{Binding OpenProjectCommand}">
                         <Image Source="/Resources/Open_folder.png" />
                     </Button>
                     <Button Command="{Binding SaveProjectCommand}" IsEnabled="{Binding Path=IsProjectOpen}">
@@ -133,6 +133,8 @@
                     <Button Command="{Binding CleanCommand}" IsEnabled="{Binding Path=IsProjectOpen}">
                         <Image Source="/Resources/Eraser.png" />
                     </Button>
+                    
+                    <Button IsVisible="False" Command="{Binding OpenRecentCommand}" CommandParameter="{Binding RecentFiles[0].FileName}" IsEnabled="{Binding !!RecentFiles.Count}" HotKey="Ctrl+Shift+O"></Button>
                 </StackPanel>
             </Border>
 
