@@ -37,9 +37,9 @@ namespace engenious.ContentTool.Presenters
 
             shell.ShowInExplorerItemClick += Shell_ShowInExplorerItemClick;
             shell.SaveProjectClick += i => SaveProject();
-            shell.OpenProjectClick += async (s, e) =>
+            shell.OpenProjectClick += async (path) =>
             {
-                if (await CloseProject()) await OpenProject();
+                if (await CloseProject()) await OpenProject(path);
             };
             shell.NewProjectClick += async (s, e) =>
             {

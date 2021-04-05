@@ -6,6 +6,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Globalization;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
@@ -36,14 +37,91 @@ namespace engenious.ContentTool.Avalonia
     }
     public class ProjectTreeView : UserControl
     {
-        public event EventHandler<RoutedEventArgs> RenameItemClicked;
-        public event EventHandler<RoutedEventArgs> RemoveItemClicked;
-        public event EventHandler<RoutedEventArgs> BuildItemClicked;
-        
-        public event EventHandler<RoutedEventArgs> AddNewFileClicked;
-        public event EventHandler<RoutedEventArgs> AddExistingFileClicked;
-        public event EventHandler<RoutedEventArgs> AddNewFolderClicked;
-        public event EventHandler<RoutedEventArgs> AddExistingFolderClicked;
+        public static readonly DirectProperty<ProjectTreeView, ICommand> RenameItemCommandProperty =
+            AvaloniaProperty.RegisterDirect<ProjectTreeView, ICommand>(
+                nameof(RenameItemCommand),
+                o => o.RenameItemCommand,
+                (o, v) => o.RenameItemCommand = v);
+
+        public static readonly DirectProperty<ProjectTreeView, ICommand> RemoveItemCommandProperty =
+            AvaloniaProperty.RegisterDirect<ProjectTreeView, ICommand>(
+                nameof(RemoveItemCommand),
+                o => o.RemoveItemCommand,
+                (o, v) => o.RemoveItemCommand = v);
+
+        public static readonly DirectProperty<ProjectTreeView, ICommand> BuildItemCommandProperty =
+            AvaloniaProperty.RegisterDirect<ProjectTreeView, ICommand>(
+                nameof(BuildItemCommand),
+                o => o.BuildItemCommand,
+                (o, v) => o.BuildItemCommand = v);
+
+        public static readonly DirectProperty<ProjectTreeView, ICommand> AddNewFileCommandProperty =
+            AvaloniaProperty.RegisterDirect<ProjectTreeView, ICommand>(
+                nameof(AddNewFileCommand),
+                o => o.AddNewFileCommand,
+                (o, v) => o.AddNewFileCommand = v);
+
+        public static readonly DirectProperty<ProjectTreeView, ICommand> AddExistingFileCommandProperty =
+            AvaloniaProperty.RegisterDirect<ProjectTreeView, ICommand>(
+                nameof(AddExistingFileCommand),
+                o => o.AddExistingFileCommand,
+                (o, v) => o.AddExistingFileCommand = v);
+
+        public static readonly DirectProperty<ProjectTreeView, ICommand> AddNewFolderCommandProperty =
+            AvaloniaProperty.RegisterDirect<ProjectTreeView, ICommand>(
+                nameof(AddNewFolderCommand),
+                o => o.AddNewFolderCommand,
+                (o, v) => o.AddNewFolderCommand = v);
+
+        public static readonly DirectProperty<ProjectTreeView, ICommand> AddExistingFolderCommandProperty =
+            AvaloniaProperty.RegisterDirect<ProjectTreeView, ICommand>(
+                nameof(AddExistingFolderCommand),
+                o => o.AddExistingFolderCommand,
+                (o, v) => o.AddExistingFolderCommand = v);
+
+        private ICommand _renameItemCommand, _removeItemCommand, _buildItemCommand, _addNewFileCommand;
+        private ICommand _addExistingFileCommand, _addNewFolderCommand, _addExistingFolderCommand;
+
+        public ICommand RenameItemCommand
+        {
+            get => _renameItemCommand;
+            set => SetAndRaise(RenameItemCommandProperty, ref _renameItemCommand, value);
+        }
+
+        public ICommand RemoveItemCommand
+        {
+            get => _removeItemCommand;
+            set => SetAndRaise(RemoveItemCommandProperty, ref _removeItemCommand, value);
+        }
+        public ICommand BuildItemCommand
+        {
+            get => _buildItemCommand;
+            set => SetAndRaise(BuildItemCommandProperty, ref _buildItemCommand, value);
+        }
+
+        public ICommand AddNewFileCommand
+        {
+            get => _addNewFileCommand;
+            set => SetAndRaise(AddNewFileCommandProperty, ref _addNewFileCommand, value);
+        }
+
+        public ICommand AddExistingFileCommand
+        {
+            get => _addExistingFileCommand;
+            set => SetAndRaise(AddExistingFileCommandProperty, ref _addExistingFileCommand, value);
+        }
+
+        public ICommand AddNewFolderCommand
+        {
+            get => _addNewFolderCommand;
+            set => SetAndRaise(AddNewFolderCommandProperty, ref _addNewFolderCommand, value);
+        }
+
+        public ICommand AddExistingFolderCommand
+        {
+            get => _addExistingFolderCommand;
+            set => SetAndRaise(AddExistingFolderCommandProperty, ref _addExistingFolderCommand, value);
+        }
         public event EventHandler<RoutedEventArgs> SelectedItemChanged;
         public event EventHandler<PropertyValueChangedEventArgs> SelectedItemPropertyChanged; 
         
@@ -201,38 +279,38 @@ namespace engenious.ContentTool.Avalonia
 
         private void AddNewFile_OnClick(object? sender, RoutedEventArgs e)
         {
-            AddNewFileClicked?.Invoke(sender, e);
+            AddNewFileCommand?.Execute(null);
         }
 
         private void AddExistingFile_OnClick(object? sender, RoutedEventArgs e)
         {
-            AddExistingFileClicked?.Invoke(sender, e);
+            AddExistingFileCommand?.Execute(null);
         }
 
         private void AddNewFolder_OnClick(object? sender, RoutedEventArgs e)
         {
-            AddNewFolderClicked?.Invoke(sender, e);
+            AddNewFolderCommand?.Execute(null);
         }
 
         private void AddExistingFolder_OnClick(object? sender, RoutedEventArgs e)
         {
-            AddExistingFolderClicked?.Invoke(sender, e);
+            AddExistingFolderCommand?.Execute(null);
         }
 
         private void RemoveItem_OnClick(object? sender, RoutedEventArgs e)
         {
-            RemoveItemClicked?.Invoke(sender, e);
+            RemoveItemCommand?.Execute(null);
         }
 
         private void RenameItem_OnClick(object? sender, RoutedEventArgs e)
         {
             GetParentMenu((MenuItem)sender)?.Close();
-            RenameItemClicked?.Invoke(sender, e);
+            RenameItemCommand?.Execute(null);
         }
 
         private void BuildItem_OnClick(object? sender, RoutedEventArgs e)
         {
-            BuildItemClicked?.Invoke(sender, e);
+            BuildItemCommand?.Execute(null);
         }
     }
 }

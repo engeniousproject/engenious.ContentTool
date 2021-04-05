@@ -43,34 +43,43 @@
                     </Style>
                 </Menu.Styles>
                 <MenuItem Header="_File">
-                    <MenuItem Header="_New Project..." Click="OnNewProjectButtonClick" />
-                    <MenuItem Header="_Open Project..." Click="OnOpenProjectButtonClick"/>
+                    <MenuItem Header="_New Project..." Command="{Binding NewProjectCommand}" HotKey="Ctrl+N" InputGesture="Ctrl+N" />
+                    <MenuItem Header="_Open Project..." Command="{Binding OpenProjectCommand}" HotKey="Ctrl+O" InputGesture="Ctrl+O" />
+                    <MenuItem Header="Open _Recent..." Items="{Binding RecentFiles}">
+                        <MenuItem.DataTemplates>
+                            <DataTemplate>
+                                <MenuItem Header="{Binding FileName}"
+                                          Command="{Binding $parent[Grid].DataContext.OpenRecentCommand}" CommandParameter="{Binding FileName}"
+                                          HotKey="{Binding HotKey}" InputGesture="{Binding HotKey}"></MenuItem>
+                            </DataTemplate>
+                        </MenuItem.DataTemplates>
+                    </MenuItem>
                     <Separator />
-                    <MenuItem Header="_Save Project..." Click="OnSaveProjectButtonClick" IsEnabled="{Binding Path=IsProjectOpen}" />
-                    <MenuItem Header="Save Project _as..." Click="OnSaveProjectAsButtonClick" IsEnabled="{Binding Path=IsProjectOpen}" />
+                    <MenuItem Header="_Save Project..." Command="{Binding SaveProjectCommand}" IsEnabled="{Binding Path=IsProjectOpen}" HotKey="Ctrl+S" InputGesture="Ctrl+S" />
+                    <MenuItem Header="Save Project _as..." Command="{Binding SaveProjectAsCommand}" IsEnabled="{Binding Path=IsProjectOpen}" HotKey="Ctrl+Shift+S" InputGesture="Ctrl+Shift+S" />
                     <Separator />
-                    <MenuItem Header="_Close Project" Click="OnCloseProjectButtonClick" IsEnabled="{Binding Path=IsProjectOpen}" />
-                    <MenuItem Header="_Exit" Click="OnExitButtonClick" />
+                    <MenuItem Header="_Close Project" Command="{Binding CloseProjectCommand}" IsEnabled="{Binding Path=IsProjectOpen}" />
+                    <MenuItem Header="_Exit" Command="{Binding ExitCommand}" HotKey="Ctrl+Q" InputGesture="Ctrl+Q" />
                 </MenuItem>
                 <MenuItem Header="_Edit" IsEnabled="{Binding Path=IsProjectOpen}">
-                    <MenuItem Header="Undo" Click="OnUndoButtonClick" />
-                    <MenuItem Header="Redo" Click="OnRedoButtonClick" />
+                    <MenuItem Header="Undo" Command="{Binding UndoCommand}" HotKey="Ctrl+Z" InputGesture="Ctrl+Z" />
+                    <MenuItem Header="Redo" Command="{Binding RedoCommand}" HotKey="Ctrl+Y" InputGesture="Ctrl+Y" />
                     <Separator />
                     <MenuItem Header="Add">
-                        <MenuItem Header="New Item" Click="OnNewItemButtonClick" IsEnabled="False" />
-                        <MenuItem Header="New Folder" Click="OnNewFolderButtonClick" />
-                        <MenuItem Header="Existing Item" Click="OnExistingItemButtonClick" />
-                        <MenuItem Header="Existing Folder" Click="OnExistingFolderButtonClick" />
+                        <MenuItem Header="New Item" Command="{Binding NewItemCommand}" IsEnabled="False" />
+                        <MenuItem Header="New Folder" Command="{Binding NewFolderCommand}" />
+                        <MenuItem Header="Existing Item" Command="{Binding ExistingItemCommand}" />
+                        <MenuItem Header="Existing Folder" Command="{Binding ExistingFolderCommand}" />
                     </MenuItem>
-                    <MenuItem Header="Rename" Click="OnRenameItemButtonClick" />
-                    <MenuItem Header="Remove" Click="OnRemoveItemButtonClick" />
+                    <MenuItem Header="Rename" Command="{Binding RenameItemCommand}" HotKey="F2" InputGesture="F2" />
+                    <MenuItem Header="Remove" Command="{Binding RemoveItemCommand}" HotKey="Delete" InputGesture="Delete"/>
                 </MenuItem>
                 <MenuItem Header="_Build">
-                    <MenuItem Header="Build" Click="OnBuildButtonClick" IsEnabled="{Binding Path=IsProjectOpen}" />
-                    <MenuItem Header="Clean" Click="OnCleanButtonClick" IsEnabled="{Binding Path=IsProjectOpen}" />
-                    <MenuItem Header="Rebuild" Click="OnRebuildButtonClick" IsEnabled="{Binding Path=IsProjectOpen}" />
+                    <MenuItem Header="Build" Command="{Binding BuildCommand}" IsEnabled="{Binding Path=IsProjectOpen}" HotKey="Ctrl+Shift+B" InputGesture="Ctrl+Shift+B" />
+                    <MenuItem Header="Clean" Command="{Binding CleanCommand}" IsEnabled="{Binding Path=IsProjectOpen}"  HotKey="Ctrl+Shift+C" InputGesture="Ctrl+Shift+C" />
+                    <MenuItem Header="Rebuild" Command="{Binding RebuildCommand}" IsEnabled="{Binding Path=IsProjectOpen}"  HotKey="Ctrl+Shift+R" InputGesture="Ctrl+Shift+R" />
                     <Separator />
-                    <MenuItem Header="Always show log" Click="AlwaysShowLogClicked">
+                    <MenuItem Header="Always show log" Command="{Binding ToggleAlwaysShowLogCommand}">
                         <MenuItem.Icon>
                             <CheckBox HorizontalAlignment="Stretch" Width="20" Height="20" IsChecked="{Binding Path=AlwaysShowLog}">uhhh</CheckBox>
                         </MenuItem.Icon>
@@ -95,33 +104,33 @@
                         </Style>
                     </StackPanel.Styles>
 
-                    <Button Click="OnNewProjectButtonClick">
+                    <Button Command="{Binding NewProjectCommand}">
                         <Image Source="/Resources/Objects.png" />
                     </Button>
-                    <Button Click="OnOpenProjectButtonClick">
+                    <Button Command="{Binding OpenProjectButtonCommand}">
                         <Image Source="/Resources/Open_folder.png" />
                     </Button>
-                    <Button Click="OnSaveProjectButtonClick" IsEnabled="{Binding Path=IsProjectOpen}">
+                    <Button Command="{Binding SaveProjectCommand}" IsEnabled="{Binding Path=IsProjectOpen}">
                         <Image Source="/Resources/Save.png" />
                     </Button>
                     <Panel VerticalAlignment="Stretch" />
-                    <Button Click="OnNewItemButtonClick" IsEnabled="{Binding Path=IsProjectOpen}">
+                    <Button Command="{Binding NewItemCommand}" IsEnabled="{Binding Path=IsProjectOpen}">
                         <Image Source="/Resources/New_file.png" />
                     </Button>
-                    <Button Click="OnExistingItemButtonClick" IsEnabled="{Binding Path=IsProjectOpen}">
+                    <Button Command="{Binding ExistingItemCommand}" IsEnabled="{Binding Path=IsProjectOpen}">
                         <Image Source="/Resources/Import.png" />
                     </Button>
-                    <Button Click="OnNewFolderButtonClick" IsEnabled="{Binding Path=IsProjectOpen}">
+                    <Button Command="{Binding NewFolderCommand}" IsEnabled="{Binding Path=IsProjectOpen}">
                         <Image Source="/Resources/Add_folder.png" />
                     </Button>
-                    <Button Click="OnExistingFolderButtonClick" IsEnabled="{Binding Path=IsProjectOpen}">
+                    <Button Command="{Binding ExistingFolderCommand}" IsEnabled="{Binding Path=IsProjectOpen}">
                         <Image Source="/Resources/Folder.png" />
                     </Button>
                     <Panel VerticalAlignment="Stretch" />
-                    <Button Click="OnBuildButtonClick" IsEnabled="{Binding Path=IsProjectOpen}">
+                    <Button Command="{Binding BuildCommand}" IsEnabled="{Binding Path=IsProjectOpen}">
                         <Image Source="/Resources/Equipment.png" />
                     </Button>
-                    <Button Click="OnCleanButtonClick" IsEnabled="{Binding Path=IsProjectOpen}">
+                    <Button Command="{Binding CleanCommand}" IsEnabled="{Binding Path=IsProjectOpen}">
                         <Image Source="/Resources/Eraser.png" />
                     </Button>
                 </StackPanel>
@@ -145,13 +154,13 @@
                     <Panel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="0" Grid.Row="0">
                         <ct:ProjectTreeView HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                                             x:Name="projectTreeView"
-                                            BuildItemClicked="OnBuildItemButtonClick"
-                                            RenameItemClicked="OnRenameItemButtonClick"
-                                            RemoveItemClicked="OnRemoveItemButtonClick"
-                                            AddExistingFileClicked="OnExistingItemButtonClick"
-                                            AddNewFileClicked="OnNewItemButtonClick"
-                                            AddExistingFolderClicked="OnExistingFolderButtonClick"
-                                            AddNewFolderClicked="OnNewFolderButtonClick"/>
+                                            BuildItemCommand="{Binding BuildItemCommand}"
+                                            RenameItemCommand="{Binding RenameItemCommand}"
+                                            RemoveItemCommand="{Binding RemoveItemCommand}"
+                                            AddExistingFileCommand="{Binding ExistingItemCommand}"
+                                            AddNewFileCommand="{Binding NewItemCommand}"
+                                            AddExistingFolderCommand="{Binding ExistingFolderCommand}"
+                                            AddNewFolderCommand="{Binding NewFolderCommand}"/>
                     </Panel>
                     <GridSplitter Grid.Column="0" Grid.Row="1" />
                     <Panel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="0" Grid.Row="2">
