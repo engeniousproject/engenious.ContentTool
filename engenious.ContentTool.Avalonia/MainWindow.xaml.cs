@@ -48,6 +48,10 @@ namespace engenious.ContentTool.Avalonia
         private readonly ProjectTreeView _projectTreeView;
         private readonly IPromptShell _promptShell;
 
+        public static readonly DirectProperty<MainWindow, RecentFiles> RecentFilesProperty =
+            AvaloniaProperty.RegisterDirect<MainWindow, RecentFiles>(
+                nameof(RecentFiles),
+                o => o.RecentFiles);
         
         public static readonly DirectProperty<MainWindow, PropertyViewBase> ContentPropertiesProperty =
             AvaloniaProperty.RegisterDirect<MainWindow, PropertyViewBase>(
@@ -55,15 +59,40 @@ namespace engenious.ContentTool.Avalonia
                 o => o.ContentProperties,
                 (o, v) => o.ContentProperties = v);
 
+        private RecentFiles _recentFiles;
+        public RecentFiles RecentFiles
+        {
+            get => _recentFiles;
+        }
+        
         public PropertyViewBase ContentProperties
         {
             get => _contentProperties;
             set => SetAndRaise(ContentPropertiesProperty, ref _contentProperties, value);
         }
 
+        private const string _relConfigPath = "engenious/ContentTool";
+
+        private void LoadConfig()
+        {
+            string configDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData, Environment.SpecialFolderOption.Create), _relConfigPath);
+            string configFile = Path.Combine(configDirectory, "RecentFiles.conf");
+            try
+            {
+                Directory.CreateDirectory(configDirectory);
+                
+                _recentFiles = RecentFiles.Deserialize(configFile);
+            }
+            catch
+            {
+                _recentFiles = new RecentFiles(configFile);
+            }
+        }
         public MainWindow()
         {
-            OpenProjectCommand = new SimpleCommand(() => OpenProjectClick?.Invoke(null, EventArgs.Empty));
+            LoadConfig();
+
+            OpenProjectCommand = new SimpleCommand(async () => await OpenProjectClick?.Invoke(null));
             NewProjectCommand = new SimpleCommand(() => NewProjectClick?.Invoke(null, EventArgs.Empty));
             SaveProjectCommand = new SimpleCommand(async () => await SaveProjectClick?.Invoke(Project)!);
             SaveProjectAsCommand = new SimpleCommand(async () => await SaveProjectAsClick?.Invoke(Project)!);
@@ -87,6 +116,21 @@ namespace engenious.ContentTool.Avalonia
             CleanCommand = new SimpleCommand(() => CleanClick?.Invoke(null, EventArgs.Empty));
             RebuildCommand = new SimpleCommand(() => RebuildClick?.Invoke(null, EventArgs.Empty));
             ToggleAlwaysShowLogCommand = new SimpleCommand(() => AlwaysShowLog = !AlwaysShowLog);
+            OpenRecentCommand = new SimpleCommand<string>(async (file) =>
+            {
+                try
+                {
+                    await CloseProjectClick?.Invoke(Project)!;
+                    if (Project == null)
+                    {
+                        OpenProjectClick?.Invoke(file);
+                    }
+                }
+                catch
+                {
+                    RecentFiles.RemoveRecent(file);
+                }
+            });
 
             LogItems =  new ObservableCollection<LogItem>();
             DataContext = this;
@@ -177,6 +221,8 @@ namespace engenious.ContentTool.Avalonia
                     _propertyGrid.PropertyView = tmp;
                     _project.History.HistoryChanged += HistoryOnHistoryChanged;
                     _project.CollectionChanged += ProjectOnCollectionChanged;
+                    
+                    RecentFiles.AddRecent(_project.ContentProjectPath);
                 }
 
                 _projectTreeView.Project = Project;
@@ -450,7 +496,7 @@ namespace engenious.ContentTool.Avalonia
         public event Delegates.FolderAddActionEventHandler AddNewFolderClick;
         public event Delegates.FolderAddActionEventHandler AddExistingItemClick;
         public event EventHandler NewProjectClick;
-        public event EventHandler OpenProjectClick;
+        public event Func<string, Task> OpenProjectClick;
         public event Delegates.ItemActionEventHandler CloseProjectClick;
         public event Delegates.ItemActionEventHandler SaveProjectClick;
         public event Delegates.ItemActionEventHandler SaveProjectAsClick;
@@ -582,6 +628,25 @@ namespace engenious.ContentTool.Avalonia
 
             public event EventHandler? CanExecuteChanged;
         }
+        public class SimpleCommand<T> : ICommand
+        {
+            private readonly Action<T> _action;
+            public SimpleCommand(Action<T> action)
+            {
+                _action = action;
+            }
+            public bool CanExecute(object? parameter)
+            {
+                return true;
+            }
+
+            public void Execute(object? parameter)
+            {
+                _action?.Invoke((T)parameter);
+            }
+
+            public event EventHandler? CanExecuteChanged;
+        }
 
         public SimpleCommand OpenProjectCommand { get; }
         public SimpleCommand NewProjectCommand { get; }
@@ -602,6 +667,8 @@ namespace engenious.ContentTool.Avalonia
         public SimpleCommand CleanCommand { get; }
         public SimpleCommand RebuildCommand { get; }
         public SimpleCommand ToggleAlwaysShowLogCommand { get; }
+        
+        public SimpleCommand<string> OpenRecentCommand { get; }
 
         private bool _ignoreUnsavedChanges;
 

@@ -71,7 +71,7 @@ namespace engenious.ContentTool.Forms
         event Delegates.FolderAddActionEventHandler AddExistingItemClick;
 
         event EventHandler NewProjectClick;
-        event EventHandler OpenProjectClick;
+        event Func<string, Task> OpenProjectClick;
         event Delegates.ItemActionEventHandler CloseProjectClick;
         event Delegates.ItemActionEventHandler SaveProjectClick;
         event Delegates.ItemActionEventHandler SaveProjectAsClick;

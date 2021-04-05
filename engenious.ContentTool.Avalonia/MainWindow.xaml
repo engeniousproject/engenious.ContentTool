@@ -45,6 +45,15 @@
                 <MenuItem Header="_File">
                     <MenuItem Header="_New Project..." Command="{Binding NewProjectCommand}" HotKey="Ctrl+N" InputGesture="Ctrl+N" />
                     <MenuItem Header="_Open Project..." Command="{Binding OpenProjectCommand}" HotKey="Ctrl+O" InputGesture="Ctrl+O" />
+                    <MenuItem Header="Open _Recent..." Items="{Binding RecentFiles}">
+                        <MenuItem.DataTemplates>
+                            <DataTemplate>
+                                <MenuItem Header="{Binding FileName}"
+                                          Command="{Binding $parent[Grid].DataContext.OpenRecentCommand}" CommandParameter="{Binding FileName}"
+                                          HotKey="{Binding HotKey}" InputGesture="{Binding HotKey}"></MenuItem>
+                            </DataTemplate>
+                        </MenuItem.DataTemplates>
+                    </MenuItem>
                     <Separator />
                     <MenuItem Header="_Save Project..." Command="{Binding SaveProjectCommand}" IsEnabled="{Binding Path=IsProjectOpen}" HotKey="Ctrl+S" InputGesture="Ctrl+S" />
                     <MenuItem Header="Save Project _as..." Command="{Binding SaveProjectAsCommand}" IsEnabled="{Binding Path=IsProjectOpen}" HotKey="Ctrl+Shift+S" InputGesture="Ctrl+Shift+S" />
