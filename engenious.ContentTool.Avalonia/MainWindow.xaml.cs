@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
@@ -22,6 +23,7 @@ using engenious.ContentTool.Forms;
 using engenious.ContentTool.Models;
 using engenious.ContentTool.Viewer;
 using engenious.Graphics;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace engenious.ContentTool.Avalonia
 {
@@ -61,6 +63,30 @@ namespace engenious.ContentTool.Avalonia
 
         public MainWindow()
         {
+            OpenProjectCommand = new SimpleCommand(() => OpenProjectClick?.Invoke(null, EventArgs.Empty));
+            NewProjectCommand = new SimpleCommand(() => NewProjectClick?.Invoke(null, EventArgs.Empty));
+            SaveProjectCommand = new SimpleCommand(async () => await SaveProjectClick?.Invoke(Project)!);
+            SaveProjectAsCommand = new SimpleCommand(async () => await SaveProjectAsClick?.Invoke(Project)!);
+            CloseProjectCommand = new SimpleCommand(async () => await CloseProjectClick?.Invoke(Project)!);
+            ExitCommand = new SimpleCommand(async () =>
+            {
+                await CloseProjectClick?.Invoke(Project)!;
+                Close();
+                _cts.Cancel();
+            });
+            UndoCommand = new SimpleCommand(() => UndoClick?.Invoke(null, EventArgs.Empty));
+            RedoCommand = new SimpleCommand(() => RedoClick?.Invoke(null, EventArgs.Empty));
+            NewItemCommand = new SimpleCommand(() => throw new NotImplementedException());
+            NewFolderCommand = new SimpleCommand(() => AddNewFolderClick?.Invoke(_projectTreeView.SelectedFolder));
+            ExistingItemCommand = new SimpleCommand(() => AddExistingItemClick?.Invoke(_projectTreeView.SelectedFolder));
+            ExistingFolderCommand = new SimpleCommand(() => AddExistingFolderClick?.Invoke(_projectTreeView.SelectedFolder));
+            RenameItemCommand = new SimpleCommand(() => RenameItemClick?.Invoke(_projectTreeView.SelectedItem));
+            RemoveItemCommand = new SimpleCommand(() => RemoveItemClick?.Invoke(_projectTreeView.SelectedItem));
+            BuildCommand = new SimpleCommand(() => BuildItemClick?.Invoke(Project));
+            BuildItemCommand = new SimpleCommand(() => BuildItemClick?.Invoke(_projectTreeView.SelectedItem ?? Project));
+            CleanCommand = new SimpleCommand(() => CleanClick?.Invoke(null, EventArgs.Empty));
+            RebuildCommand = new SimpleCommand(() => RebuildClick?.Invoke(null, EventArgs.Empty));
+            ToggleAlwaysShowLogCommand = new SimpleCommand(() => AlwaysShowLog = !AlwaysShowLog);
 
             LogItems =  new ObservableCollection<LogItem>();
             DataContext = this;
@@ -534,71 +560,48 @@ namespace engenious.ContentTool.Avalonia
             LogShown = false;
         }
 
-        private void AlwaysShowLogClicked(object sender, RoutedEventArgs e)
-        {
-            AlwaysShowLog = !AlwaysShowLog;
-        }
-
-        private void OnOpenProjectButtonClick(object sender, RoutedEventArgs e) =>
-            OpenProjectClick?.Invoke(sender, EventArgs.Empty);
-
-        private void OnNewProjectButtonClick(object sender, RoutedEventArgs e) =>
-            NewProjectClick?.Invoke(sender, EventArgs.Empty);
-
-        private async void OnSaveProjectButtonClick(object sender, RoutedEventArgs e) =>
-            await SaveProjectClick?.Invoke(Project)!;
-
-        private async void OnSaveProjectAsButtonClick(object sender, RoutedEventArgs e) =>
-            await SaveProjectAsClick?.Invoke(Project)!;
-
-        private async void OnCloseProjectButtonClick(object sender, RoutedEventArgs e) =>
-            await CloseProjectClick?.Invoke(Project)!;
-
-        private async void OnExitButtonClick(object sender, RoutedEventArgs e)
-        {
-            await CloseProjectClick?.Invoke(Project)!;
-            Close();
-            _cts.Cancel();
-        }
-
-        private void OnUndoButtonClick(object sender, RoutedEventArgs e) =>
-            UndoClick?.Invoke(sender, EventArgs.Empty);
-
-        private void OnRedoButtonClick(object sender, RoutedEventArgs e) =>
-            RedoClick?.Invoke(sender, EventArgs.Empty);
-
-        private void OnNewItemButtonClick(object sender, RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void OnNewFolderButtonClick(object sender, RoutedEventArgs e) =>
-            AddNewFolderClick?.Invoke(_projectTreeView.SelectedFolder);
-
-        private void OnExistingItemButtonClick(object sender, RoutedEventArgs e) =>
-            AddExistingItemClick?.Invoke(_projectTreeView.SelectedFolder);
-
-        private void OnExistingFolderButtonClick(object sender, RoutedEventArgs e) =>
-            AddExistingFolderClick?.Invoke(_projectTreeView.SelectedFolder);
-
-        private void OnRenameItemButtonClick(object sender, RoutedEventArgs e) =>
-            RenameItemClick?.Invoke(_projectTreeView.SelectedItem);
-
-        private void OnRemoveItemButtonClick(object sender, RoutedEventArgs e) =>
-            RemoveItemClick?.Invoke(_projectTreeView.SelectedItem);
-
-        private void OnBuildButtonClick(object sender, RoutedEventArgs e) =>
-            BuildItemClick?.Invoke(Project);
-        private void OnBuildItemButtonClick(object sender, RoutedEventArgs e) =>
-            BuildItemClick?.Invoke(_projectTreeView.SelectedItem ?? Project);
-        private void OnCleanButtonClick(object sender, RoutedEventArgs e) =>
-            CleanClick?.Invoke(sender, EventArgs.Empty);
-
-        private void OnRebuildButtonClick(object sender, RoutedEventArgs e) =>
-            RebuildClick?.Invoke(sender, EventArgs.Empty);
-
         private async void FormLoading(object sender, EventArgs e) =>
             OnShellLoad?.Invoke(sender, EventArgs.Empty);
+
+        public class SimpleCommand : ICommand
+        {
+            private readonly Action _action;
+            public SimpleCommand(Action action)
+            {
+                _action = action;
+            }
+            public bool CanExecute(object? parameter)
+            {
+                return true;
+            }
+
+            public void Execute(object? parameter)
+            {
+                _action?.Invoke();
+            }
+
+            public event EventHandler? CanExecuteChanged;
+        }
+
+        public SimpleCommand OpenProjectCommand { get; }
+        public SimpleCommand NewProjectCommand { get; }
+        public SimpleCommand SaveProjectCommand { get; }
+        public SimpleCommand SaveProjectAsCommand { get; }
+        public SimpleCommand CloseProjectCommand { get; }
+        public SimpleCommand ExitCommand { get; }
+        public SimpleCommand UndoCommand { get; }
+        public SimpleCommand RedoCommand { get; }
+        public SimpleCommand NewItemCommand { get; }
+        public SimpleCommand NewFolderCommand { get; }
+        public SimpleCommand ExistingItemCommand { get; }
+        public SimpleCommand ExistingFolderCommand { get; }
+        public SimpleCommand RenameItemCommand { get; }
+        public SimpleCommand RemoveItemCommand { get; }
+        public SimpleCommand BuildCommand { get; }
+        public SimpleCommand BuildItemCommand { get; }
+        public SimpleCommand CleanCommand { get; }
+        public SimpleCommand RebuildCommand { get; }
+        public SimpleCommand ToggleAlwaysShowLogCommand { get; }
 
         private bool _ignoreUnsavedChanges;
 
