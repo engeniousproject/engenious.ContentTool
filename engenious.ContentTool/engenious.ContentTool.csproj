@@ -106,13 +106,13 @@
   <ItemGroup>
     <PackageReference Include="LiCo" Version="0.1.10-alpha" PrivateAssets="all" />
     <PackageReference Include="Mono.Cecil" Version="0.11.3" />
-    <PackageReference Include="SharpFont.Dependencies" Version="2.6.0" ExcludeAssets="build" />
+<!--    <PackageReference Include="SharpFont.Dependencies" Version="2.6.0" ExcludeAssets="build" />-->
     <PackageReference Include="System.Resources.Extensions" Version="5.0.0" />
     <ProjectReference Include="..\..\engenious\engenious.csproj" Condition="Exists('..\..\engenious\engenious.csproj')" />
     <PackageReference Include="engenious" Version="0.5.1.1-alpha" Condition="!Exists('..\engenious\engenious.csproj')" />
 
     <ProjectReference Include="..\..\engenious.Pipeline\engenious.Pipeline.csproj" Condition="Exists('..\..\engenious.Pipeline\engenious.Pipeline.csproj')" />
-    <PackageReference Include="engenious.Pipeline" Version="0.5.1.5-alpha" Condition="!Exists('..\..\engenious.Pipeline\engenious.Pipeline.csproj')" />
+    <PackageReference Include="engenious.Pipeline" Version="0.5.1.6-alpha" Condition="!Exists('..\..\engenious.Pipeline\engenious.Pipeline.csproj')" />
 
 
     <PackageReference Include="LitGit" Version="0.2.0.18-alpha" PrivateAssets="all" />
@@ -125,17 +125,17 @@
     </None>
 
   </ItemGroup>
-  <ItemGroup>
-    <SharpFontNativeFiles Visible="False" Include="$(NuGetPackageRoot)sharpfont.dependencies/2.6.0/bin/msvc12/**/*.*" Condition="Exists('$(NuGetPackageRoot)sharpfont.dependencies/2.6.0/bin/msvc12/')" />
+<!--  <ItemGroup>-->
+<!--    <SharpFontNativeFiles Visible="False" Include="$(NuGetPackageRoot)sharpfont.dependencies/2.6.0/bin/msvc12/**/*.*" Condition="Exists('$(NuGetPackageRoot)sharpfont.dependencies/2.6.0/bin/msvc12/')" />-->
 
-    <SharpFontTransformedNativeFiles Include="@(SharpFontNativeFiles)">
-      <OriginalPath>%(Identity)</OriginalPath>
-      <TrimmedName>$([System.String]::Copy('%(Filename)').TrimEnd('6'))</TrimmedName>
-      <SavedRecursiveDir>runtimes/win-%(RecursiveDir)native/</SavedRecursiveDir>
-      <SavedExtension>%(Extension)</SavedExtension>
-    </SharpFontTransformedNativeFiles>
-    <None Include="@(SharpFontTransformedNativeFiles->'%(OriginalPath)')" Link="%(SavedRecursiveDir)%(TrimmedName)%(SavedExtension)" CopyToOutputDirectory="PreserveNewest" />
-  </ItemGroup>
+<!--    <SharpFontTransformedNativeFiles Include="@(SharpFontNativeFiles)">-->
+<!--      <OriginalPath>%(Identity)</OriginalPath>-->
+<!--      <TrimmedName>$([System.String]::Copy('%(Filename)').TrimEnd('6'))</TrimmedName>-->
+<!--      <SavedRecursiveDir>runtimes/win-%(RecursiveDir)native/</SavedRecursiveDir>-->
+<!--      <SavedExtension>%(Extension)</SavedExtension>-->
+<!--    </SharpFontTransformedNativeFiles>-->
+<!--    <None Include="@(SharpFontTransformedNativeFiles->'%(OriginalPath)')" Link="%(SavedRecursiveDir)%(TrimmedName)%(SavedExtension)" CopyToOutputDirectory="PreserveNewest" />-->
+<!--  </ItemGroup>-->
 
   <Target Name="WorkaroundThirdParty" BeforeTargets="Publish">
     <CallTarget Targets="CreateThirdPartyNotice" />
