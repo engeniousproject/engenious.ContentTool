@@ -382,9 +382,10 @@ namespace engenious.ContentTool.Presenters
         {
             string path = await _shell.ShowSaveAsDialog();
             if (path == null) return;
-            _shell.Project = new ContentProject("Content", path, Path.GetDirectoryName(path));
-            _shell.Project.Configuration = "Debug";
-            _shell.Project.OutputDirectory = "bin/{Configuration}";
+            var project = new ContentProject("Content", path, Path.GetDirectoryName(path));
+            project.Configuration = "Debug";
+            project.OutputDirectory = "bin/{Configuration}";
+            _shell.Project = project;
             await SaveProject();
         }
 
