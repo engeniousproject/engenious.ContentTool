@@ -7,7 +7,7 @@ using Avalonia.Data;
 using Avalonia.Data.Converters;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
-using engenious.ContentTool.Models;
+using engenious.Content.Models;
 using engenious.ContentTool.Observer;
 using ReactiveUI;
 

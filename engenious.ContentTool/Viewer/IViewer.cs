@@ -1,6 +1,6 @@
 ﻿using System;
-using engenious.ContentTool.Models;
-using engenious.ContentTool.Models.History;
+using engenious.Content.Models;
+using engenious.Content.Models.History;
 
 namespace engenious.ContentTool.Viewer
 {

@@ -1,5 +1,5 @@
-using engenious.ContentTool.Models;
-using engenious.ContentTool.Models.History;
+using engenious.Content.Models;
+using engenious.Content.Models.History;
 using engenious.ContentTool.Viewer;
 
 namespace engenious.ContentTool.Avalonia

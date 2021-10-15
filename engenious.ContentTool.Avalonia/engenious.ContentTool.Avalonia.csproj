@@ -8,6 +8,7 @@
         <OutputPath>..\bin\$(Configuration)\</OutputPath>
         
         <IsPackable>false</IsPackable>
+        <LiCoOutput>NOTICE</LiCoOutput>
     </PropertyGroup>
 
     <ItemGroup>
@@ -59,6 +60,9 @@
         </Compile>
     </ItemGroup>
     <ItemGroup>
+        <LiCoAdditionalLicenses Include="../engenious.ContentTool/NOTICE" Visible="false" />
+        
+        <PackageReference Include="LiCo" Version="0.1.11.10-alpha" PrivateAssets="all" />
         <PackageReference Include="Avalonia" Version="0.10.0" />
         <PackageReference Include="Avalonia.Desktop" Version="0.10.0" />
         <PackageReference Include="Avalonia.Diagnostics" Version="0.10.0" />
@@ -68,15 +72,31 @@
         <PackageReference Include="OpenTK" Version="4.5.0" />
     </ItemGroup>
     <ItemGroup>
-      <PackageReference Include="engenious.Avalonia" Version="0.5.1-alpha" Condition="!Exists('..\..\engenious.Avalonia\engenious.Avalonia.csproj')" />
+      <PackageReference Include="engenious.Avalonia" Version="0.6.0-alpha" Condition="!Exists('..\..\engenious.Avalonia\engenious.Avalonia.csproj')" />
         
       <ProjectReference Include="..\..\engenious.Avalonia\engenious.Avalonia.csproj" Condition="Exists('..\..\engenious.Avalonia\engenious.Avalonia.csproj')" />
-      <ProjectReference Include="..\engenious.ContentTool\engenious.ContentTool.csproj" Condition="Exists('..\engenious.ContentTool\engenious.ContentTool.csproj')" />
+      <ProjectReference Include="..\engenious.ContentTool\engenious.ContentTool.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <None Update="NOTICE">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
     <Target Name="CopyAssembly" AfterTargets="Build">
         <!--<Copy SourceFiles="bin\$(Configuration)\$(TargetFramework)\engenious.ContentTool.Avalonia.dll" DestinationFolder="..\bin\$(Configuration)\$(TargetFramework)\Plugins" />-->
     </Target>
-    
 
+    <Target Name="WorkaroundThirdParty" BeforeTargets="Publish">
+        <CallTarget Targets="CreateThirdPartyNotice" />
+        <ItemGroup>
+            <LiCoOutputFile Include="$(LiCoOutput)" />
+        </ItemGroup>
+        <PropertyGroup>
+            <LiCoOutputFileName>@(LiCoOutputFile->'%(filename)')</LiCoOutputFileName>
+            <LiCoOutputFileExtension>@(LiCoOutputFile->'%(extension)')</LiCoOutputFileExtension>
+        </PropertyGroup>
+        <Copy SourceFiles="$(LiCoOutput)" DestinationFiles="$(PublishDir)/$(LiCoOutputFileName)$(LiCoOutputFileExtension)" />
+        <Copy SourceFiles="$(LiCoOutput)" DestinationFiles="$(OutDir)/$(LiCoOutputFileName)$(LiCoOutputFileExtension)" />
+    </Target>
 </Project>

@@ -20,7 +20,7 @@ using Avalonia.Threading;
 using Dialogs.Avalonia;
 using engenious.Avalonia;
 using engenious.ContentTool.Forms;
-using engenious.ContentTool.Models;
+using engenious.Content.Models;
 using engenious.ContentTool.Viewer;
 using engenious.Graphics;
 using Microsoft.CodeAnalysis.CSharp.Syntax;

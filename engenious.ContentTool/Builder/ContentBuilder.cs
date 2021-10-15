@@ -3,12 +3,14 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using engenious.Content;
 using engenious.Content.Pipeline;
 using engenious.Content.Serialization;
-using engenious.ContentTool.Models;
+using engenious.Content.Models;
 using engenious.Graphics;
 using Microsoft.CSharp;
 using Mono.Cecil;
+using ContentFile = engenious.Content.Models.ContentFile;
 
 namespace engenious.ContentTool.Builder
 {
@@ -172,34 +174,19 @@ namespace engenious.ContentTool.Builder
 
             Guid buildId = Guid.NewGuid();
 
-            AssemblyDefinition assemblyDefinition = null;
-            if (rewriteAssembly)
-            {
-                try
-                {
-                        var memStream = new MemoryStream(File.ReadAllBytes(createdContentAssemblyFile));
-                        assemblyDefinition = AssemblyDefinition.ReadAssembly(memStream);
-                }
-                catch (Exception)
-                {
-                    rewriteAssembly = false;
-                }
-            }
-            if (!rewriteAssembly)
-            {
-                assemblyDefinition = AssemblyDefinition.CreateAssembly(new AssemblyNameDefinition(moduleName, new Version()), moduleName,
-                    ModuleKind.Dll);
-            }
-            var asmCreatedContent = new AssemblyCreatedContent(assemblyDefinition, buildId);
 
             var cache = BuildCache.Load(Path.Combine(Path.GetDirectoryName(item.Project.ContentProjectPath), "obj",
                 item.Project.Configuration,
-                item.Project.Name + ".dat"), asmCreatedContent);
+                item.Project.Name + ".dat"), buildId);
 
-            using (var iContext = new ContentImporterContext(buildId, asmCreatedContent, item.Project.FilePath))
-            using (var pContext = new ContentProcessorContext(_syncContext, asmCreatedContent, Game,
-                buildId, Path.GetDirectoryName(Project.ContentProjectPath), item.Project.FilePath))
+            var createdContentCode = cache.CreatedContentCode;
+
+            using (var iContext = new ContentImporterContext(buildId, createdContentCode, item.Project.FilePath))
+            using (var pContext = new ContentProcessorContext(_syncContext, Game, buildId, createdContentCode,
+                Path.GetDirectoryName(Project.ContentProjectPath), item.Project.FilePath))
             {
+                Game.GraphicsDevice.SwitchUiThread();
+                
                 //Console.WriteLine($"GL Version: {pContext.GraphicsDevice.DriverVersion.ToString()}");
                 //Console.WriteLine($"GLSL Version: {pContext.GraphicsDevice.GlslVersion.ToString()}");
 
@@ -207,18 +194,17 @@ namespace engenious.ContentTool.Builder
                 iContext.BuildMessage += RaiseBuildMessage;
                 pContext.BuildMessage += RaiseBuildMessage;
                 InternalBuildItem(item, outputDestination, iContext, pContext, cancellationToken, cache);
-                try
-                {
-                    if (rewriteAssembly)
-                    {
-                        File.Delete(createdContentAssemblyFile);
-                    }
-                    assemblyDefinition.Write(createdContentAssemblyFile);
-                }
-                catch (FileNotFoundException ex)
-                {
-                    pContext.RaiseBuildMessage("<Module>", ex.Message, BuildMessageEventArgs.BuildMessageType.Error);
-                }
+                // try
+                // {
+                //     createdContentCode.WriteCode(Path.Combine(outputDestination, "GeneratedCode"));
+                // }
+                // catch (FileNotFoundException ex)
+                // {
+                //     pContext.RaiseBuildMessage("<Module>", ex.Message, BuildMessageEventArgs.BuildMessageType.Error);
+                // }
+                
+                
+                Game.GraphicsDevice.Context.MakeNoneCurrent();
             }
 
 
@@ -230,9 +216,10 @@ namespace engenious.ContentTool.Builder
 
         protected void CleanThread(CancellationToken cancellationToken)
         {
+            Guid buildId = Guid.NewGuid();
             var cache = BuildCache.Load(Path.Combine(Path.GetDirectoryName(Project.ContentProjectPath), "obj",
                 Project.Configuration,
-                Project.Name + ".dat"), null);
+                Project.Name + ".dat"), buildId);
             foreach (var item in cache.Files)
             {
                 if (cancellationToken.IsCancellationRequested)
@@ -240,6 +227,8 @@ namespace engenious.ContentTool.Builder
                 if (File.Exists(item.Value.OutputFilePath))
                     File.Delete(item.Value.OutputFilePath);
             }
+
+            cache.CreatedContentCode.Clean();
 
             try
             {
@@ -261,8 +250,7 @@ namespace engenious.ContentTool.Builder
             if (!(item is ContentProject))
                 outputDestination = Path.Combine(outputDestination, item.Name);
 
-            var folder = item as ContentFolder;
-            if (folder != null)
+            if (item is ContentFolder folder)
             {
                 foreach (var child in folder.Content)
                 {
@@ -379,7 +367,7 @@ namespace engenious.ContentTool.Builder
 
             cache?.AddFile(item.FilePath, buildFile);
             buildFile.RefreshBuildCache(processorContext.BuildId, cache?.ContentManager);
-            buildFile.CreatesUserContent = processorContext.CreatedContent.CreatesUserContent(processorContext.GetRelativePathToContentDirectory(item.FilePath));
+            buildFile.CreatesUserContent = processorContext.CreatedContentCode.CreatesUserContent(processorContext.GetRelativePathToContentDirectory(item.FilePath));
 
             return processedFile;
         }

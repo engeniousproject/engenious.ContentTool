@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using engenious.Content.Pipeline;
 using engenious.ContentTool.Builder;
 using engenious.ContentTool.Forms;
-using engenious.ContentTool.Models;
+using engenious.Content.Models;
 using engenious.ContentTool.Presenters;
 
 namespace engenious.ContentTool
