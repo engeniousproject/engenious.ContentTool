@@ -1,0 +1,51 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        
+        <LangVersion>9.0</LangVersion>
+
+        <!-- Special properties for analyzer packages. -->
+        <IncludeBuildOutput>false</IncludeBuildOutput>
+        <IncludeSymbols>false</IncludeSymbols>
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+        <UseNETCoreGenerator>true</UseNETCoreGenerator>
+        <IsRoslynComponent>true</IsRoslynComponent>
+        <Nullable>enable</Nullable>
+        <LitGitIncludeProjectUrl>true</LitGitIncludeProjectUrl>
+
+        <LiCoOutput>NOTICE</LiCoOutput>
+        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="LitGit" Version="0.2.0.52-alpha" PrivateAssets="all" />
+
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.9.0" />
+        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.2" PrivateAssets="all" />
+        <PackageReference Include="engenious.Pipeline.Core" Version="0.6.0.2-alpha" Condition="!Exists('..\..\engenious.Pipeline.Core\engenious.Pipeline.Core.csproj')" />
+        <ProjectReference Include="..\..\engenious.Pipeline.Core\engenious.Pipeline.Core.csproj" Condition="Exists('..\..\engenious.Pipeline.Core\engenious.Pipeline.Core.csproj')" />
+
+        <None Include="..\LICENSE" Pack="true" PackagePath="" />
+
+        <None Include="$(OutputPath)$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    </ItemGroup>
+    <PropertyGroup>
+        <GetTargetPathDependsOn>$(GetTargetPathDependsOn);GetDependencyTargetPaths</GetTargetPathDependsOn>
+    </PropertyGroup>
+    <Target Name="GetDependencyTargetPaths">
+<!--        <Warning Text="Project Reference: %(_ResolvedProjectReferencePaths.Name) Target Path: @(_ResolvedProjectReferencePaths)" />-->
+<!--        <Warning Text="All References: @(ResolvedCompileFileDefinitions)"/>-->
+
+        <ItemGroup>
+
+            <TargetPathWithTargetPlatformMoniker Include="@(_ResolvedProjectReferencePaths)" IncludeRuntimeDependency="true" CopyToOutputDirectory="PreserveNewest" />
+            <None Include="@(_ResolvedProjectReferencePaths)" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+
+            <!--<None Include="@(_ResolvedProjectReferencePaths)" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />-->
+
+            <!--<TargetPathWithTargetPlatformMoniker Include="@(_ResolvedProjectReferencePaths)" IncludeRuntimeDependency="false" />-->
+        </ItemGroup>
+    </Target>
+</Project>

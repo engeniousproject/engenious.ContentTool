@@ -7,8 +7,8 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Markup.Xaml;
 using engenious.Avalonia;
-using engenious.ContentTool.Models;
-using engenious.ContentTool.Models.History;
+using engenious.Content.Models;
+using engenious.Content.Models.History;
 using engenious.ContentTool.Viewer;
 using OpenTK.Windowing.Common;
 

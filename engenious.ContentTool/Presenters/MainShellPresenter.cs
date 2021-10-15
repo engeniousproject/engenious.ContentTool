@@ -9,7 +9,7 @@ using System.Xml.Linq;
 using engenious.Content.Pipeline;
 using engenious.ContentTool.Builder;
 using engenious.ContentTool.Forms;
-using engenious.ContentTool.Models;
+using engenious.Content.Models;
 using engenious.ContentTool.Viewer;
 using engenious.Graphics;
 
@@ -383,8 +383,6 @@ namespace engenious.ContentTool.Presenters
             string path = await _shell.ShowSaveAsDialog();
             if (path == null) return;
             var project = new ContentProject("Content", path, Path.GetDirectoryName(path));
-            project.Configuration = "Debug";
-            project.OutputDirectory = "bin/{Configuration}";
             _shell.Project = project;
             await SaveProject();
         }
@@ -430,7 +428,7 @@ namespace engenious.ContentTool.Presenters
                 _shell.Project.Save(path);
         }
 
-        private async Task Shell_ShowInExplorerItemClick(Models.ContentItem item)
+        private async Task Shell_ShowInExplorerItemClick(ContentItem item)
         {
             var path = item.FilePath;
             if (item is ContentFile)

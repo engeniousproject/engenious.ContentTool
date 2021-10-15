@@ -13,16 +13,16 @@ namespace engenious.ContentTool.Builder
         public string CacheFilePath { get; private set; }
         
         [field: NonSerialized]
-        public AssemblyCreatedContent AssemblyCreatedContent { get; set; }
-        public Dictionary<string, BuildFile> Files { get; } = new Dictionary<string, BuildFile>();
+        public CreatedContentCode CreatedContentCode { get; set; }
+        public Dictionary<string, BuildFile> Files { get; } = new();
 
         [field: NonSerialized]
         internal ContentManagerBase ContentManager;
-        protected BuildCache(string cacheFilePath, AssemblyCreatedContent assemblyCreatedContent)
+        protected BuildCache(string cacheFilePath, CreatedContentCode createdContentCode)
         {
             ContentManager = new AggregateContentManager(null!, string.Empty);
             CacheFilePath = cacheFilePath;
-            AssemblyCreatedContent = assemblyCreatedContent;
+            CreatedContentCode = createdContentCode;
             //Files
         }
 
@@ -62,21 +62,19 @@ namespace engenious.ContentTool.Builder
                         return true;
                 }
 
-                if (!AssemblyCreatedContent.MostRecentBuildFileBuildIdMapping.TryGetValue(relativePath,
-                    out var createdContentBuildId))
-                    return buildFile.CreatesUserContent;
+                var createdContentBuildId = CreatedContentCode.GetTypeContainerBuildId(relativePath);
                 if (createdContentBuildId == null)
-                    return true;
-                if (buildFile.BuildId != createdContentBuildId)
-                    return true;
-
+                    return buildFile.CreatesUserContent;
+                // if (createdContentBuildId == null)
+                //     return true;
+                return buildFile.BuildId != createdContentBuildId;
             }
             return true;
         }
 
         public bool HasBuiltItems()
         {
-            foreach (var file in Files)
+            foreach (var file  in Files)
             {
                 if (file.Value.IsBuilt())
                     return true;
@@ -110,6 +108,10 @@ namespace engenious.ContentTool.Builder
         public void Save(string path)
         {
             Directory.CreateDirectory(Path.GetDirectoryName(path));
+            
+            var contentCodePath = Path.Combine(Path.GetDirectoryName(path) ?? string.Empty, Path.GetFileNameWithoutExtension(path) + ".CreatedCode.dat");
+            CreatedContentCode.Save(contentCodePath);
+            
             try
             {
                 using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
@@ -130,25 +132,28 @@ namespace engenious.ContentTool.Builder
         /// </summary>
         /// <param name="cacheFilePath">Location of the cache file</param>
         /// <returns>The build cache</returns>
-        public static BuildCache Load(string cacheFilePath, AssemblyCreatedContent assemblyCreatedContent)
+        public static BuildCache Load(string cacheFilePath, Guid buildId)
         {
+            var contentCodePath = Path.Combine(Path.GetDirectoryName(cacheFilePath) ?? string.Empty, Path.GetFileNameWithoutExtension(cacheFilePath) + ".CreatedCode.dat");
+
+            var contentCode = CreatedContentCode.Load(contentCodePath, buildId);
             if (!File.Exists(cacheFilePath))
             {
-                var cache = new BuildCache(cacheFilePath, assemblyCreatedContent);
-
+                var cache = new BuildCache(cacheFilePath, contentCode);
                 return cache;
             }
 
             try
             {
-                using (var fs = new FileStream(cacheFilePath, FileMode.Open, FileAccess.Read))
-                {
-                    var formatter = new BinaryFormatter();
-                    var cache = (BuildCache) formatter.Deserialize(fs);
-                    cache.AssemblyCreatedContent = assemblyCreatedContent;
-                    cache.ContentManager = new AggregateContentManager(null!, string.Empty);
-                    return cache;
-                }
+                using var fs = new FileStream(cacheFilePath, FileMode.Open, FileAccess.Read);
+                var formatter = new BinaryFormatter();
+                var cache = (BuildCache) formatter.Deserialize(fs);
+                //cache.CreatedContentCode = createdContentCode;
+
+                cache.CreatedContentCode = contentCode;
+                    
+                cache.ContentManager = new AggregateContentManager(null!, string.Empty);
+                return cache;
             }
             catch
             {
@@ -160,7 +165,7 @@ namespace engenious.ContentTool.Builder
                 {
                     // ignored
                 }
-                return Load(cacheFilePath, assemblyCreatedContent);
+                return Load(cacheFilePath, buildId);
             }
         }
     }

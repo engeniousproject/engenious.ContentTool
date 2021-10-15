@@ -2,7 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Markup.Xaml;
-using engenious.ContentTool.Models;
+using engenious.Content.Models;
 
 namespace engenious.ContentTool.Avalonia
 {

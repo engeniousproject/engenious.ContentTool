@@ -15,7 +15,7 @@ using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Styling;
 using Avalonia.Threading;
-using engenious.ContentTool.Models;
+using engenious.Content.Models;
 using engenious.ContentTool.Observer;
 using JetBrains.Annotations;
 using ReactiveUI;

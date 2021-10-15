@@ -19,10 +19,11 @@
         <file src="..\\bin\\$configuration$\\$framework$\\publish\\runtimes\\win\\**" target="tools\\runtimes\\win" />
         <file src="..\\bin\\$configuration$\\$framework$\\publish\\runtimes\\win-x64\\**" target="tools\\runtimes\\win-x64" />
         <file src="..\\bin\\$configuration$\\$framework$\\publish\\runtimes\\unix\\**" target="tools\\runtimes\\unix" />
-        <file src="..\\bin\\$configuration$\\$framework$\\publish\\*.dll" target="tools" />
-        <file src="..\\bin\\$configuration$\\$framework$\\publish\\*.json" target="tools" />
-        <file src="..\\bin\\$configuration$\\$framework$\\publish\\*.exe" target="tools" />
-        <file src="..\\bin\\$configuration$\\$framework$\\publish\\*.config" target="tools" />
-        <file src="..\\bin\\$configuration$\\$framework$\\publish\\ThirdPartyNotice.txt" target="tools" />
+        <file src="..\\bin\\$configuration$\\$framework$\\publish\\*.dll" target="tools\\" />
+        <file src="..\\bin\\$configuration$\\$framework$\\publish\\*.json" target="tools\\" />
+        <file src="..\\bin\\$configuration$\\$framework$\\publish\\*.exe" target="tools\\" />
+        <file src="..\\bin\\$configuration$\\$framework$\\publish\\*.config" target="tools\\" />
+        <file src="..\\bin\\$configuration$\\$framework$\\publish\\NOTICE" target="NOTICE" />
+        <file src="..\\LICENSE" target="LICENSE" />
     </files>
 </package>

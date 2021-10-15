@@ -4,6 +4,7 @@
   <!-- Add EngeniousContentReference to item type selection in Visual Studio -->
   <ItemGroup>
     <AvailableItemName Include="EngeniousContentReference" />
+    <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SourceItemGroup" />
   </ItemGroup>
 
   <!-- Get all Engenious Game Content References and store them in a list -->
@@ -16,7 +17,7 @@
     <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
   </PropertyGroup>
 
-  <Target Name="Prepare">
+  <Target Name="PrepareEngeniousContent">
     <PropertyGroup>
 		<ContentRootDirectory>Content</ContentRootDirectory>
 	</PropertyGroup>
@@ -42,27 +43,41 @@
 
     <MakeDir Directories="$(ParentIntermediateDir)"/>
     <MakeDir Directories="$(ParentOutputDir)"/>
-
+    <ItemGroup>
+      <AdditionalFiles Include="@(EngeniousContentReference)" SourceItemGroup="EngeniousContentReference" />
+      <EngeniousObjFolders Include="%(ContentReferences.RootDir)%(ContentReferences.Directory)obj" />
+    </ItemGroup>
+    <XmlPeek XmlInputPath="%(ContentReferences.FullPath)" Query="//Content/Configuration/text()">
+      <Output TaskParameter="Result" PropertyName="EngeniousProjectConfiguration" />
+    </XmlPeek>
+    <XmlPeek XmlInputPath="%(ContentReferences.FullPath)" Query="//Content/Name/text()">
+      <Output TaskParameter="Result" PropertyName="EngeniousProjectName" />
+    </XmlPeek>
+    <ItemGroup>
+      <AdditionalFiles Include="%(EngeniousObjFolders.Identity)/$(EngeniousProjectConfiguration)/$(EngeniousProjectName).CreatedContent.dat" />
+    </ItemGroup>
   </Target>
 
   <PropertyGroup>
+    <CoreBuildDependsOn>
+    $(CoreBuildDependsOn);
+    BuildEngeniousContent;
+    </CoreBuildDependsOn>
     <CleanDependsOn>
       $(CleanDependsOn);
-      CleanContent;
+      CleanEngeniousContent;
     </CleanDependsOn>
     <RebuildDependsOn>
       $(RebuildDependsOn);
-      RebuildContent;
+      RebuildEngeniousContent;
     </RebuildDependsOn>
   </PropertyGroup>
 
 
-  <Target Name="BuildContent"
+  <Target Name="BuildEngeniousContent"
         BeforeTargets="BeforeBuild;PreBuildEvent"
-        DependsOnTargets="Prepare">
+        DependsOnTargets="PrepareEngeniousContent">
 
-
-    <!--<Exec Command="chmod +x &quot;$(EngeniousContentBuilderExe)&quot;" Condition=" '$(OS)' == 'Unix' " />-->
     <Exec Command="$(DotnetExe) &quot;$(EngeniousContentBuilderExe)&quot; /@:&quot;%(ContentReferences.FullPath)&quot; $(Header)"
           WorkingDirectory="%(ContentReferences.RootDir)%(ContentReferences.Directory)" Condition="Exists('%(ContentReferences.FullPath)')" />
     <ItemGroup>
@@ -70,11 +85,11 @@
     </ItemGroup>
     <Copy SourceFiles="@(ExtraContent)" DestinationFolder="$(ProjectDir)\$(OutputPath)\Content\%(RecursiveDir)" SkipUnchangedFiles="true" />
   </Target>
-  <Target Name="CleanContent" BeforeTargets="BeforeClean;Clean" DependsOnTargets="Prepare"> 
+  <Target Name="CleanEngeniousContent" BeforeTargets="BeforeClean;Clean" DependsOnTargets="PrepareEngeniousContent"> 
     <Exec Command="$(DotnetExe) &quot;$(EngeniousContentBuilderExe)&quot; /@:&quot;%(ContentReferences.FullPath)&quot; $(Header) /clean"
           WorkingDirectory="%(ContentReferences.RootDir)%(ContentReferences.Directory)" Condition="Exists('%(ContentReferences.FullPath)')" />
   </Target>
-  <Target Name="RebuildContent" BeforeTargets="BeforeRebuild;Rebuild" DependsOnTargets="Prepare"> 
+  <Target Name="RebuildEngeniousContent" BeforeTargets="BeforeRebuild;Rebuild" DependsOnTargets="PrepareEngeniousContent"> 
     <Exec Command="$(DotnetExe) &quot;$(EngeniousContentBuilderExe)&quot; /@:&quot;%(ContentReferences.FullPath)&quot; $(Header) /rebuild"
           WorkingDirectory="%(ContentReferences.RootDir)%(ContentReferences.Directory)" Condition="Exists('%(ContentReferences.FullPath)')" />
   </Target>

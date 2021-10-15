@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using engenious.ContentTool.Models;
+using engenious.Content.Models;
 
 namespace engenious.ContentTool
 {

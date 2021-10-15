@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using engenious.ContentTool.Forms;
-using engenious.ContentTool.Models;
+using engenious.Content.Models;
 
 namespace engenious.ContentTool
 {

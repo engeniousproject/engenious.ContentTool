@@ -4,7 +4,7 @@
              xmlns:ct="clr-namespace:engenious.ContentTool.Avalonia"
              HorizontalAlignment="Stretch"
              VerticalAlignment="Stretch"
-             xmlns:models="clr-namespace:engenious.ContentTool.Models;assembly=engenious.ContentTool"
+             xmlns:models="clr-namespace:engenious.Content.Models;assembly=engenious.ContentTool"
              xmlns:System="clr-namespace:System;assembly=System.Runtime">
     <Design.DataContext>
         <ct:SpriteFontViewer />

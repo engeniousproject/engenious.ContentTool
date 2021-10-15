@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using engenious.ContentTool.Models;
+using engenious.Content.Models;
 
 namespace engenious.ContentTool.Viewer
 {
