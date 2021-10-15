@@ -6,6 +6,9 @@
         <title>${PRODUCT}</title>
         <authors>${AUTHORS}</authors>
         <ProjectUrl>${PROJECT_URL}</ProjectUrl>
+        <repository url="https://github.com/engeniousproject/engenious.ContentTool.git" />
+        <requireLicenseAcceptance>true</requireLicenseAcceptance>
+        <license type="file">LICENSE</license>
         <IsTool>true</IsTool>
         <description>engenious content-tool for engenious content projects(.ecp).</description>
     </metadata>
