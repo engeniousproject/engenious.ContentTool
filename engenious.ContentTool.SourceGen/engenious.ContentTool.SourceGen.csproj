@@ -24,7 +24,7 @@
 
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.9.0" />
         <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.2" PrivateAssets="all" />
-        <PackageReference Include="engenious.Pipeline.Core" Version="0.6.0.2-alpha" Condition="!Exists('..\..\engenious.Pipeline.Core\engenious.Pipeline.Core.csproj')" />
+        <PackageReference Include="engenious.Pipeline.Core" Version="0.6.0.3-alpha" Condition="!Exists('..\..\engenious.Pipeline.Core\engenious.Pipeline.Core.csproj')" />
         <ProjectReference Include="..\..\engenious.Pipeline.Core\engenious.Pipeline.Core.csproj" Condition="Exists('..\..\engenious.Pipeline.Core\engenious.Pipeline.Core.csproj')" />
 
         <None Include="..\LICENSE" Pack="true" PackagePath="" />
