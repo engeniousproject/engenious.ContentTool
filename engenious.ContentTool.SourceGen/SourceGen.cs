@@ -28,8 +28,6 @@ namespace engenious.ContentTool.SourceGen
 
         public void Execute(GeneratorExecutionContext context)
         {
-            context.ReportDiagnostic(Diagnostic.Create("asdf", "asdf", "Building shit", DiagnosticSeverity.Warning, DiagnosticSeverity.Info, true,1 ));;
-            context.AddSource("smth", "namespace Sample{public struct smth{}}");
             var cps = context.GetMSBuildItems("EngeniousContentReference");
             foreach (var cp in cps)
             {
@@ -40,7 +38,7 @@ namespace engenious.ContentTool.SourceGen
 
         private static void BuildContentProjectSources(GeneratorExecutionContext context, string? cp)
         {
-            if (cp == null || File.Exists(cp))
+            if (cp == null || !File.Exists(cp))
             {
                 return;
             }
