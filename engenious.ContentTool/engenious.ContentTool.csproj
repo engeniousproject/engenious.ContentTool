@@ -128,9 +128,6 @@
         </None>
 
     </ItemGroup>
-    <ItemGroup>
-        <Folder Include="Controls" />
-    </ItemGroup>
     <!--  <ItemGroup>-->
     <!--    <SharpFontNativeFiles Visible="False" Include="$(NuGetPackageRoot)sharpfont.dependencies/2.6.0/bin/msvc12/**/*.*" Condition="Exists('$(NuGetPackageRoot)sharpfont.dependencies/2.6.0/bin/msvc12/')" />-->
 
