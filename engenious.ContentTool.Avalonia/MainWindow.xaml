@@ -156,13 +156,13 @@
                     <Panel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="0" Grid.Row="0">
                         <ct:ProjectTreeView HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                                             x:Name="projectTreeView"
-                                            BuildItemCommand="{Binding BuildItemCommand}"
-                                            RenameItemCommand="{Binding RenameItemCommand}"
-                                            RemoveItemCommand="{Binding RemoveItemCommand}"
-                                            AddExistingFileCommand="{Binding ExistingItemCommand}"
-                                            AddNewFileCommand="{Binding NewItemCommand}"
-                                            AddExistingFolderCommand="{Binding ExistingFolderCommand}"
-                                            AddNewFolderCommand="{Binding NewFolderCommand}"/>
+                                            BuildItemCommand="{Binding $parent[ct:MainWindow].BuildItemCommand}"
+                                            RenameItemCommand="{Binding $parent[ct:MainWindow].RenameItemCommand}"
+                                            RemoveItemCommand="{Binding $parent[ct:MainWindow].RemoveItemCommand}"
+                                            AddExistingFileCommand="{Binding $parent[ct:MainWindow].ExistingItemCommand}"
+                                            AddNewFileCommand="{Binding $parent[ct:MainWindow].NewItemCommand}"
+                                            AddExistingFolderCommand="{Binding $parent[ct:MainWindow].ExistingFolderCommand}"
+                                            AddNewFolderCommand="{Binding $parent[ct:MainWindow].NewFolderCommand}"/>
                     </Panel>
                     <GridSplitter Grid.Column="0" Grid.Row="1" />
                     <Panel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="0" Grid.Row="2">
