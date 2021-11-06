@@ -176,6 +176,10 @@ namespace engenious.ContentTool.Avalonia
                         File.Move(oldPath, item.FilePath);
                 }
             };
+
+            _projectTreeView.AddSpecificFiles += (sender, tuple) => AddSpecificFiles?.Invoke(tuple.folder, tuple.newFiles, tuple.index);
+            _projectTreeView.AddSpecificFolder += (sender, tuple) => AddSpecificFolder?.Invoke(tuple.folder, tuple.newFolder, tuple.index);
+            
             _logText = this.FindControl<TextBlock>("logText");
             _defaultTextBlockColorDummy = this.FindControl<TextBlock>("defaultTextBlockColorDummy");
 
@@ -501,6 +505,10 @@ namespace engenious.ContentTool.Avalonia
         public event Delegates.ItemActionEventHandler SaveProjectClick;
         public event Delegates.ItemActionEventHandler SaveProjectAsClick;
         public event Delegates.ItemActionEventHandler OnItemSelect;
+
+        public event Delegates.AddSpecificFilesEventHandler AddSpecificFiles;
+        public event Delegates.AddSpecificFolderEventHandler AddSpecificFolder;
+        
         public event EventHandler IntegrateCSClick;
         public event EventHandler OnAboutClick;
         public event EventHandler OnHelpClick;

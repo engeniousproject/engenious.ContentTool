@@ -33,7 +33,7 @@ namespace engenious.ContentTool
             }
         }
         public static async Task<FileAction> CopyDirectory(string src, string dest, ContentFolder fld, IPromptShell promptShell,
-            FileAction action = FileAction.Ask, Action<int> progress=null)
+            FileAction action = FileAction.Ask, Action<int> progress=null, int index = -1)
         {
             var foldername = Path.GetFileName(src);
             dest = Path.Combine(dest, foldername);
@@ -43,7 +43,10 @@ namespace engenious.ContentTool
             if (newfld == null)
             {
                 newfld = new ContentFolder(foldername, fld);
-                fld.Content.Add(newfld);
+                if (index == -1)
+                    fld.Content.Add(newfld);
+                else
+                    fld.Content.Insert(index++, newfld);
             }
             fld = newfld;
 
@@ -59,7 +62,7 @@ namespace engenious.ContentTool
         }
 
         public static async Task<FileAction> CopyFiles(string[] files, string dir, ContentFolder fld, IPromptShell promptShell,
-            FileAction action = FileAction.Ask)
+            FileAction action = FileAction.Ask, int index = -1)
         {
             foreach (var src in files)
             {
@@ -103,7 +106,12 @@ namespace engenious.ContentTool
                 promptShell.Invoke(() =>
                 {
                     if (!fld.Content.Any(x => x.Name == filename && x is ContentFile))
-                        fld.Content.Add(new ContentFile(filename, fld));
+                    {
+                        if (index == -1)
+                            fld.Content.Add(new ContentFile(filename, fld));
+                        else
+                            fld.Content.Insert(index++, new ContentFile(filename, fld));
+                    }
                 });
             }
             return action;

@@ -77,6 +77,9 @@ namespace engenious.ContentTool.Forms
         event Delegates.ItemActionEventHandler SaveProjectAsClick;
 
         event Delegates.ItemActionEventHandler OnItemSelect;
+
+        event Delegates.AddSpecificFilesEventHandler AddSpecificFiles;
+        event Delegates.AddSpecificFolderEventHandler AddSpecificFolder;
         
         event EventHandler IntegrateCSClick;
 

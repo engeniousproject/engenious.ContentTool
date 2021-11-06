@@ -65,6 +65,9 @@ namespace engenious.ContentTool.Presenters
 
             shell.IntegrateCSClick += ShellOnIntegrateCsClick;
 
+            shell.AddSpecificFiles += AddSpecificFiles;
+            shell.AddSpecificFolder += AddSpecificFolder;
+
             _viewerManager = new ViewerManager();
         }
 
@@ -238,6 +241,32 @@ namespace engenious.ContentTool.Presenters
                 _shell.RenameItem(newFolder);
             });
         }
+        
+        public async Task AddSpecificFolder(ContentFolder fld, string src, int destinationIndex = -1)
+        {
+            await _shell.ShowLoading();
+            await _shell.SuspendRendering();
+
+            var progress = new Action<int>(i => _shell.Invoke(() => _shell.WaitProgress(i)));
+            var t = new Thread(async () =>
+                               {
+                                   string dest = fld.FilePath;
+                                   await FileHelper.CopyDirectory(src, dest, fld, _promptShell, FileAction.Ask, progress, index: destinationIndex);
+                                   _shell.Invoke(() =>
+                                                 {
+                                                     _shell.ResumeRendering();
+                                                     _shell.HideLoading();
+                                                 });
+                               });
+            t.Start();
+        }
+        public async Task AddSpecificFiles(ContentFolder fld, string[] files, int destinationIndex = -1)
+        {
+            var dir = fld.FilePath;
+            await _shell.SuspendRendering();
+            await FileHelper.CopyFiles(files, dir, fld, _promptShell, index: destinationIndex);
+            await _shell.ResumeRendering();
+        }
 
 
         private async Task Shell_AddExistingFolderClick(ContentFolder fld)
@@ -247,22 +276,8 @@ namespace engenious.ContentTool.Presenters
             if (src == null)
                 return;
 
-            await _shell.ShowLoading();
-            await _shell.SuspendRendering();
-
-            var progress = new Action<int>(i => _shell.Invoke(() => _shell.WaitProgress(i)));
-            var t = new Thread(async () =>
-            {
-                await FileHelper.CopyDirectory(src, dest, fld, _promptShell, FileAction.Ask, progress);
-                _shell.Invoke(() =>
-                {
-                    _shell.ResumeRendering();
-                    _shell.HideLoading();
-                });
-            });
-            t.Start();
+            await AddSpecificFolder(fld, src);
         }
-
 
         private async Task Shell_AddExistingItemClick(ContentItem item)
         {
@@ -273,11 +288,9 @@ namespace engenious.ContentTool.Presenters
             if (files == null)
                 return;
 
-            var dir = fld.FilePath;
-            await _shell.SuspendRendering();
-            await FileHelper.CopyFiles(files, dir, fld, _promptShell);
-            await _shell.ResumeRendering();
+            await AddSpecificFiles(fld, files);
         }
+        
 
         private void ShellOnRedoClick(object sender, EventArgs eventArgs)
         {

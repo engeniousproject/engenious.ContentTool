@@ -79,7 +79,7 @@
                 </StackPanel>
             </TreeDataTemplate>
             <TreeDataTemplate DataType="models:ContentFolder" ItemsSource="{Binding Path=Content, Mode=TwoWay}">
-                <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal" Background="Transparent">
                     <StackPanel.ContextMenu>
                         <ContextMenu>
                             <MenuItem Header="Add">
@@ -96,11 +96,11 @@
                         </ContextMenu>
                     </StackPanel.ContextMenu>
                     <Image Source="/Resources/Folder.png" Width="15" Height="15" Margin="0 2 2 2" />
-                    <ContentControl Content="{Binding}" />
+                    <ContentControl Content="{Binding}"  Background="Transparent" />
                 </StackPanel>
             </TreeDataTemplate>
             <DataTemplate DataType="models:ContentFile">
-                <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal"  Background="Transparent">
                     <StackPanel.ContextMenu>
                         <ContextMenu>
                             <MenuItem Header="Add">
@@ -117,7 +117,7 @@
                         </ContextMenu>
                     </StackPanel.ContextMenu>
                     <Image Source="/Resources/New_file.png" Width="15" Height="15" Margin="0 2 2 2" />
-                    <ContentControl Content="{Binding}" />
+                    <ContentControl Content="{Binding}"  Background="Transparent" />
                 </StackPanel>
             </DataTemplate>
         </TreeView.DataTemplates>
