@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Avalonia;
@@ -123,8 +125,8 @@ namespace engenious.ContentTool.Avalonia
             set => SetAndRaise(AddExistingFolderCommandProperty, ref _addExistingFolderCommand, value);
         }
         public event EventHandler<RoutedEventArgs> SelectedItemChanged;
-        public event EventHandler<PropertyValueChangedEventArgs> SelectedItemPropertyChanged; 
-        
+        public event EventHandler<PropertyValueChangedEventArgs> SelectedItemPropertyChanged;
+
         public static readonly DirectProperty<ProjectTreeView, ContentProject> ProjectProperty =
             AvaloniaProperty.RegisterDirect<ProjectTreeView, ContentProject>(
                 nameof(Project),
@@ -135,16 +137,16 @@ namespace engenious.ContentTool.Avalonia
                 nameof(IsInEditMode),
                 o => o.IsInEditMode,
                 (o, v) => o.IsInEditMode = v);
-        
+
         private readonly TreeView _treeView;
         private readonly ContextMenu _projectContextMenu;
 
         private ContentProject _project;
         private List<Tuple<object, NotifyCollectionChangedEventArgs>> _changes;
-        
+
 
         private bool _isInEditMode;
-        
+
         public bool IsInEditMode
         {
             get => _isInEditMode;
@@ -158,7 +160,7 @@ namespace engenious.ContentTool.Avalonia
 
         public ContentFolder SelectedFolder =>
             (SelectedItem as ContentFolder) ?? (SelectedItem?.Parent as ContentFolder) ?? Project;
-        
+
         public ContentItem SelectedItem
         {
             get => _treeView.SelectedItem as ContentItem;
@@ -177,6 +179,49 @@ namespace engenious.ContentTool.Avalonia
             InitializeComponent();
             _treeView = this.FindControl<TreeView>("treeView");
             _projectContextMenu = this.FindControl<ContextMenu>("ProjectContextMenu");
+
+            _treeView.AddHandler(DragDrop.DragOverEvent, DragOver);
+            _treeView.AddHandler(DragDrop.DragEnterEvent, DragEnter);
+            _treeView.AddHandler(DragDrop.DropEvent, Drop);
+            DragDrop.SetAllowDrop(_treeView, true);
+        }
+
+        private void Drop(object sender, DragEventArgs e)
+        {
+            var fileNames = e.Data.Get(DataFormats.FileNames) as List<string>;
+
+            if (fileNames is null)
+                return;
+
+            ;
+        }
+
+        private void DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.Contains(DataFormats.FileNames))
+            {
+                e.DragEffects = DragDropEffects.Copy;
+            }
+            else
+            {
+                e.DragEffects = DragDropEffects.None;
+            }
+
+            e.Handled = true;
+        }
+
+        private void DragOver(object? sender, DragEventArgs e)
+        {
+            if (e.Data.Contains(DataFormats.FileNames))
+            {
+                e.DragEffects = DragDropEffects.Copy;
+            }
+            else
+            {
+                e.DragEffects = DragDropEffects.None;
+            }
+
+            e.Handled = true;
         }
 
         private INotifyPropertyValueChanged _oldSelectedItem;
@@ -187,10 +232,10 @@ namespace engenious.ContentTool.Avalonia
 
             if (_oldSelectedItem != null)
                 _oldSelectedItem.PropertyValueChanged -= SelectedItemOnPropertyChanged;
-            
+
             if (SelectedItem != null)
                 ((INotifyPropertyValueChanged)SelectedItem).PropertyValueChanged += SelectedItemOnPropertyChanged;
-            
+
             _oldSelectedItem = SelectedItem;
         }
 
@@ -219,12 +264,12 @@ namespace engenious.ContentTool.Avalonia
             IsInEditMode = false;
             _commitEdit = true;
         }
-        
+
         private void EditField_OnLostFocus(object? sender, RoutedEventArgs e)
         {
             if (sender == null)
                 return;
-            var editField = (TextBox) sender;
+            var editField = (TextBox)sender;
             var contentItem = (ContentItem)editField.DataContext;
             if (contentItem == null)
                 return;
@@ -236,13 +281,13 @@ namespace engenious.ContentTool.Avalonia
         {
             if (sender == null || e.Property.Name != "IsVisible")
                 return;
-            var editField = (TextBox) sender;
+            var editField = (TextBox)sender;
             if (editField.IsVisible)
                 editField.Focus();
             else
             {
                 var contentItem = (ContentItem)editField.DataContext;
-                
+
                 UpdateValue(editField, contentItem);
             }
         }

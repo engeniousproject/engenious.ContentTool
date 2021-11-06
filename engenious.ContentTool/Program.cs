@@ -32,7 +32,7 @@ namespace engenious.ContentTool
     internal static class Program
     {
         [STAThread]
-        static async Task<int> Main(string[] args)
+        static int Main(string[] args)
         {
             var arguments = new Arguments();
             arguments.ParseArguments(args);
