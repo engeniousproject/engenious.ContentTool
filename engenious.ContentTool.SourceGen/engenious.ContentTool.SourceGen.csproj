@@ -20,7 +20,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="LitGit" Version="0.2.0.52-alpha" PrivateAssets="all" />
+        <PackageReference Include="LitGit" Version="0.2.0.55-alpha" PrivateAssets="all" />
 
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.9.0" />
         <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.2" PrivateAssets="all" />

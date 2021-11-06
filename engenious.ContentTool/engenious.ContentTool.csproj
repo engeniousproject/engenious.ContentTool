@@ -106,7 +106,7 @@
         </Compile>
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="LiCo" Version="0.1.11.9-alpha" PrivateAssets="all" />
+        <PackageReference Include="LiCo" Version="0.1.11.10-alpha" PrivateAssets="all" />
         <PackageReference Include="Mono.Cecil" Version="0.11.3" />
         <!--    <PackageReference Include="SharpFont.Dependencies" Version="2.6.0" ExcludeAssets="build" />-->
         <PackageReference Include="System.Resources.Extensions" Version="5.0.0" />
@@ -117,7 +117,7 @@
         <PackageReference Include="engenious.Pipeline" Version="0.6.0.2-alpha" Condition="!Exists('..\..\engenious.Pipeline\engenious.Pipeline.csproj')" />
 
 
-        <PackageReference Include="LitGit" Version="0.2.0.52-alpha" PrivateAssets="all" />
+        <PackageReference Include="LitGit" Version="0.2.0.55-alpha" PrivateAssets="all" />
     </ItemGroup>
     <ItemGroup>
         <None Include="../LICENSE" />
