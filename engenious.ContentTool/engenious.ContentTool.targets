@@ -67,7 +67,7 @@
           WorkingDirectory="%(ContentReferences.RootDir)%(ContentReferences.Directory)" Condition="Exists('%(ContentReferences.FullPath)')" />
     <ItemGroup>
       <ExtraContent Include="$(ParentOutputDir)\**\*.*" />
-	  <None Include="@(ExtraContent)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Visible="false" />
+      <None Include="@(ExtraContent->'%(Identity)')" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Visible="false" Link="$(ContentRootDirectory)\$([MSBuild]::MakeRelative($(ParentOutputDir), %(ExtraContent.Identity)))" />
     </ItemGroup>
   </Target>
   <Target Name="CleanContent" BeforeTargets="BeforeClean;Clean" DependsOnTargets="Prepare"> 
