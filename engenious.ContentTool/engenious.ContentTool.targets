@@ -82,8 +82,8 @@
           WorkingDirectory="%(ContentReferences.RootDir)%(ContentReferences.Directory)" Condition="Exists('%(ContentReferences.FullPath)')" />
     <ItemGroup>
       <ExtraContent Include="$(ParentOutputDir)\**\*.*" />
+	  <None Include="@(ExtraContent->'%(Identity)')" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Visible="false" Link="$(ContentRootDirectory)\$([MSBuild]::MakeRelative($(ParentOutputDir), %(ExtraContent.Identity)))" />
     </ItemGroup>
-    <Copy SourceFiles="@(ExtraContent)" DestinationFolder="$(ProjectDir)\$(OutputPath)\Content\%(RecursiveDir)" SkipUnchangedFiles="true" />
   </Target>
   <Target Name="CleanEngeniousContent" BeforeTargets="BeforeClean;Clean" DependsOnTargets="PrepareEngeniousContent"> 
     <Exec Command="$(DotnetExe) &quot;$(EngeniousContentBuilderExe)&quot; /@:&quot;%(ContentReferences.FullPath)&quot; $(Header) /clean"
