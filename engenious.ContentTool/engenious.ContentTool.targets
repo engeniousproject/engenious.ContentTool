@@ -54,7 +54,7 @@
       <Output TaskParameter="Result" PropertyName="EngeniousProjectName" />
     </XmlPeek>
     <ItemGroup>
-      <AdditionalFiles Include="%(EngeniousObjFolders.Identity)/$(EngeniousProjectConfiguration)/$(EngeniousProjectName).CreatedContent.dat" />
+      <AdditionalFiles Include="%(EngeniousObjFolders.Identity)/$(EngeniousProjectConfiguration)/$(EngeniousProjectName).CreatedCode.dat" />
     </ItemGroup>
   </Target>
 

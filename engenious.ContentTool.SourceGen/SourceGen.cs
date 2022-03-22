@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using engenious.Content.CodeGenerator;
@@ -31,7 +32,7 @@ namespace engenious.ContentTool.SourceGen
             var cps = context.GetMSBuildItems("EngeniousContentReference");
             foreach (var cp in cps)
             {
-                context.ReportDiagnostic(Diagnostic.Create("asdf", "asdf", $"Trying to build content project: {cp}", DiagnosticSeverity.Warning, DiagnosticSeverity.Info, true,1 ));;
+                context.ReportDiagnostic(Diagnostic.Create("ECP01", "ContentSourceGen", $"Trying to build content project: {cp}", DiagnosticSeverity.Info, DiagnosticSeverity.Info, true,1 ));;
                 BuildContentProjectSources(context, cp);
             }
         }
@@ -42,7 +43,7 @@ namespace engenious.ContentTool.SourceGen
             {
                 return;
             }
-            context.ReportDiagnostic(Diagnostic.Create("asdf", "asdf", $"Shit just got real: {cp}", DiagnosticSeverity.Warning, DiagnosticSeverity.Info, true,1 ));;
+            context.ReportDiagnostic(Diagnostic.Create("ECP02", "ContentSourceGen", $"Load content project: {cp}", DiagnosticSeverity.Info, DiagnosticSeverity.Info, true,1 ));;
 
             
             var p = ContentProject.Load(cp);
@@ -51,8 +52,14 @@ namespace engenious.ContentTool.SourceGen
                 p.Name + ".CreatedCode.dat");
 
             var contentCode = CreatedContentCode.Load(cacheFile, Guid.Empty);
+            
+            context.ReportDiagnostic(Diagnostic.Create("ECP03", "ContentSourceGen", $"Loaded content code: {cacheFile} with {contentCode.FileDefinitions.Count()} file definitions.", DiagnosticSeverity.Info, DiagnosticSeverity.Info, true,1 ));;
+
             foreach(var f in contentCode.FileDefinitions)
             {
+                            
+                context.ReportDiagnostic(Diagnostic.Create("ECP04", "ContentSourceGen", $"Create code for file definition: {f.Name}", DiagnosticSeverity.Info, DiagnosticSeverity.Info, true,1 ));;
+
                 var codeBuilder = new StringCodeBuilder();
                 f.WriteTo(codeBuilder);
                 context.AddSource(f.Name.Replace('/', '_'), codeBuilder.ToString());

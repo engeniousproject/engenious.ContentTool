@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Loader;
 using System.Threading.Tasks;
+using engenious.Content.CodeGenerator;
 using engenious.Content.Pipeline;
 using engenious.ContentTool.Builder;
 using engenious.ContentTool.Forms;
