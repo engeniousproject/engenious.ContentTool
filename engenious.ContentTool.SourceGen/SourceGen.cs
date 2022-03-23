@@ -30,26 +30,27 @@ namespace engenious.ContentTool.SourceGen
         public void Execute(GeneratorExecutionContext context)
         {
             var cps = context.GetMSBuildItems("EngeniousContentReference");
-            foreach (var cp in cps)
+            var cpd = context.GetMSBuildItems("EngeniousContentData");
+            foreach (var cp in cps.Zip(cpd, (contentReference, contentData) => (contentReference, contentData)))
             {
                 context.ReportDiagnostic(Diagnostic.Create("ECP01", "ContentSourceGen", $"Trying to build content project: {cp}", DiagnosticSeverity.Info, DiagnosticSeverity.Info, true,1 ));;
-                BuildContentProjectSources(context, cp);
+                BuildContentProjectSources(context, cp.contentReference, cp.contentData);
             }
         }
 
-        private static void BuildContentProjectSources(GeneratorExecutionContext context, string? cp)
+        private static void BuildContentProjectSources(GeneratorExecutionContext context, string? cp, string? cpd)
         {
             if (cp == null || !File.Exists(cp))
             {
                 return;
             }
-            context.ReportDiagnostic(Diagnostic.Create("ECP02", "ContentSourceGen", $"Load content project: {cp}", DiagnosticSeverity.Info, DiagnosticSeverity.Info, true,1 ));;
+            context.ReportDiagnostic(Diagnostic.Create("ECP02", "ContentSourceGen", $"Load content project: {cp} with content data {cpd}", DiagnosticSeverity.Info, DiagnosticSeverity.Info, true,1 ));;
 
             
             var p = ContentProject.Load(cp);
 
-            var cacheFile = Path.Combine(Path.GetDirectoryName(p.ContentProjectPath), "obj", p.Configuration,
-                p.Name + ".CreatedCode.dat");
+            var cacheFile = cpd == null || !File.Exists(cpd) ? Path.Combine(Path.GetDirectoryName(p.ContentProjectPath), "obj", p.Configuration,
+                p.Name + ".CreatedCode.dat") : cpd;
 
             var contentCode = CreatedContentCode.Load(cacheFile, Guid.Empty);
             

@@ -3,8 +3,8 @@
 
   <!-- Add EngeniousContentReference to item type selection in Visual Studio -->
   <ItemGroup>
-    <AvailableItemName Include="EngeniousContentReference" />
-    <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SourceItemGroup" />
+      <AvailableItemName Include="EngeniousContentReference" />
+      <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SourceItemGroup" />
   </ItemGroup>
 
   <!-- Get all Engenious Game Content References and store them in a list -->
@@ -52,7 +52,7 @@
       <Output TaskParameter="Result" PropertyName="EngeniousProjectName" />
     </XmlPeek>
     <ItemGroup>
-      <AdditionalFiles Include="%(EngeniousObjFolders.Identity)/$(EngeniousProjectConfiguration)/$(EngeniousProjectName).CreatedCode.dat" />
+      <AdditionalFiles Include="%(EngeniousObjFolders.Identity)/$(EngeniousProjectConfiguration)/$(EngeniousProjectName).CreatedCode.dat" SourceItemGroup="EngeniousContentData" />
     </ItemGroup>
   </Target>
 
