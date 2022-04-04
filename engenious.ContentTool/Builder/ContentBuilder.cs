@@ -24,8 +24,6 @@ namespace engenious.ContentTool.Builder
 
         public bool IsBuilding { get; private set; }
 
-        private readonly SynchronizationContext _syncContext;
-
         private readonly Thread _buildThread;
         private readonly ConcurrentQueue<BuildTask> _buildQueue;
         private readonly AutoResetEvent _startBuild;
@@ -63,7 +61,6 @@ namespace engenious.ContentTool.Builder
             Project = project;
             Game = new ContentBuilderGame();
             Game.GraphicsDevice.RemoveFromUiThread();
-            _syncContext = SynchronizationContext.Current;
 
 
             _buildThreadCancellation = new CancellationTokenSource();
@@ -181,12 +178,11 @@ namespace engenious.ContentTool.Builder
 
             var createdContentCode = cache.CreatedContentCode;
 
+            Game.GraphicsDevice.SwitchUiThread();
             using (var iContext = new ContentImporterContext(buildId, createdContentCode, item.Project.FilePath))
-            using (var pContext = new ContentProcessorContext(_syncContext, Game, buildId, createdContentCode,
+            using (var pContext = new ContentProcessorContext(Game.GraphicsDevice.UiThread.SynchronizationContext, Game, buildId, createdContentCode,
                 Path.GetDirectoryName(Project.ContentProjectPath), item.Project.FilePath))
             {
-                Game.GraphicsDevice.SwitchUiThread();
-                
                 //Console.WriteLine($"GL Version: {pContext.GraphicsDevice.DriverVersion.ToString()}");
                 //Console.WriteLine($"GLSL Version: {pContext.GraphicsDevice.GlslVersion.ToString()}");
 
