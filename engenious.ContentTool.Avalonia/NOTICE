@@ -24,6 +24,14 @@
 ==================== Dependent packages dialogs.interfaces 0.1.29  ===================================================================================
 ==================== Dependent packages messagebox.avalonia 1.0.5  ===================================================================================
 ==================== Dependent packages opentk 4.5.0  ================================================================================================
+==================== Dependent packages system.resources.extensions 5.0.0  ===========================================================================
+==================== Dependent packages system.drawing.common 5.0.0  =================================================================================
+==================== Dependent packages microsoft.netcore.platforms 5.0.0  ===========================================================================
+==================== Dependent packages microsoft.win32.systemevents 5.0.0  ==========================================================================
+==================== Dependent packages system.runtime.compilerservices.unsafe 5.0.0  ================================================================
+==================== Dependent packages microsoft.win32.registry 5.0.0  ==============================================================================
+==================== Dependent packages system.security.accesscontrol 5.0.0  =========================================================================
+==================== Dependent packages system.security.principal.windows 5.0.0  =====================================================================
 ======================================================================================================================================================
 
 'MIT' reference 
@@ -64,6 +72,14 @@ MIT License _____ Permission is hereby granted, free of charge, to any person ob
 ==================== Dependent packages dialogs.interfaces 0.1.29  ===================================================================================
 ==================== Dependent packages messagebox.avalonia 1.0.5  ===================================================================================
 ==================== Dependent packages opentk 4.5.0  ================================================================================================
+==================== Dependent packages system.resources.extensions 5.0.0  ===========================================================================
+==================== Dependent packages system.drawing.common 5.0.0  =================================================================================
+==================== Dependent packages microsoft.netcore.platforms 5.0.0  ===========================================================================
+==================== Dependent packages microsoft.win32.systemevents 5.0.0  ==========================================================================
+==================== Dependent packages system.runtime.compilerservices.unsafe 5.0.0  ================================================================
+==================== Dependent packages microsoft.win32.registry 5.0.0  ==============================================================================
+==================== Dependent packages system.security.accesscontrol 5.0.0  =========================================================================
+==================== Dependent packages system.security.principal.windows 5.0.0  =====================================================================
 ======================================================================================================================================================
 
 MIT License
@@ -153,6 +169,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 ==================== Dependent packages system.runtime 4.3.1  ========================================================================================
 ==================== Dependent packages system.text.encoding.extensions 4.3.0  =======================================================================
 ==================== Dependent packages system.runtime.serialization.primitives 4.3.0  ===============================================================
+==================== Dependent packages system.threading.thread 4.3.0  ===============================================================================
 ======================================================================================================================================================
 
 MICROSOFT SOFTWARE LICENSE TERMS
@@ -263,6 +280,8 @@ It also applies even if Microsoft knew or should have known about the possibilit
 ==================== Dependent packages system.text.encoding.codepages 4.5.1  ========================================================================
 ==================== Dependent packages microsoft.netcore.platforms 2.1.2  ===========================================================================
 ==================== Dependent packages system.threading.tasks.extensions 4.5.3  =====================================================================
+==================== Dependent packages system.memory 4.5.4  =========================================================================================
+==================== Dependent packages system.buffers 4.5.1  ========================================================================================
 ======================================================================================================================================================
 
 The MIT License (MIT) Copyright (c) .NET Foundation and Contributors All rights reserved. Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -394,9 +413,9 @@ mono</mono> / SkiaSharp</mono/SkiaSharp> Public
 
 
 *	Notifications </login?return_to=%2Fmono%2FSkiaSharp>
-*	Star </login?return_to=%2Fmono%2FSkiaSharp>2.4k </mono/SkiaSharp/stargazers>
-*	Fork </login?return_to=%2Fmono%2FSkiaSharp>365 </mono/SkiaSharp/network/members>
+*	Fork 419 </login?return_to=%2Fmono%2FSkiaSharp>
 *	
+Star 2.8k </login?return_to=%2Fmono%2FSkiaSharp>
 
 
 
@@ -404,7 +423,8 @@ mono</mono> / SkiaSharp</mono/SkiaSharp> Public
 
 
 
-Permalink</mono/SkiaSharp/blob/95c296bd9e8301205c7136de5670681fd1f24396/LICENSE.md> 
+
+Permalink</mono/SkiaSharp/blob/2a8192c0f646b7f52f11375ffd8c63c9760a1f73/LICENSE.md> 
 
 main 
 
@@ -485,6 +505,12 @@ This is not legal advice. Learn more about repository licenses<https://docs.gith
 
 
 
+This commit does not belong to any branch on this repository, and may belong to a fork outside of the repository.
+
+
+
+
+
 [@mattleibow<https://avatars.githubusercontent.com/u/1096616?s=48&amp;v=4>]</mattleibow>
 
 mattleibow</mattleibow> updated the license</mono/SkiaSharp/commit/19d72a97f6f9076640639bcf643fee7f0cb75124> 
@@ -508,7 +534,7 @@ Users who have contributed to this file
 
 Raw </mono/SkiaSharp/raw/main/LICENSE.md>Blame </mono/SkiaSharp/blame/main/LICENSE.md>
 
-<https://desktop.github.com></login?return_to=https%3A%2F%2Fgithub.com%2Fmono%2FSkiaSharp%2Fblob%2Fmain%2FLICENSE.md></login?return_to=https%3A%2F%2Fgithub.com%2Fmono%2FSkiaSharp%2Fblob%2Fmain%2FLICENSE.md>
+<https://desktop.github.com>
 
 
 
@@ -547,13 +573,13 @@ Go
 
 
 
-*	© 2021 GitHub, Inc.
+*	<https://github.com>© 2022 GitHub, Inc. 
+
 *	Terms<https://docs.github.com/en/github/site-policy/github-terms-of-service>
 *	Privacy<https://docs.github.com/en/github/site-policy/github-privacy-statement>
 *	Security<https://github.com/security>
 *	Status<https://www.githubstatus.com/>
 *	Docs<https://docs.github.com>
-<https://github.com>
 *	Contact GitHub<https://support.github.com?tags=dotcom-footer>
 *	Pricing<https://github.com/pricing>
 *	API<https://docs.github.com>
@@ -717,7 +743,6 @@ Skip to main content<#main-content>
 
 *	Home</>
 *	Contact</contact>
-*	Donate</civicrm/contribute/transact?reset=1&amp;id=2>
 *	Login</user/login>
 
 
@@ -754,11 +779,9 @@ Search form
 
 
 
-[Home<https://opensource.org/files/osi_keyhole_300X300_90ppi_0.png>]</>
+[Home<https://opensource.org/sites/default/files/public/osi_keyhole_300X300_90ppi_0.png>]</>
 
 Open Source Initiative</> 
-
-Guaranteeing the 'our' in source... 
 
 
 
@@ -829,6 +852,36 @@ End license text.
 
 
 
+You must have JavaScript enabled to use this form. 
+
+
+User login
+
+
+
+Log in using OpenID 
+What is OpenID?<https://openid.net/>
+
+
+Username * 
+
+Password * 
+
+
+*	Log in using OpenID<#openid-login>
+*	Cancel OpenID login<#>
+
+
+
+*	Create new account</user/register>
+*	Request new password</user/password>
+
+
+
+
+
+
+
 
 
 
@@ -839,6 +892,8 @@ End license text.
 
 Keep up with Open Source
 
+
+You must have JavaScript enabled to use this form. 
 
 Sign up with your email to receive our newsletter — your resource for industry news, upcoming events, insights from Open Source thought leaders and more.
 
@@ -855,6 +910,16 @@ First Name
 
 Last Name 
 
+
+Leave this field blank 
+
+CAPTCHA
+
+This question is for testing whether or not you are a human visitor and to prevent automated spam submissions.
+
+
+
+ 
 
 
 
@@ -899,19 +964,17 @@ Open source software is made by many people<https://opensource.org/members> and 
 
 
 
-[</files/twitterlogo.png>]<https://twitter.com/OpenSourceOrg>[</files/linkedin.png>]<https://www.linkedin.com/company/open-source-initiative-osi->[</files/xwikilogo.png>]<http://wiki.opensource.org>[</files/ccby.png>]<http://creativecommons.org/licenses/by/4.0/>
+[</files/twitterlogo.png>]<https://twitter.com/OpenSourceOrg>[</files/linkedin.png>]<https://www.linkedin.com/company/open-source-initiative-osi->[</files/ccby.png>]<https://creativecommons.org/licenses/by/4.0/>
 
 
+Sign-up for our newsletter</signup>!
 
 
-
-Sign-up for our newsletter<newsletter/signup>!
-
-The content on this website, of which Opensource.org is the author, is licensed under a Creative Commons Attribution 4.0 International License<http://creativecommons.org/licenses/by/4.0/>.
+The content on this website, of which Opensource.org is the author, is licensed under a Creative Commons Attribution 4.0 International License<https://creativecommons.org/licenses/by/4.0/>.
 Opensource.org is not the author of any of the licenses reproduced on this site. Questions about the copyright in a license should be directed to the license steward.
 
 Hosting for Opensource.org is generously provided by DigitalOcean<https://www.digitalocean.com/>. Please see Terms of Service<../ToS>.
-For questions regarding the OSI website and contents pleasee email our webmaster<mailto:webmaster@lists.opensource.org?subject=OSI%20website%20comment>.
+For questions regarding the OSI website and contents please contact us</contact>.
 
 
 
@@ -930,68 +993,6 @@ For questions regarding the OSI website and contents pleasee email our webmaster
 
 
 
-
-======================================================================================================================================================
-==================== Dependent packages system.resources.extensions 5.0.0  ===========================================================================
-==================== Dependent packages system.drawing.common 5.0.0  =================================================================================
-==================== Dependent packages microsoft.netcore.platforms 5.0.0  ===========================================================================
-==================== Dependent packages microsoft.win32.systemevents 5.0.0  ==========================================================================
-==================== Dependent packages system.runtime.compilerservices.unsafe 5.0.0  ================================================================
-======================================================================================================================================================
-
-'MIT' reference 
-
-
-SPDX identifier
-
-MIT
-
-License text
-MIT License _____ Permission is hereby granted, free of charge, to any person obtaining a copy of _____ (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions: The above copyright notice and this permission notice (including the next paragraph) shall be included in all copies or substantial portions of the Software. THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL _____ BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
-
-
-
-======================================================================================================================================================
-==================== Dependent packages system.resources.extensions 5.0.0  ===========================================================================
-==================== Dependent packages system.drawing.common 5.0.0  =================================================================================
-==================== Dependent packages microsoft.netcore.platforms 5.0.0  ===========================================================================
-==================== Dependent packages microsoft.win32.systemevents 5.0.0  ==========================================================================
-==================== Dependent packages system.runtime.compilerservices.unsafe 5.0.0  ================================================================
-======================================================================================================================================================
-
-MIT License
-
-
-
-Copyright (c) <year> <copyright holders> 
-
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice (including the next paragraph) shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-
-
-======================================================================================================================================================
-==================== Dependent packages system.memory 4.5.4  =========================================================================================
-==================== Dependent packages system.buffers 4.5.1  ========================================================================================
-======================================================================================================================================================
-
-The MIT License (MIT) Copyright (c) .NET Foundation and Contributors All rights reserved. Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions: The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software. THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE. 
 
 ======================================================================================================================================================
 ==================== Dependent packages nvorbis 0.10.1  ==============================================================================================
@@ -1024,6 +1025,7 @@ SOFTWARE.
 ==================== Dependent packages system.drawing.common 5.0.0  =================================================================================
 ==================== Dependent packages microsoft.netcore.platforms 5.0.0  ===========================================================================
 ==================== Dependent packages microsoft.win32.systemevents 5.0.0  ==========================================================================
+==================== Dependent packages opentk 4.5.0  ================================================================================================
 ======================================================================================================================================================
 
 MIT License
@@ -1044,7 +1046,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 
 ======================================================================================================================================================
-==================== Dependent packages engenious 0.6.0.4-alpha  =====================================================================================
+==================== Dependent packages engenious 0.6.1.5-alpha  =====================================================================================
+==================== Dependent packages msdfgen.net 0.1.5-alpha  =====================================================================================
 ======================================================================================================================================================
 
 Copyright 2021 jvbsl
@@ -1060,4 +1063,109 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+
+======================================================================================================================================================
+==================== Dependent packages opentk.redist.glfw 3.3.5.18  =================================================================================
+======================================================================================================================================================
+
+Copyright (c) 2002-2006 Marcus Geelnard
+
+Copyright (c) 2006-2019 Camilla Löwy
+
+This software is provided 'as-is', without any express or implied
+warranty. In no event will the authors be held liable for any damages
+arising from the use of this software.
+
+Permission is granted to anyone to use this software for any purpose,
+including commercial applications, and to alter it and redistribute it
+freely, subject to the following restrictions:
+
+1. The origin of this software must not be misrepresented; you must not
+   claim that you wrote the original software. If you use this software
+   in a product, an acknowledgment in the product documentation would
+   be appreciated but is not required.
+
+2. Altered source versions must be plainly marked as such, and must not
+   be misrepresented as being the original software.
+
+3. This notice may not be removed or altered from any source
+   distribution.
+
+
+
+======================================================================================================================================================
+==================== Dependent packages assimpnet 5.0.0-beta1  =======================================================================================
+======================================================================================================================================================
+
+
+Copyright (c) 2012-2020 AssimpNet - Nicholas Woodfield
+ 
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+ 
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+====================================================================================
+
+Open Asset Import Library (Assimp)
+
+
+Copyright (c) 2006-2018, Assimp Development Team
+All rights reserved.
+
+Redistribution and use of this software in source and binary forms, 
+with or without modification, are permitted provided that the 
+following conditions are met:
+
+* Redistributions of source code must retain the above
+  copyright notice, this list of conditions and the
+  following disclaimer.
+
+* Redistributions in binary form must reproduce the above
+  copyright notice, this list of conditions and the
+  following disclaimer in the documentation and/or other
+  materials provided with the distribution.
+
+* Neither the name of the ASSIMP team, nor the names of its
+  contributors may be used to endorse or promote products
+  derived from this software without specific prior
+  written permission of the ASSIMP Development Team.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT 
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY 
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT 
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+
+AN EXCEPTION applies to all files in the ./test/models-nonbsd subfolder.
+These are 3d models for testing purposes, from various free sources
+on the internet. They are - unless otherwise stated - copyright of
+their respective creators, which may impose additional requirements
+on the use of their work. For any of these models, see 
+<model-name>.source.txt for more legal information. Contact us if you
+are a copyright holder and believe that we credited you inproperly or 
+if you don't want your files to appear in the repository.
+
+
 

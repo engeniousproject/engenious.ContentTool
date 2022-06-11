@@ -19,7 +19,6 @@ Skip to main content<#main-content>
 
 *	Home</>
 *	Contact</contact>
-*	Donate</civicrm/contribute/transact?reset=1&amp;id=2>
 *	Login</user/login>
 
 
@@ -56,11 +55,9 @@ Search form
 
 
 
-[Home<https://opensource.org/files/osi_keyhole_300X300_90ppi_0.png>]</>
+[Home<https://opensource.org/sites/default/files/public/osi_keyhole_300X300_90ppi_0.png>]</>
 
 Open Source Initiative</> 
-
-Guaranteeing the 'our' in source... 
 
 
 
@@ -131,6 +128,36 @@ End license text.
 
 
 
+You must have JavaScript enabled to use this form. 
+
+
+User login
+
+
+
+Log in using OpenID 
+What is OpenID?<https://openid.net/>
+
+
+Username * 
+
+Password * 
+
+
+*	Log in using OpenID<#openid-login>
+*	Cancel OpenID login<#>
+
+
+
+*	Create new account</user/register>
+*	Request new password</user/password>
+
+
+
+
+
+
+
 
 
 
@@ -141,6 +168,8 @@ End license text.
 
 Keep up with Open Source
 
+
+You must have JavaScript enabled to use this form. 
 
 Sign up with your email to receive our newsletter — your resource for industry news, upcoming events, insights from Open Source thought leaders and more.
 
@@ -157,6 +186,16 @@ First Name
 
 Last Name 
 
+
+Leave this field blank 
+
+CAPTCHA
+
+This question is for testing whether or not you are a human visitor and to prevent automated spam submissions.
+
+
+
+ 
 
 
 
@@ -201,19 +240,17 @@ Open source software is made by many people<https://opensource.org/members> and 
 
 
 
-[</files/twitterlogo.png>]<https://twitter.com/OpenSourceOrg>[</files/linkedin.png>]<https://www.linkedin.com/company/open-source-initiative-osi->[</files/xwikilogo.png>]<http://wiki.opensource.org>[</files/ccby.png>]<http://creativecommons.org/licenses/by/4.0/>
+[</files/twitterlogo.png>]<https://twitter.com/OpenSourceOrg>[</files/linkedin.png>]<https://www.linkedin.com/company/open-source-initiative-osi->[</files/ccby.png>]<https://creativecommons.org/licenses/by/4.0/>
 
 
+Sign-up for our newsletter</signup>!
 
 
-
-Sign-up for our newsletter<newsletter/signup>!
-
-The content on this website, of which Opensource.org is the author, is licensed under a Creative Commons Attribution 4.0 International License<http://creativecommons.org/licenses/by/4.0/>.
+The content on this website, of which Opensource.org is the author, is licensed under a Creative Commons Attribution 4.0 International License<https://creativecommons.org/licenses/by/4.0/>.
 Opensource.org is not the author of any of the licenses reproduced on this site. Questions about the copyright in a license should be directed to the license steward.
 
 Hosting for Opensource.org is generously provided by DigitalOcean<https://www.digitalocean.com/>. Please see Terms of Service<../ToS>.
-For questions regarding the OSI website and contents pleasee email our webmaster<mailto:webmaster@lists.opensource.org?subject=OSI%20website%20comment>.
+For questions regarding the OSI website and contents please contact us</contact>.
 
 
 
@@ -411,10 +448,6 @@ It also applies even if Microsoft knew or should have known about the possibilit
 
 
 
-
-======================================================================================================================================================
-==================== Dependent packages engenious 0.6.0.4-alpha ThirdPartyInfo =======================================================================
-======================================================================================================================================================
 
 ======================================================================================================================================================
 ==================== Dependent packages nvorbis 0.10.1  ==============================================================================================
@@ -443,160 +476,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 ======================================================================================================================================================
-==================== Dependent packages system.memory 4.5.3  =========================================================================================
-==================== Dependent packages system.buffers 4.4.0  ========================================================================================
-==================== Dependent packages system.runtime.compilerservices.unsafe 4.5.2  ================================================================
-==================== Dependent packages system.numerics.vectors 4.4.0  ===============================================================================
-==================== Dependent packages system.valuetuple 4.5.0  =====================================================================================
-==================== Dependent packages system.memory 4.5.4  =========================================================================================
-==================== Dependent packages system.buffers 4.5.1  ========================================================================================
-==================== Dependent packages system.runtime.compilerservices.unsafe 4.5.3  ================================================================
-==================== Dependent packages system.numerics.vectors 4.5.0  ===============================================================================
-======================================================================================================================================================
-
-The MIT License (MIT) Copyright (c) .NET Foundation and Contributors All rights reserved. Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions: The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software. THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE. 
-
-======================================================================================================================================================
-==================== Dependent packages system.diagnostics.debug 4.3.0  ==============================================================================
-==================== Dependent packages microsoft.netcore.platforms 1.1.0  ===========================================================================
-==================== Dependent packages microsoft.netcore.targets 1.1.0  =============================================================================
-==================== Dependent packages system.runtime 4.3.0  ========================================================================================
-==================== Dependent packages system.diagnostics.tracing 4.3.0  ============================================================================
-==================== Dependent packages system.resources.resourcemanager 4.3.0  ======================================================================
-==================== Dependent packages system.globalization 4.3.0  ==================================================================================
-==================== Dependent packages system.reflection 4.3.0  =====================================================================================
-==================== Dependent packages system.io 4.3.0  =============================================================================================
-==================== Dependent packages system.text.encoding 4.3.0  ==================================================================================
-==================== Dependent packages system.threading.tasks 4.3.0  ================================================================================
-==================== Dependent packages system.reflection.primitives 4.3.0  ==========================================================================
-==================== Dependent packages system.threading 4.3.0  ======================================================================================
-==================== Dependent packages system.runtime.extensions 4.3.0  =============================================================================
-==================== Dependent packages system.runtime.interopservices 4.3.0  ========================================================================
-==================== Dependent packages system.runtime.handles 4.3.0  ================================================================================
-======================================================================================================================================================
-
-MICROSOFT SOFTWARE LICENSE TERMS
-
-
-MICROSOFT .NET LIBRARY
-
-
-These license terms are an agreement between you and Microsoft Corporation (or based on where you live, one of its affiliates). They apply to the software named above. The terms also apply to any Microsoft services or updates for the software, except to the extent those have different terms.
-
-
-If you comply with these license terms, you have the rights below.
-
-
-1.    INSTALLATION AND USE RIGHTS. 
-
-You may install and use any number of copies of the software to develop and test your applications.  
-
-2.    THIRD PARTY COMPONENTS. The software may include third party components with separate legal notices or governed by other agreements, as may be described in the ThirdPartyNotices file(s) accompanying the software.
-
-3.    ADDITIONAL LICENSING REQUIREMENTS AND/OR USE RIGHTS.
-
-a.     DISTRIBUTABLE CODE.  The software is comprised of Distributable Code. “Distributable Code” is code that you are permitted to distribute in applications you develop if you comply with the terms below.
-i.      Right to Use and Distribute. 
-·        You may copy and distribute the object code form of the software.
-
-·        Third Party Distribution. You may permit distributors of your applications to copy and distribute the Distributable Code as part of those applications.
-ii.     Distribution Requirements. For any Distributable Code you distribute, you must 
-·        use the Distributable Code in your applications and not as a standalone distribution;
-
-·        require distributors and external end users to agree to terms that protect it at least as much as this agreement; and
-
-·        indemnify, defend, and hold harmless Microsoft from any claims, including attorneys’ fees, related to the distribution or use of your applications, except to the extent that any claim is based solely on the unmodified Distributable Code.
-iii.   Distribution Restrictions. You may not 
-·        use Microsoft’s trademarks in your applications’ names or in a way that suggests your applications come from or are endorsed by Microsoft; or
-
-·        modify or distribute the source code of any Distributable Code so that any part of it becomes subject to an Excluded License. An “Excluded License” is one that requires, as a condition of use, modification or distribution of code, that (i) it be disclosed or distributed in source code form; or (ii) others have the right to modify it.
-
-4.    DATA.
-
-a.     Data Collection. The software may collect information about you and your use of the software, and send that to Microsoft. Microsoft may use this information to provide services and improve our products and services. You may opt-out of many of these scenarios, but not all, as described in the software documentation. There are also some features in the software that may enable you and Microsoft to collect data from users of your applications. If you use these features, you must comply with applicable law, including providing appropriate notices to users of your applications together with Microsoft’s privacy statement. Our privacy statement is located at https://go.microsoft.com/fwlink/?LinkID=824704. You can learn more about data collection and its use from the software documentation and our privacy statement. Your use of the software operates as your consent to these practices.
-
-b.    Processing of Personal Data. To the extent Microsoft is a processor or subprocessor of personal data in connection with the software, Microsoft makes the commitments in the European Union General Data Protection Regulation Terms of the Online Services Terms to all customers effective May 25, 2018, at https://docs.microsoft.com/en-us/legal/gdpr.
-
-5.    Scope of License. The software is licensed, not sold. This agreement only gives you some rights to use the software. Microsoft reserves all other rights. Unless applicable law gives you more rights despite this limitation, you may use the software only as expressly permitted in this agreement. In doing so, you must comply with any technical limitations in the software that only allow you to use it in certain ways. You may not
-
-·        work around any technical limitations in the software;
-
-·        reverse engineer, decompile or disassemble the software, or otherwise attempt to derive the source code for the software, except and to the extent required by third party licensing terms governing use of certain open source components that may be included in the software;
-
-·        remove, minimize, block or modify any notices of Microsoft or its suppliers in the software; 
-
-·        use the software in any way that is against the law; or
-
-·        share, publish, rent or lease the software, provide the software as a stand-alone offering for others to use, or transfer the software or this agreement to any third party.
-
-6.    Export Restrictions. You must comply with all domestic and international export laws and regulations that apply to the software, which include restrictions on destinations, end users, and end use. For further information on export restrictions, visit www.microsoft.com/exporting. 
-
-7.    SUPPORT SERVICES. Because this software is “as is,” we may not provide support services for it.
-
-8.    Entire Agreement. This agreement, and the terms for supplements, updates, Internet-based services and support services that you use, are the entire agreement for the software and support services.
-
-9.    Applicable Law. If you acquired the software in the United States, Washington law applies to interpretation of and claims for breach of this agreement, and the laws of the state where you live apply to all other claims. If you acquired the software in any other country, its laws apply.
-
-10. CONSUMER RIGHTS; REGIONAL VARIATIONS. This agreement describes certain legal rights. You may have other rights, including consumer rights, under the laws of your state or country. Separate and apart from your relationship with Microsoft, you may also have rights with respect to the party from which you acquired the software. This agreement does not change those other rights if the laws of your state or country do not permit it to do so. For example, if you acquired the software in one of the below regions, or mandatory country law applies, then the following provisions apply to you:
-
-a)    Australia. You have statutory guarantees under the Australian Consumer Law and nothing in this agreement is intended to affect those rights.
-
-b)    Canada. If you acquired this software in Canada, you may stop receiving updates by turning off the automatic update feature, disconnecting your device from the Internet (if and when you re-connect to the Internet, however, the software will resume checking for and installing updates), or uninstalling the software. The product documentation, if any, may also specify how to turn off updates for your specific device or software.
-
-c)    Germany and Austria.
-
-(i) Warranty. The software will perform substantially as described in any Microsoft materials that accompany it. However, Microsoft gives no contractual guarantee in relation to the software.
-
-(ii) Limitation of Liability. In case of intentional conduct, gross negligence, claims based on the Product Liability Act, as well as in case of death or personal or physical injury, Microsoft is liable according to the statutory law.
-
-Subject to the foregoing clause (ii), Microsoft will only be liable for slight negligence if Microsoft is in breach of such material contractual obligations, the fulfillment of which facilitate the due performance of this agreement, the breach of which would endanger the purpose of this agreement and the compliance with which a party may constantly trust in (so-called "cardinal obligations"). In other cases of slight negligence, Microsoft will not be liable for slight negligence
-
-11. Disclaimer of Warranty. THE SOFTWARE IS LICENSED “AS-IS.” YOU BEAR THE RISK OF USING IT. MICROSOFT GIVES NO EXPRESS WARRANTIES, GUARANTEES OR CONDITIONS. TO THE EXTENT PERMITTED UNDER YOUR LOCAL LAWS, MICROSOFT EXCLUDES THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. 
-
-12. Limitation on and Exclusion of Remedies and Damages. YOU CAN RECOVER FROM MICROSOFT AND ITS SUPPLIERS ONLY DIRECT DAMAGES UP TO U.S. $5.00. YOU CANNOT RECOVER ANY OTHER DAMAGES, INCLUDING CONSEQUENTIAL, LOST PROFITS, SPECIAL, INDIRECT OR INCIDENTAL DAMAGES.
-
-This limitation applies to (a) anything related to the software, services, content (including code) on third party Internet sites, or third party applications; and (b) claims for breach of contract, breach of warranty, guarantee or condition, strict liability, negligence, or other tort to the extent permitted by applicable law.
-
-It also applies even if Microsoft knew or should have known about the possibility of the damages. The above limitation or exclusion may not apply to you because your state or country may not allow the exclusion or limitation of incidental, consequential or other damages.
-
- 
-
-
-
-
-======================================================================================================================================================
-==================== Dependent packages system.runtime.compilerservices.unsafe 5.0.0  ================================================================
-==================== Dependent packages opentk 4.5.0  ================================================================================================
-==================== Dependent packages system.drawing.common 5.0.0  =================================================================================
-==================== Dependent packages microsoft.netcore.platforms 5.0.0  ===========================================================================
-==================== Dependent packages microsoft.win32.systemevents 5.0.0  ==========================================================================
-======================================================================================================================================================
-
-'MIT' reference 
-
-
-SPDX identifier
-
-MIT
-
-License text
-MIT License _____ Permission is hereby granted, free of charge, to any person obtaining a copy of _____ (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions: The above copyright notice and this permission notice (including the next paragraph) shall be included in all copies or substantial portions of the Software. THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL _____ BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
-
-
-
-======================================================================================================================================================
 ==================== Dependent packages system.runtime.compilerservices.unsafe 5.0.0  ================================================================
 ==================== Dependent packages opentk 4.5.0  ================================================================================================
 ==================== Dependent packages system.drawing.common 5.0.0  =================================================================================
@@ -622,7 +501,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 
 ======================================================================================================================================================
-==================== Dependent packages engenious 0.6.0.4-alpha  =====================================================================================
+==================== Dependent packages engenious 0.6.1.5-alpha  =====================================================================================
 ======================================================================================================================================================
 
 Copyright 2021 jvbsl
@@ -640,28 +519,31 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 ======================================================================================================================================================
-==================== Dependent packages nvorbis 0.10.1  ==============================================================================================
+==================== Dependent packages opentk.redist.glfw 3.3.5.18  =================================================================================
 ======================================================================================================================================================
 
-MIT License
+Copyright (c) 2002-2006 Marcus Geelnard
 
-Copyright (c) 2020 Andrew Ward
+Copyright (c) 2006-2019 Camilla Löwy
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+This software is provided 'as-is', without any express or implied
+warranty. In no event will the authors be held liable for any damages
+arising from the use of this software.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+Permission is granted to anyone to use this software for any purpose,
+including commercial applications, and to alter it and redistribute it
+freely, subject to the following restrictions:
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+1. The origin of this software must not be misrepresented; you must not
+   claim that you wrote the original software. If you use this software
+   in a product, an acknowledgment in the product documentation would
+   be appreciated but is not required.
+
+2. Altered source versions must be plainly marked as such, and must not
+   be misrepresented as being the original software.
+
+3. This notice may not be removed or altered from any source
+   distribution.
+
+
 
