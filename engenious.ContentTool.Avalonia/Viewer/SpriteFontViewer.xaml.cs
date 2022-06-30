@@ -392,6 +392,7 @@ namespace engenious.ContentTool.Avalonia
 
         public void Refresh()
         {
+            ErrorText = "";
             ReInit(ContentFile);
         }
 

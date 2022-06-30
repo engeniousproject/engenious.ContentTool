@@ -49,7 +49,7 @@
                     <TextBlock Text="Example: " VerticalAlignment="Center"/>
                     <TextBox Text="{Binding ExampleText}" FontFamily="{Binding Path=SpriteFontFamily}" FontWeight="{Binding Path=SpriteFontWeight}" FontStyle="{Binding Path=SpriteFontStyle}" />
                 </StackPanel>
-                <TextBlock Text="{Binding ErrorText}"/>
+                <TextBlock Text="{Binding ErrorText}" Foreground="Yellow"/>
                 <Panel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="40">
                     <avalonia:AvaloniaRenderingSurface HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                                                        x:Name="renderingSurface">
