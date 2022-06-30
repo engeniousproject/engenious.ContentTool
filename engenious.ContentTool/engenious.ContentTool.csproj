@@ -111,10 +111,10 @@
         <!--    <PackageReference Include="SharpFont.Dependencies" Version="2.6.0" ExcludeAssets="build" />-->
         <PackageReference Include="System.Resources.Extensions" Version="5.0.0" />
         <ProjectReference Include="..\..\engenious\engenious.csproj" Condition="Exists('..\..\engenious\engenious.csproj')" />
-        <PackageReference Include="engenious" Version="0.6.1.8-alpha" Condition="!Exists('..\engenious\engenious.csproj')" />
+        <PackageReference Include="engenious" Version="0.6.2-alpha" Condition="!Exists('..\engenious\engenious.csproj')" />
 
         <ProjectReference Include="..\..\engenious.Pipeline\engenious.Pipeline.csproj" Condition="Exists('..\..\engenious.Pipeline\engenious.Pipeline.csproj')" />
-        <PackageReference Include="engenious.Pipeline" Version="0.6.1.7-alpha" Condition="!Exists('..\..\engenious.Pipeline\engenious.Pipeline.csproj')" />
+        <PackageReference Include="engenious.Pipeline" Version="0.6.2-alpha" Condition="!Exists('..\..\engenious.Pipeline\engenious.Pipeline.csproj')" />
 
         <PackageReference Include="OpenTK.redist.glfw" Version="3.3.5.18" /> <!-- Patch glfw to newer version -->
 
