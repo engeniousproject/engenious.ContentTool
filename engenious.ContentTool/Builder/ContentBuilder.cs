@@ -85,21 +85,43 @@ namespace engenious.ContentTool.Builder
                         switch (buildTask.BuildTaskType)
                         {
                             case BuildTaskType.Clean:
+                                BuildStatusChanged?.Invoke(BuildStatus.Clean);
                                 CleanThread(buildTask.CancellationTokenSource.Token);
                                 break;
                             case BuildTaskType.Build:
+                                BuildStatusChanged?.Invoke(BuildStatus.Build);
                                 BuildThread(buildTask.BuildItem, buildTask.CancellationTokenSource.Token);
+                                
+                                if (!buildTask.CancellationTokenSource.IsCancellationRequested)
+                                {
+                                    BuildStatusChanged?.Invoke(BuildStatus.Built);
+                                }
                                 break;
                             case BuildTaskType.Rebuild:
                                 if (Project.HasUnsavedChanges)
                                     Project.Save();
+                                BuildStatusChanged?.Invoke(BuildStatus.Clean);
                                 CleanThread(buildTask.CancellationTokenSource.Token);
-                                BuildThread(Project, buildTask.CancellationTokenSource.Token);
+                                if (!buildTask.CancellationTokenSource.IsCancellationRequested)
+                                {
+                                    BuildStatusChanged?.Invoke(BuildStatus.Build);
+                                    BuildThread(Project, buildTask.CancellationTokenSource.Token);
+                                    if (!buildTask.CancellationTokenSource.IsCancellationRequested)
+                                        BuildStatusChanged?.Invoke(BuildStatus.Built);
+                                }
                                 break;
                             default:
                                 throw new ArgumentOutOfRangeException();
                         }
 
+                        if (buildTask.CancellationTokenSource.IsCancellationRequested)
+                        {
+                            BuildStatusChanged?.Invoke(BuildStatus.Abort);
+                        }
+                        else
+                        {
+                            BuildStatusChanged?.Invoke(BuildStatus.Finished);
+                        }
                         buildTask.CompletionHandle.Set();
                         IsBuilding = false;
                     }

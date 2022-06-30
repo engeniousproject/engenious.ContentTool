@@ -84,6 +84,9 @@ namespace engenious.ContentTool.Avalonia
         {
             throw new NotImplementedException();
         }
+        public void Refresh()
+        {
+        }
 
         public void Discard()
         {

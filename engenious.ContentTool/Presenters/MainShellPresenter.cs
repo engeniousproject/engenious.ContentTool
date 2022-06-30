@@ -324,37 +324,40 @@ namespace engenious.ContentTool.Presenters
 
         private async Task Shell_BuildItemClick(ContentItem item)
         {
-            if (_builder == null)
-            {
-                _builder = new ContentBuilder(_shell.Project);
-                _builder.BuildMessage += a => _shell.Invoke(() => _shell.WriteLineLog(a.Message, TranslateLogType(a)));
-            }
+            _builder ??= CreateBuilder();
             await _shell.ShowLog();
 
             if (_shell.CurrentViewer != null && _shell.CurrentViewer.UnsavedChanges)
-                _shell.CurrentViewer.Save(); //TODO: always save together with project?
+                _shell.CurrentViewer.Save();
             _builder.Build(item);
         }
 
         private void ShellOnCleanClick(object sender, EventArgs eventArgs)
         {
-            if (_builder == null)
-            {
-                _builder = new ContentBuilder(_shell.Project);
-                _builder.BuildMessage += a => _shell.Invoke(() => _shell.WriteLineLog(a.Message, TranslateLogType(a)));
-            }
+            _builder ??= CreateBuilder();
             _shell.ShowLog();
 
             _builder.Clean();
         }
 
+        private ContentBuilder CreateBuilder()
+        {
+            var builder = new ContentBuilder(_shell.Project);
+            builder.BuildMessage += a => _shell.Invoke(() => _shell.WriteLineLog(a.Message, TranslateLogType(a)));
+
+            builder.BuildStatusChanged += status =>
+                                          {
+                                              if (status == ContentBuilder.BuildStatus.Finished)
+                                              {
+                                                  _shell.Invoke(() => _shell.CurrentViewer?.Refresh());
+                                              }
+                                          };
+            return builder;
+        }
+
         private void ShellOnRebuildClick(object sender, EventArgs eventArgs)
         {
-            if (_builder == null)
-            {
-                _builder = new ContentBuilder(_shell.Project);
-                _builder.BuildMessage += a => _shell.Invoke(() => _shell.WriteLineLog(a.Message, TranslateLogType(a)));
-            }
+            _builder ??= CreateBuilder();
             _shell.ShowLog();
 
             if (_shell.CurrentViewer != null && _shell.CurrentViewer.UnsavedChanges)
@@ -426,6 +429,7 @@ namespace engenious.ContentTool.Presenters
                 _shell.Project.Save();
             else
                 _shell.Project.Save(path);
+            _shell.CurrentViewer?.Save();
         }
 
         private async Task Shell_ShowInExplorerItemClick(ContentItem item)

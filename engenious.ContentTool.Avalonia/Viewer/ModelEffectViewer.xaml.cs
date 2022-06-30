@@ -119,6 +119,7 @@ namespace engenious.ContentTool.Avalonia
                 lst.Add(p.Name);
             }
 
+            _avaloniaRenderingSurface.InitializeContext();
         }
 
         public object GetViewerControl(ContentFile file)
@@ -149,6 +150,10 @@ namespace engenious.ContentTool.Avalonia
             throw new NotImplementedException();
         }
 
+        public void Refresh()
+        {
+            ReInit();
+        }
         public void Discard()
         {
             throw new NotImplementedException();

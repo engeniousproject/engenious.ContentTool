@@ -5,7 +5,8 @@
              HorizontalAlignment="Stretch"
              VerticalAlignment="Stretch"
              xmlns:models="clr-namespace:engenious.Content.Models;assembly=engenious.ContentTool"
-             xmlns:System="clr-namespace:System;assembly=System.Runtime">
+             xmlns:System="clr-namespace:System;assembly=System.Runtime"
+             xmlns:avalonia="clr-namespace:engenious.Avalonia;assembly=engenious.Avalonia">
     <Design.DataContext>
         <ct:SpriteFontViewer />
     </Design.DataContext>
@@ -41,7 +42,23 @@
             </StackPanel>
         </ct:GroupBox>
         <ct:GroupBox Header="Character Regions" HorizontalAlignment="Stretch">
-            <ListBox Items="{Binding Path=CharacterRegions}" HorizontalAlignment="Stretch"/>
+            <StackPanel>
+                <ListBox Items="{Binding Path=CharacterRegions}" HorizontalAlignment="Stretch"/>
+                
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Example: " VerticalAlignment="Center"/>
+                    <TextBox Text="{Binding ExampleText}" FontFamily="{Binding Path=SpriteFontFamily}" FontWeight="{Binding Path=SpriteFontWeight}" FontStyle="{Binding Path=SpriteFontStyle}" />
+                </StackPanel>
+                <TextBlock Text="{Binding ErrorText}"/>
+                <Panel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="40">
+                    <avalonia:AvaloniaRenderingSurface HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                                       x:Name="renderingSurface">
+                        <avalonia:AvaloniaRenderingSurface.RenderTransform>
+                            <ScaleTransform ScaleY="-1" ScaleX="1" />
+                        </avalonia:AvaloniaRenderingSurface.RenderTransform>
+                    </avalonia:AvaloniaRenderingSurface>
+                </Panel>
+            </StackPanel>
         </ct:GroupBox>
     </StackPanel>
 </UserControl>

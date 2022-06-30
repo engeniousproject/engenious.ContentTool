@@ -9,6 +9,7 @@ namespace engenious.ContentTool.Viewer
         object GetViewerControl(ContentFile file);
         void Save();
         void Discard();
+        void Refresh();
         IHistory History { get; }
         bool UnsavedChanges { get; }
         ContentFile ContentFile { get; }
