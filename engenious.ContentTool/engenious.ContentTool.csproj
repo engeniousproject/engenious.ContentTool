@@ -106,7 +106,7 @@
         </Compile>
     </ItemGroup>
     <ItemGroup>
-<!--        <PackageReference Include="LiCo" Version="0.1.11.13-alpha" PrivateAssets="all" />-->
+        <PackageReference Include="LiCo" Version="0.1.11.13-alpha" PrivateAssets="all" />
         <PackageReference Include="Mono.Cecil" Version="0.11.3" />
         <!--    <PackageReference Include="SharpFont.Dependencies" Version="2.6.0" ExcludeAssets="build" />-->
         <PackageReference Include="System.Resources.Extensions" Version="5.0.0" />
@@ -141,16 +141,16 @@
     <!--    <None Include="@(SharpFontTransformedNativeFiles->'%(OriginalPath)')" Link="%(SavedRecursiveDir)%(TrimmedName)%(SavedExtension)" CopyToOutputDirectory="PreserveNewest" />-->
     <!--  </ItemGroup>-->
 
-<!--    <Target Name="WorkaroundThirdParty" BeforeTargets="Publish">-->
-<!--        <CallTarget Targets="CreateThirdPartyNotice" />-->
-<!--        <ItemGroup>-->
-<!--            <LiCoOutputFile Include="$(LiCoOutput)" />-->
-<!--        </ItemGroup>-->
-<!--        <PropertyGroup>-->
-<!--            <LiCoOutputFileName>@(LiCoOutputFile->'%(filename)')</LiCoOutputFileName>-->
-<!--            <LiCoOutputFileExtension>@(LiCoOutputFile->'%(extension)')</LiCoOutputFileExtension>-->
-<!--        </PropertyGroup>-->
-<!--        <Copy SourceFiles="$(LiCoOutput)" DestinationFiles="$(PublishDir)/$(LiCoOutputFileName)$(LiCoOutputFileExtension)" />-->
-<!--        <Copy SourceFiles="$(LiCoOutput)" DestinationFiles="$(OutDir)/$(LiCoOutputFileName)$(LiCoOutputFileExtension)" />-->
-<!--    </Target>-->
+    <Target Name="WorkaroundThirdParty" BeforeTargets="Publish">
+        <CallTarget Targets="CreateThirdPartyNotice" />
+        <ItemGroup>
+            <LiCoOutputFile Include="$(LiCoOutput)" />
+        </ItemGroup>
+        <PropertyGroup>
+            <LiCoOutputFileName>@(LiCoOutputFile->'%(filename)')</LiCoOutputFileName>
+            <LiCoOutputFileExtension>@(LiCoOutputFile->'%(extension)')</LiCoOutputFileExtension>
+        </PropertyGroup>
+        <Copy SourceFiles="$(LiCoOutput)" DestinationFiles="$(PublishDir)/$(LiCoOutputFileName)$(LiCoOutputFileExtension)" />
+        <Copy SourceFiles="$(LiCoOutput)" DestinationFiles="$(OutDir)/$(LiCoOutputFileName)$(LiCoOutputFileExtension)" />
+    </Target>
 </Project>

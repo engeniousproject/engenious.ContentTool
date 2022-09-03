@@ -65,7 +65,7 @@
     <ItemGroup>
         <LiCoAdditionalLicenses Include="../engenious.ContentTool/NOTICE" Visible="false" />
         
-<!--        <PackageReference Include="LiCo" Version="0.1.11.13-alpha" PrivateAssets="all" />-->
+        <PackageReference Include="LiCo" Version="0.1.11.13-alpha" PrivateAssets="all" />
         <PackageReference Include="Avalonia" Version="0.10.15" />
         <PackageReference Include="Avalonia.Desktop" Version="0.10.15" />
         <PackageReference Include="Avalonia.Diagnostics" Version="0.10.15" />
