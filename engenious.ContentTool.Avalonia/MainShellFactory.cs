@@ -2,6 +2,7 @@ using System.Threading;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Dialogs;
+using Avalonia.Logging;
 using engenious.ContentTool;
 using engenious.ContentTool.Avalonia;
 using engenious.ContentTool.Forms;
@@ -12,7 +13,7 @@ namespace engenious.ContentTool.Avalonia
     public class MainShellFactory : IShellFactory
     {
         public static AppBuilder BuildAvaloniaApp() 
-            => AppBuilder.Configure<App>().UsePlatformDetect();
+            => AppBuilder.Configure<App>().UsePlatformDetect().LogToTrace(LogEventLevel.Debug, LogArea.Binding);
 
         private App _app;
         private readonly AutoResetEvent _waitEvent = new AutoResetEvent(false);

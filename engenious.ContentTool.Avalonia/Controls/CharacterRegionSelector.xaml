@@ -1,0 +1,24 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml'
+             x:Class="engenious.ContentTool.Avalonia.CharacterRegionSelector"
+             xmlns:ct="clr-namespace:engenious.ContentTool.Avalonia"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch" Margin="5" FontSize="18">
+    <UserControl.Resources>
+        <ct:CharacterRegionBackground x:Key="selectedConverter"/>
+    </UserControl.Resources>
+    <ScrollViewer HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled">
+        <ItemsRepeater Items="{Binding Codepoints}" Name="itemsRepeater" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <ItemsRepeater.ItemTemplate>
+                <DataTemplate>
+                    <Panel Background="{Binding IsSelected, Converter={StaticResource selectedConverter}}" PointerReleased="InputElement_OnPointerReleased">
+                        <TextBlock Text="{Binding}" TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
+                    </Panel>
+                </DataTemplate>
+            </ItemsRepeater.ItemTemplate>
+            <ItemsRepeater.Layout>
+                <UniformGridLayout MinColumnSpacing="3" MinItemHeight="30" MinItemWidth="30"></UniformGridLayout>
+            </ItemsRepeater.Layout>
+        </ItemsRepeater>
+    </ScrollViewer>
+</UserControl>

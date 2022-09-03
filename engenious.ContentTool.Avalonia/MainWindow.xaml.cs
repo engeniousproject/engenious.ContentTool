@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -90,6 +91,7 @@ namespace engenious.ContentTool.Avalonia
         }
         public MainWindow()
         {
+
             LoadConfig();
 
             OpenProjectCommand = new SimpleCommand(async () => await OpenProjectClick?.Invoke(null));

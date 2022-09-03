@@ -7,11 +7,14 @@ using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
+using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
@@ -19,6 +22,7 @@ using Avalonia.Platform;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using DynamicData;
+using DynamicData.Kernel;
 using engenious.Avalonia;
 using engenious.Content.Models;
 using engenious.Content.Models.History;
@@ -35,6 +39,8 @@ namespace engenious.ContentTool.Avalonia
     public class SpriteFontViewer : UserControl, IViewer
     {
         private readonly ListBox list_characterRegions;
+
+        private readonly Popup _characterRegionPopup;
 
         public static readonly DirectProperty<SpriteFontViewer, bool> IsBoldProperty =
             AvaloniaProperty.RegisterDirect<SpriteFontViewer, bool>(
@@ -267,14 +273,24 @@ namespace engenious.ContentTool.Avalonia
             get => _spriteFontWeight;
             set => SetAndRaise(SpriteFontWeightProperty, ref _spriteFontWeight, value);
         }
+        public static readonly DirectProperty<SpriteFontViewer, CharacterRegionView> SelectedCharacterRegionProperty =
+            AvaloniaProperty.RegisterDirect<SpriteFontViewer, CharacterRegionView>(
+                nameof(SelectedCharacterRegion),
+                o => o.SelectedCharacterRegion,
+                (o, v) => o.SelectedCharacterRegion = v);
+
+        public CharacterRegionView SelectedCharacterRegion
+        {
+            get => _selectedCharacterRegion;
+            set => SetAndRaise(SelectedCharacterRegionProperty, ref _selectedCharacterRegion, value);
+        }
 
         private SpriteFontContent _spf;
-        private readonly Dictionary<CharacterRegion, string> _specialRegions;
         private SpriteFontType _spriteFontType;
 
         public ObservableCollection<FontFamily> FamilyNames { get; }
 
-        public ObservableCollection<string> CharacterRegions { get; }
+        public ObservableCollection<CharacterRegionView> CharacterRegions { get; }
 
 
         private void LoadFonts()
@@ -288,26 +304,15 @@ namespace engenious.ContentTool.Avalonia
         {
             AvailableSpriteFontTypes = Enum.GetValues<SpriteFontType>().Distinct().ToList();
 
-            CharacterRegions = new ObservableCollection<string>();
+            CharacterRegions = new ObservableCollection<CharacterRegionView>();
             FamilyNames = new ObservableCollection<FontFamily>();
             LoadFonts();
 
             DataContext = this;
             InitializeComponent();
 
-            _specialRegions = new Dictionary<CharacterRegion, string>
-                              {
-                                  { new CharacterRegion(32, 126), "latin alphabet" },
-                                  { new CharacterRegion(228, 228), "character \"ä\"" },
-                                  { new CharacterRegion(246, 246), "character \"ö\"" },
-                                  { new CharacterRegion(252, 252), "character \"ü\"" },
-                                  { new CharacterRegion(196, 196), "character \"Ä\"" },
-                                  { new CharacterRegion(214, 214), "character \"Ö\"" },
-                                  { new CharacterRegion(220, 220), "character \"Ü\"" },
-                                  { new CharacterRegion(223, 223), "character \"ß\"" }
-                              };
-
             _avaloniaRenderingSurface = this.FindControl<AvaloniaRenderingSurface>("renderingSurface");
+            _characterRegionPopup = this.FindControl<Popup>("CharacterRegionPopup");
 
             var res = GetResource("ThemeForegroundBrush");
             if (res is SolidColorBrush solidColorBrush)
@@ -318,12 +323,12 @@ namespace engenious.ContentTool.Avalonia
         }
 
         [CanBeNull]
-        private object GetResource(object key)
+        private static object GetResource(object key)
         {
             return GetResource(key, Application.Current.Styles);
         }
         [CanBeNull]
-        private object GetResource(object key, IReadOnlyList<IStyle> styles)
+        private static object GetResource(object key, IReadOnlyList<IStyle> styles)
         {
             object? res = null;
             foreach (var s in styles)
@@ -347,6 +352,112 @@ namespace engenious.ContentTool.Avalonia
             AvaloniaXamlLoader.Load(this);
         }
 
+        public class CharacterRegionView : INotifyPropertyChanged
+        {
+            private static readonly Dictionary<CharacterRegion, string> _specialRegions;
+            static CharacterRegionView()
+            {
+                
+                _specialRegions = new Dictionary<CharacterRegion, string>
+                                  {
+                                      { new CharacterRegion(32, 126), "latin alphabet" },
+                                  };
+            }
+            private CharacterRegion _region;
+            private string _specialName;
+
+            public CharacterRegionView(CharacterRegion region)
+            {
+                Region = region;
+            }
+
+            public CharacterRegion Region
+            {
+                get => _region;
+                set
+                {
+                    _region = value;
+                    UpdateRegion();
+                }
+            }
+
+            private void UpdateRegion()
+            {
+                if (_region.Start == _region.End)
+                {
+                    SpecialName = $"character \"{char.ConvertFromUtf32(_region.Start)}\"";
+                }
+                else
+                {
+                    _specialRegions.TryGetValue(_region, out var spec);
+                    SpecialName = spec;
+                }
+                
+                OnPropertyChanged(nameof(Start));
+                OnPropertyChanged(nameof(End));
+                OnPropertyChanged(nameof(DisplayString));
+            }
+
+            private static CharacterRegion Create(int first, int second)
+            {
+                int min = Math.Min(first, second);
+                int max = Math.Max(first, second);
+                return new CharacterRegion(min, max);
+            }
+            
+            public int Start
+            {
+                get => _region.Start;
+                set => Region = Create(value, _region.End);
+            }
+            public int End
+            {
+                get => _region.End;
+                set => Region = Create(_region.Start, value);
+            }
+
+            public string SpecialName
+            {
+                get => _specialName;
+                private set
+                {
+                    if (value == _specialName) return;
+                    _specialName = value;
+                    OnPropertyChanged();
+                }
+            }
+
+            private string RegionString()
+            {
+                if (Region.Start == Region.End)
+                    return "0x" + Region.Start.ToString("X");
+                
+                return $"0x{Region.Start:X} - 0x{Region.End:X}";
+            }
+
+            public string DisplayString => ToString();
+            public override string ToString()
+            {
+                if (string.IsNullOrEmpty(SpecialName))
+                    return RegionString();
+                return $"{SpecialName} ({RegionString()})";
+            }
+
+            public event PropertyChangedEventHandler PropertyChanged;
+
+            protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
+
+            protected bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
+            {
+                if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+                field = value;
+                OnPropertyChanged(propertyName);
+                return true;
+            }
+        }
         public object GetViewerControl(ContentFile file)
         {
             History = new History();
@@ -369,10 +480,7 @@ namespace engenious.ContentTool.Avalonia
             CharacterRegions.Clear();
             foreach (var region in _spf.CharacterRegions)
             {
-                if (_specialRegions.TryGetValue(region, out var spec))
-                    CharacterRegions.Add($"{spec} ({region.Start} - {region.End})");
-                else
-                    CharacterRegions.Add($"{region.Start} - {region.End}");
+                CharacterRegions.Add(new CharacterRegionView(region));
             }
             //list_characterRegions.SelectedIndex = sel;
 
@@ -426,6 +534,8 @@ namespace engenious.ContentTool.Avalonia
 
         private SimpleGame _game;
         private SpriteFont _font;
+        private uint _characterRegionEditStart, _characterRegionEditEnd;
+        private CharacterRegionView _selectedCharacterRegion;
 
 
         private void SetFont(string outputDir, string assetPath)
@@ -471,6 +581,98 @@ namespace engenious.ContentTool.Avalonia
             batch.Begin();
             batch.DrawString(_font, ExampleText, new Vector2(0, 0), _exampleTextColor);
             batch.End();
+        }
+
+        public static readonly DirectProperty<SpriteFontViewer, uint> CharacterRegionEditStartProperty =
+            AvaloniaProperty.RegisterDirect<SpriteFontViewer, uint>(
+                nameof(CharacterRegionEditStart),
+                o => o.CharacterRegionEditStart,
+                (o, v) => o.CharacterRegionEditStart = v);
+        public static readonly DirectProperty<SpriteFontViewer, uint> CharacterRegionEditEndProperty =
+            AvaloniaProperty.RegisterDirect<SpriteFontViewer, uint>(
+                nameof(CharacterRegionEditEnd),
+                o => o.CharacterRegionEditEnd,
+                (o, v) => o.CharacterRegionEditEnd = v);
+        public static readonly DirectProperty<SpriteFontViewer, bool> ShowAsHexProperty =
+            AvaloniaProperty.RegisterDirect<SpriteFontViewer, bool>(
+                nameof(ShowAsHex),
+                o => o.ShowAsHex,
+                (o, v) => o.ShowAsHex = v);
+
+        public bool ShowAsHex
+        {
+            get => _showAsHex;
+            set => SetAndRaise(ShowAsHexProperty, ref _showAsHex, value);
+        }
+
+        public uint CharacterRegionEditStart
+        {
+            get => _characterRegionEditStart;
+            set => SetAndRaise(CharacterRegionEditStartProperty, ref _characterRegionEditStart, value);
+        }
+        
+        public uint CharacterRegionEditEnd
+        {
+            get => _characterRegionEditEnd;
+            set => SetAndRaise(CharacterRegionEditEndProperty, ref _characterRegionEditEnd, value);
+        }
+
+        private int _editIndex;
+        private bool _showAsHex;
+
+        private void AddCharacterRegion_OnClick(object sender, RoutedEventArgs e)
+        {
+            _editIndex = -1;
+            CharacterRegionEditStart = CharacterRegionEditEnd = 0;
+            _characterRegionPopup.Open();
+        }
+
+        private void RemoveCharacterRegion_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (SelectedCharacterRegion is null)
+                return;
+            if (!_spf.CharacterRegions.Remove(SelectedCharacterRegion.Region))
+            {
+                throw new ArgumentException();
+            }
+
+            CharacterRegions.Remove(SelectedCharacterRegion);
+            UnsavedChanges = true;
+        }
+
+        private void InputElement_OnDoubleTapped(object sender, RoutedEventArgs e)
+        {
+            if (SelectedCharacterRegion is null)
+                return;
+            _editIndex = CharacterRegions.IndexOf(SelectedCharacterRegion);
+            if (_editIndex == -1)
+                return;
+            CharacterRegionEditStart = (uint)SelectedCharacterRegion.Region.Start;
+            CharacterRegionEditEnd = (uint)SelectedCharacterRegion.Region.End;
+            _characterRegionPopup.Open();
+            
+        }
+
+        private void PopupCancel_OnClick(object sender, RoutedEventArgs e)
+        {
+            _characterRegionPopup.Close();
+        }
+        private void PopupOk_OnClick(object sender, RoutedEventArgs e)
+        {
+            _characterRegionPopup.Close();
+            var newRegion = new CharacterRegion((int)CharacterRegionEditStart, (int)CharacterRegionEditEnd);
+            if (_editIndex == -1)
+            {
+                _spf.CharacterRegions.Add(newRegion);
+                CharacterRegions.Add(new CharacterRegionView(newRegion));
+                CharacterRegionEditStart = CharacterRegionEditEnd = 0;
+            }
+            else
+            {
+                _spf.CharacterRegions[_editIndex] = newRegion;
+                CharacterRegions[_editIndex].Region = newRegion;
+            }
+            UnsavedChanges = true;
         }
     }
 }

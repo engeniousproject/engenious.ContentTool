@@ -6,11 +6,33 @@
              VerticalAlignment="Stretch"
              xmlns:models="clr-namespace:engenious.Content.Models;assembly=engenious.ContentTool"
              xmlns:System="clr-namespace:System;assembly=System.Runtime"
-             xmlns:avalonia="clr-namespace:engenious.Avalonia;assembly=engenious.Avalonia">
+             xmlns:avalonia="clr-namespace:engenious.Avalonia;assembly=engenious.Avalonia"
+             xmlns:controls="clr-namespace:engenious.ContentTool.Avalonia.Controls">
     <Design.DataContext>
         <ct:SpriteFontViewer />
     </Design.DataContext>
-    <StackPanel>
+    <UserControl.Styles>
+        <Style Selector="ct|CharacterRegionSelectorPresenter" >
+            <Setter Property="Template">
+                <ControlTemplate >
+                    <Grid Background="{DynamicResource ThemeBackgroundColor}" RowDefinitions="25,400"
+                            ColumnDefinitions="60,10,60,170,100,100">
+                        <controls:HexNumericUpDown Grid.Column="0" Name="CharacterRegionLow" IsHex="{Binding ShowAsHex}" Value="{Binding CharacterRegionEditStart, Mode=TwoWay}" Maximum="{Binding #CharacterRegionHigh.Value}" />
+                        <TextBlock  Grid.Column="1" Grid.Row="0" Text=" - "/>
+                        <controls:HexNumericUpDown  Grid.Column="2" Grid.Row="0" Name="CharacterRegionHigh" IsHex="{Binding ShowAsHex}" Value="{Binding CharacterRegionEditEnd, Mode=TwoWay}" Minimum="{Binding #CharacterRegionLow.Value}" />
+                        <StackPanel Orientation="Horizontal" Grid.Column="3" Grid.Row="0">
+                            <CheckBox Margin="5 0 5 0" IsChecked="{Binding ShowAsHex, Mode=OneWayToSource}" />
+                            <TextBlock Text="As Hex" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <Button Grid.Column="4" Grid.Row="0" Content="Cancel" Click="PopupCancel_OnClick"/>
+                        <Button Grid.Column="5" Grid.Row="0" Content="Apply"  Click="PopupOk_OnClick"/>
+                        <ct:CharacterRegionSelector Margin="0 5 0 0" MaxHeight="400" FontFamily="{Binding SpriteFontFamily}" HorizontalAlignment="Stretch" Start="{Binding Path=CharacterRegionEditStart, Mode = TwoWay}" End="{Binding CharacterRegionEditEnd, Mode = TwoWay}" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="6" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+    </UserControl.Styles>
+    <StackPanel HorizontalAlignment="Stretch">
         <ct:GroupBox Header="Basic settings" HorizontalAlignment="Stretch">
             <StackPanel>
                 <ComboBox Items="{Binding Path=FamilyNames}" FontWeight="{Binding Path=SpriteFontWeight}" FontStyle="{Binding Path=SpriteFontStyle}" SelectedItem="{Binding Path=SpriteFontFamily}">
@@ -42,15 +64,40 @@
             </StackPanel>
         </ct:GroupBox>
         <ct:GroupBox Header="Character Regions" HorizontalAlignment="Stretch">
-            <StackPanel>
-                <ListBox Items="{Binding Path=CharacterRegions}" HorizontalAlignment="Stretch"/>
-                
-                <StackPanel Orientation="Horizontal">
+            <Grid HorizontalAlignment="Stretch">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <ListBox Items="{Binding Path=CharacterRegions}" SelectedItem="{Binding SelectedCharacterRegion}" HorizontalAlignment="Stretch" Grid.Row="0" DoubleTapped="InputElement_OnDoubleTapped">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding DisplayString}" />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                <StackPanel Orientation="Horizontal" Grid.Row="1">
+                    <Button Content="+" Name="AddCharacterRegion" Click="AddCharacterRegion_OnClick" />
+                    <Button Content="-" Name="RemoveCharacterRegion" Click="RemoveCharacterRegion_OnClick" />
+                    <Popup Name="CharacterRegionPopup"
+                           WindowManagerAddShadowHint="False"
+                           IsLightDismissEnabled="False"
+                           PlacementMode="Bottom"
+                           PlacementTarget="{Binding ElementName=sabri}">
+                        <ct:CharacterRegionSelectorPresenter />
+                    </Popup>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Grid.Row="3">
                     <TextBlock Text="Example: " VerticalAlignment="Center"/>
                     <TextBox Text="{Binding ExampleText}" FontFamily="{Binding Path=SpriteFontFamily}" FontWeight="{Binding Path=SpriteFontWeight}" FontStyle="{Binding Path=SpriteFontStyle}" />
                 </StackPanel>
-                <TextBlock Text="{Binding ErrorText}" Foreground="Yellow"/>
-                <Panel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="40">
+                <TextBlock Text="{Binding ErrorText}" Foreground="Yellow" Grid.Row="4"/>
+                <Panel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="40" Grid.Row="5">
                     <avalonia:AvaloniaRenderingSurface HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                                                        x:Name="renderingSurface">
                         <avalonia:AvaloniaRenderingSurface.RenderTransform>
@@ -58,7 +105,7 @@
                         </avalonia:AvaloniaRenderingSurface.RenderTransform>
                     </avalonia:AvaloniaRenderingSurface>
                 </Panel>
-            </StackPanel>
+            </Grid>
         </ct:GroupBox>
     </StackPanel>
 </UserControl>

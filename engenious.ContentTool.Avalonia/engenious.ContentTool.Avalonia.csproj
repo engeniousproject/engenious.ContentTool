@@ -58,11 +58,14 @@
         <Compile Update="Controls\PropertyGrid.xaml.cs">
           <DependentUpon>PropertyGrid.xaml</DependentUpon>
         </Compile>
+        <Compile Update="Controls\CharacterRegionSelector.xaml.cs">
+          <DependentUpon>CharacterRegionSelector.xaml</DependentUpon>
+        </Compile>
     </ItemGroup>
     <ItemGroup>
         <LiCoAdditionalLicenses Include="../engenious.ContentTool/NOTICE" Visible="false" />
         
-        <PackageReference Include="LiCo" Version="0.1.11.13-alpha" PrivateAssets="all" />
+<!--        <PackageReference Include="LiCo" Version="0.1.11.13-alpha" PrivateAssets="all" />-->
         <PackageReference Include="Avalonia" Version="0.10.15" />
         <PackageReference Include="Avalonia.Desktop" Version="0.10.15" />
         <PackageReference Include="Avalonia.Diagnostics" Version="0.10.15" />
@@ -72,7 +75,7 @@
         <PackageReference Include="OpenTK" Version="4.5.0" />
     </ItemGroup>
     <ItemGroup>
-      <PackageReference Include="engenious.Avalonia" Version="0.6.2.1-alpha" Condition="!Exists('..\..\engenious.Avalonia\engenious.Avalonia.csproj')" />
+      <PackageReference Include="engenious.Avalonia" Version="0.6.2.2-alpha" Condition="!Exists('..\..\engenious.Avalonia\engenious.Avalonia.csproj')" />
         
       <ProjectReference Include="..\..\engenious.Avalonia\engenious.Avalonia.csproj" Condition="Exists('..\..\engenious.Avalonia\engenious.Avalonia.csproj')" />
       <ProjectReference Include="..\engenious.ContentTool\engenious.ContentTool.csproj" />
