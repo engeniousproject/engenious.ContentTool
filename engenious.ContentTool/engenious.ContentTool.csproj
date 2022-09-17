@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net7.0</TargetFramework>
 
         <RuntimeIdentifiers>win10-x64;osx-x64;linux-x64</RuntimeIdentifiers>
 
@@ -107,18 +107,18 @@
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="LiCo" Version="0.1.11.13-alpha" PrivateAssets="all" />
-        <PackageReference Include="Mono.Cecil" Version="0.11.3" />
+        <PackageReference Include="Mono.Cecil" Version="0.11.4" />
         <!--    <PackageReference Include="SharpFont.Dependencies" Version="2.6.0" ExcludeAssets="build" />-->
-        <PackageReference Include="System.Resources.Extensions" Version="5.0.0" />
+        <PackageReference Include="System.Resources.Extensions" Version="6.0.0" />
         <ProjectReference Include="..\..\engenious\engenious.csproj" Condition="Exists('..\..\engenious\engenious.csproj')" />
-        <PackageReference Include="engenious" Version="0.6.2.3-alpha" Condition="!Exists('..\engenious\engenious.csproj')" />
+        <PackageReference Include="engenious" Version="0.7.0.1-alpha" Condition="!Exists('..\engenious\engenious.csproj')" />
 
         <ProjectReference Include="..\..\engenious.Pipeline\engenious.Pipeline.csproj" Condition="Exists('..\..\engenious.Pipeline\engenious.Pipeline.csproj')" />
-        <PackageReference Include="engenious.Pipeline" Version="0.6.2.8-alpha" Condition="!Exists('..\..\engenious.Pipeline\engenious.Pipeline.csproj')" />
+        <PackageReference Include="engenious.Pipeline" Version="0.7.0-alpha" Condition="!Exists('..\..\engenious.Pipeline\engenious.Pipeline.csproj')" />
 
-        <PackageReference Include="OpenTK.redist.glfw" Version="3.3.5.18" /> <!-- Patch glfw to newer version -->
+        <PackageReference Include="OpenTK.redist.glfw" Version="3.3.8.30" /> <!-- Patch glfw to newer version -->
 
-        <PackageReference Include="LitGit" Version="0.2.0.55-alpha" PrivateAssets="all" />
+        <PackageReference Include="LitGit" Version="0.2.0.56-alpha" PrivateAssets="all" />
     </ItemGroup>
     <ItemGroup>
         <None Include="../LICENSE" />

@@ -32,6 +32,7 @@ using engenious.Graphics;
 using engenious.Pipeline;
 using JetBrains.Annotations;
 using ReactiveUI;
+using FontStyle = Avalonia.Media.FontStyle;
 
 namespace engenious.ContentTool.Avalonia
 {
@@ -220,11 +221,11 @@ namespace engenious.ContentTool.Avalonia
         {
             if (_isLoading) return;
             var old = _spf.Style;
-            var fontStyle = System.Drawing.FontStyle.Regular;
+            var fontStyle = engenious.Pipeline.FontStyle.Regular;
             if (IsBold)
-                fontStyle |= System.Drawing.FontStyle.Bold;
+                fontStyle |= engenious.Pipeline.FontStyle.Bold;
             if (IsItalic)
-                fontStyle |= System.Drawing.FontStyle.Italic;
+                fontStyle |= engenious.Pipeline.FontStyle.Italic;
 
             _spf.Style = fontStyle;
             History.Push(new HistoryPropertyChange(_spf, nameof(_spf.Style), old, _spf.Style));
