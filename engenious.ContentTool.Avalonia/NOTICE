@@ -32,6 +32,30 @@
 ==================== Dependent packages microsoft.win32.registry 5.0.0  ==============================================================================
 ==================== Dependent packages system.security.accesscontrol 5.0.0  =========================================================================
 ==================== Dependent packages system.security.principal.windows 5.0.0  =====================================================================
+==================== Dependent packages mono.cecil 0.11.4  ===========================================================================================
+==================== Dependent packages system.resources.extensions 6.0.0  ===========================================================================
+==================== Dependent packages system.text.encoding.codepages 5.0.0  ========================================================================
+==================== Dependent packages system.runtime.compilerservices.unsafe 6.0.0  ================================================================
+==================== Dependent packages avalonia 0.10.18  ============================================================================================
+==================== Dependent packages avalonia.remote.protocol 0.10.18  ============================================================================
+==================== Dependent packages avalonia.desktop 0.10.18  ====================================================================================
+==================== Dependent packages avalonia.native 0.10.18  =====================================================================================
+==================== Dependent packages avalonia.x11 0.10.18  ========================================================================================
+==================== Dependent packages avalonia.freedesktop 0.10.18  ================================================================================
+==================== Dependent packages avalonia.skia 0.10.18  =======================================================================================
+==================== Dependent packages avalonia.win32 0.10.18  ======================================================================================
+==================== Dependent packages avalonia.diagnostics 0.10.18  ================================================================================
+==================== Dependent packages avalonia.controls.datagrid 0.10.18  ==========================================================================
+==================== Dependent packages avalonia.reactiveui 0.10.18  =================================================================================
+==================== Dependent packages reactiveui 13.2.10  ==========================================================================================
+==================== Dependent packages dynamicdata 7.1.1  ===========================================================================================
+==================== Dependent packages splat 10.0.1  ================================================================================================
+==================== Dependent packages messagebox.avalonia 2.1.0  ===================================================================================
+==================== Dependent packages avalonia 0.10.15  ============================================================================================
+==================== Dependent packages avalonia.remote.protocol 0.10.15  ============================================================================
+==================== Dependent packages markdown.avalonia 0.10.11  ===================================================================================
+==================== Dependent packages markdown.avalonia.syntaxhigh 0.10.11  ========================================================================
+==================== Dependent packages markdown.avalonia.tight 0.10.11  =============================================================================
 ======================================================================================================================================================
 
 'MIT' reference 
@@ -80,6 +104,30 @@ MIT License _____ Permission is hereby granted, free of charge, to any person ob
 ==================== Dependent packages microsoft.win32.registry 5.0.0  ==============================================================================
 ==================== Dependent packages system.security.accesscontrol 5.0.0  =========================================================================
 ==================== Dependent packages system.security.principal.windows 5.0.0  =====================================================================
+==================== Dependent packages mono.cecil 0.11.4  ===========================================================================================
+==================== Dependent packages system.resources.extensions 6.0.0  ===========================================================================
+==================== Dependent packages system.text.encoding.codepages 5.0.0  ========================================================================
+==================== Dependent packages system.runtime.compilerservices.unsafe 6.0.0  ================================================================
+==================== Dependent packages avalonia 0.10.18  ============================================================================================
+==================== Dependent packages avalonia.remote.protocol 0.10.18  ============================================================================
+==================== Dependent packages avalonia.desktop 0.10.18  ====================================================================================
+==================== Dependent packages avalonia.native 0.10.18  =====================================================================================
+==================== Dependent packages avalonia.x11 0.10.18  ========================================================================================
+==================== Dependent packages avalonia.freedesktop 0.10.18  ================================================================================
+==================== Dependent packages avalonia.skia 0.10.18  =======================================================================================
+==================== Dependent packages avalonia.win32 0.10.18  ======================================================================================
+==================== Dependent packages avalonia.diagnostics 0.10.18  ================================================================================
+==================== Dependent packages avalonia.controls.datagrid 0.10.18  ==========================================================================
+==================== Dependent packages avalonia.reactiveui 0.10.18  =================================================================================
+==================== Dependent packages reactiveui 13.2.10  ==========================================================================================
+==================== Dependent packages dynamicdata 7.1.1  ===========================================================================================
+==================== Dependent packages splat 10.0.1  ================================================================================================
+==================== Dependent packages messagebox.avalonia 2.1.0  ===================================================================================
+==================== Dependent packages avalonia 0.10.15  ============================================================================================
+==================== Dependent packages avalonia.remote.protocol 0.10.15  ============================================================================
+==================== Dependent packages markdown.avalonia 0.10.11  ===================================================================================
+==================== Dependent packages markdown.avalonia.syntaxhigh 0.10.11  ========================================================================
+==================== Dependent packages markdown.avalonia.tight 0.10.11  =============================================================================
 ======================================================================================================================================================
 
 MIT License
@@ -282,6 +330,7 @@ It also applies even if Microsoft knew or should have known about the possibilit
 ==================== Dependent packages system.threading.tasks.extensions 4.5.3  =====================================================================
 ==================== Dependent packages system.memory 4.5.4  =========================================================================================
 ==================== Dependent packages system.buffers 4.5.1  ========================================================================================
+==================== Dependent packages system.collections.immutable 1.6.0  ==========================================================================
 ======================================================================================================================================================
 
 The MIT License (MIT) Copyright (c) .NET Foundation and Contributors All rights reserved. Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -611,6 +660,7 @@ You signed in with another tab or window. Reload to refresh your session. You si
 ==================== Dependent packages microsoft.codeanalysis.analyzers 2.9.6  ======================================================================
 ==================== Dependent packages microsoft.codeanalysis.csharp 3.4.0  =========================================================================
 ==================== Dependent packages microsoft.codeanalysis.scripting.common 3.4.0  ===============================================================
+==================== Dependent packages sixlabors.imagesharp 2.1.3  ==================================================================================
 ======================================================================================================================================================
 
 'Apache-2.0' reference 
@@ -631,6 +681,7 @@ Apache License Version 2.0, January 2004 http://www.apache.org/licenses/ TERMS A
 ==================== Dependent packages microsoft.codeanalysis.analyzers 2.9.6  ======================================================================
 ==================== Dependent packages microsoft.codeanalysis.csharp 3.4.0  =========================================================================
 ==================== Dependent packages microsoft.codeanalysis.scripting.common 3.4.0  ===============================================================
+==================== Dependent packages sixlabors.imagesharp 2.1.3  ==================================================================================
 ======================================================================================================================================================
 
 Apache License 
@@ -718,6 +769,12 @@ limitations under the License.
 ==================== Dependent packages tizen.net 5.0.0.14562  =======================================================================================
 ==================== Dependent packages tizen.net.api4 4.0.1.14152  ==================================================================================
 ==================== Dependent packages tizen.net.api5 5.0.0.14562  ==================================================================================
+==================== Dependent packages tizen.net 8.0.0.15631  =======================================================================================
+==================== Dependent packages tizen.net.api4 4.0.1.14164  ==================================================================================
+==================== Dependent packages tizen.net.api5 5.0.0.14638  ==================================================================================
+==================== Dependent packages tizen.net.api6 6.0.0.14995  ==================================================================================
+==================== Dependent packages tizen.net.api7 7.0.0.15162  ==================================================================================
+==================== Dependent packages tizen.net.api8 8.0.0.15631  ==================================================================================
 ======================================================================================================================================================
 
 Apache License Version 2.0, January 2004 http://www.apache.org/licenses/ TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION 1. Definitions. "License" shall mean the terms and conditions for use, reproduction, and distribution as defined by Sections 1 through 9 of this document. "Licensor" shall mean the copyright owner or entity authorized by the copyright owner that is granting the License. "Legal Entity" shall mean the union of the acting entity and all other entities that control, are controlled by, or are under common control with that entity. For the purposes of this definition, "control" means (i) the power, direct or indirect, to cause the direction or management of such entity, whether by contract or otherwise, or (ii) ownership of fifty percent (50%) or more of the outstanding shares, or (iii) beneficial ownership of such entity. "You" (or "Your") shall mean an individual or Legal Entity exercising permissions granted by this License. "Source" form shall mean the preferred form for making modifications, including but not limited to software source code, documentation source, and configuration files. "Object" form shall mean any form resulting from mechanical transformation or translation of a Source form, including but not limited to compiled object code, generated documentation, and conversions to other media types. "Work" shall mean the work of authorship, whether in Source or Object form, made available under the License, as indicated by a copyright notice that is included in or attached to the work (an example is provided in the Appendix below). "Derivative Works" shall mean any work, whether in Source or Object form, that is based on (or derived from) the Work and for which the editorial revisions, annotations, elaborations, or other modifications represent, as a whole, an original work of authorship. For the purposes of this License, Derivative Works shall not include works that remain separable from, or merely link (or bind by name) to the interfaces of, the Work and Derivative Works thereof. "Contribution" shall mean any work of authorship, including the original version of the Work and any modifications or additions to that Work or Derivative Works thereof, that is intentionally submitted to Licensor for inclusion in the Work by the copyright owner or by an individual or Legal Entity authorized to submit on behalf of the copyright owner. For the purposes of this definition, "submitted" means any form of electronic, verbal, or written communication sent to the Licensor or its representatives, including but not limited to communication on electronic mailing lists, source code control systems, and issue tracking systems that are managed by, or on behalf of, the Licensor for the purpose of discussing and improving the Work, but excluding communication that is conspicuously marked or otherwise designated in writing by the copyright owner as "Not a Contribution." "Contributor" shall mean Licensor and any individual or Legal Entity on behalf of whom a Contribution has been received by Licensor and subsequently incorporated within the Work. 2. Grant of Copyright License. Subject to the terms and conditions of this License, each Contributor hereby grants to You a perpetual, worldwide, non-exclusive, no-charge, royalty-free, irrevocable copyright license to reproduce, prepare Derivative Works of, publicly display, publicly perform, sublicense, and distribute the Work and such Derivative Works in Source or Object form. 3. Grant of Patent License. Subject to the terms and conditions of this License, each Contributor hereby grants to You a perpetual, worldwide, non-exclusive, no-charge, royalty-free, irrevocable (except as stated in this section) patent license to make, have made, use, offer to sell, sell, import, and otherwise transfer the Work, where such license applies only to those patent claims licensable by such Contributor that are necessarily infringed by their Contribution(s) alone or by combination of their Contribution(s) with the Work to which such Contribution(s) was submitted. If You institute patent litigation against any entity (including a cross-claim or counterclaim in a lawsuit) alleging that the Work or a Contribution incorporated within the Work constitutes direct or contributory patent infringement, then any patent licenses granted to You under this License for that Work shall terminate as of the date such litigation is filed. 4. Redistribution. You may reproduce and distribute copies of the Work or Derivative Works thereof in any medium, with or without modifications, and in Source or Object form, provided that You meet the following conditions: (a) You must give any other recipients of the Work or Derivative Works a copy of this License; and (b) You must cause any modified files to carry prominent notices stating that You changed the files; and (c) You must retain, in the Source form of any Derivative Works that You distribute, all copyright, patent, trademark, and attribution notices from the Source form of the Work, excluding those notices that do not pertain to any part of the Derivative Works; and (d) If the Work includes a "NOTICE" text file as part of its distribution, then any Derivative Works that You distribute must include a readable copy of the attribution notices contained within such NOTICE file, excluding those notices that do not pertain to any part of the Derivative Works, in at least one of the following places: within a NOTICE text file distributed as part of the Derivative Works; within the Source form or documentation, if provided along with the Derivative Works; or, within a display generated by the Derivative Works, if and wherever such third-party notices normally appear. The contents of the NOTICE file are for informational purposes only and do not modify the License. You may add Your own attribution notices within Derivative Works that You distribute, alongside or as an addendum to the NOTICE text from the Work, provided that such additional attribution notices cannot be construed as modifying the License. You may add Your own copyright statement to Your modifications and may provide additional or different license terms and conditions for use, reproduction, or distribution of Your modifications, or for any such Derivative Works as a whole, provided Your use, reproduction, and distribution of the Work otherwise complies with the conditions stated in this License. 5. Submission of Contributions. Unless You explicitly state otherwise, any Contribution intentionally submitted for inclusion in the Work by You to the Licensor shall be under the terms and conditions of this License, without any additional terms or conditions. Notwithstanding the above, nothing herein shall supersede or modify the terms of any separate license agreement you may have executed with Licensor regarding such Contributions. 6. Trademarks. This License does not grant permission to use the trade names, trademarks, service marks, or product names of the Licensor, except as required for reasonable and customary use in describing the origin of the Work and reproducing the content of the NOTICE file. 7. Disclaimer of Warranty. Unless required by applicable law or agreed to in writing, Licensor provides the Work (and each Contributor provides its Contributions) on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied, including, without limitation, any warranties or conditions of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A PARTICULAR PURPOSE. You are solely responsible for determining the appropriateness of using or redistributing the Work and assume any risks associated with Your exercise of permissions under this License. 8. Limitation of Liability. In no event and under no legal theory, whether in tort (including negligence), contract, or otherwise, unless required by applicable law (such as deliberate and grossly negligent acts) or agreed to in writing, shall any Contributor be liable to You for damages, including any direct, indirect, special, incidental, or consequential damages of any character arising as a result of this License or out of the use or inability to use the Work (including but not limited to damages for loss of goodwill, work stoppage, computer failure or malfunction, or any and all other commercial damages or losses), even if such Contributor has been advised of the possibility of such damages. 9. Accepting Warranty or Additional Liability. While redistributing the Work or Derivative Works thereof, You may choose to offer, and charge a fee for, acceptance of support, warranty, indemnity, or other liability obligations and/or rights consistent with this License. However, in accepting such obligations, You may act only on Your own behalf and on Your sole responsibility, not on behalf of any other Contributor, and only if You agree to indemnify, defend, and hold each Contributor harmless for any liability incurred by, or claims asserted against, such Contributor by reason of your accepting any such warranty or additional liability. END OF TERMS AND CONDITIONS APPENDIX: How to apply the Apache License to your work. To apply the Apache License to your work, attach the following boilerplate notice, with the fields enclosed by brackets "[]" replaced with your own identifying information. (Don't include the brackets!) The text should be enclosed in the appropriate comment syntax for the file format. We also recommend that a file or class name and description of purpose be included on the same "printed page" as the copyright notice for easier identification within third-party archives. Copyright [yyyy] [name of copyright owner] Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License. 
@@ -996,6 +1053,7 @@ For questions regarding the OSI website and contents please contact us</contact>
 
 ======================================================================================================================================================
 ==================== Dependent packages nvorbis 0.10.1  ==============================================================================================
+==================== Dependent packages nvorbis 0.10.4  ==============================================================================================
 ======================================================================================================================================================
 
 MIT License
@@ -1048,6 +1106,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 ======================================================================================================================================================
 ==================== Dependent packages engenious 0.6.1.5-alpha  =====================================================================================
 ==================== Dependent packages msdfgen.net 0.1.5-alpha  =====================================================================================
+==================== Dependent packages engenious 0.6.2-alpha  =======================================================================================
+==================== Dependent packages engenious 0.7.0.1-alpha  =====================================================================================
 ======================================================================================================================================================
 
 Copyright 2021 jvbsl
@@ -1066,6 +1126,7 @@ limitations under the License.
 
 ======================================================================================================================================================
 ==================== Dependent packages opentk.redist.glfw 3.3.5.18  =================================================================================
+==================== Dependent packages opentk.redist.glfw 3.3.8.30  =================================================================================
 ======================================================================================================================================================
 
 Copyright (c) 2002-2006 Marcus Geelnard
@@ -1166,6 +1227,896 @@ on the use of their work. For any of these models, see
 <model-name>.source.txt for more legal information. Contact us if you
 are a copyright holder and believe that we credited you inproperly or 
 if you don't want your files to appear in the repository.
+
+
+
+======================================================================================================================================================
+==================== Dependent packages nonsucking.framework.serialization 0.1.0.80-alpha  ===========================================================
+======================================================================================================================================================
+
+                                 Apache License
+                           Version 2.0, January 2004
+                        http://www.apache.org/licenses/
+
+   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+
+   1. Definitions.
+
+      "License" shall mean the terms and conditions for use, reproduction,
+      and distribution as defined by Sections 1 through 9 of this document.
+
+      "Licensor" shall mean the copyright owner or entity authorized by
+      the copyright owner that is granting the License.
+
+      "Legal Entity" shall mean the union of the acting entity and all
+      other entities that control, are controlled by, or are under common
+      control with that entity. For the purposes of this definition,
+      "control" means (i) the power, direct or indirect, to cause the
+      direction or management of such entity, whether by contract or
+      otherwise, or (ii) ownership of fifty percent (50%) or more of the
+      outstanding shares, or (iii) beneficial ownership of such entity.
+
+      "You" (or "Your") shall mean an individual or Legal Entity
+      exercising permissions granted by this License.
+
+      "Source" form shall mean the preferred form for making modifications,
+      including but not limited to software source code, documentation
+      source, and configuration files.
+
+      "Object" form shall mean any form resulting from mechanical
+      transformation or translation of a Source form, including but
+      not limited to compiled object code, generated documentation,
+      and conversions to other media types.
+
+      "Work" shall mean the work of authorship, whether in Source or
+      Object form, made available under the License, as indicated by a
+      copyright notice that is included in or attached to the work
+      (an example is provided in the Appendix below).
+
+      "Derivative Works" shall mean any work, whether in Source or Object
+      form, that is based on (or derived from) the Work and for which the
+      editorial revisions, annotations, elaborations, or other modifications
+      represent, as a whole, an original work of authorship. For the purposes
+      of this License, Derivative Works shall not include works that remain
+      separable from, or merely link (or bind by name) to the interfaces of,
+      the Work and Derivative Works thereof.
+
+      "Contribution" shall mean any work of authorship, including
+      the original version of the Work and any modifications or additions
+      to that Work or Derivative Works thereof, that is intentionally
+      submitted to Licensor for inclusion in the Work by the copyright owner
+      or by an individual or Legal Entity authorized to submit on behalf of
+      the copyright owner. For the purposes of this definition, "submitted"
+      means any form of electronic, verbal, or written communication sent
+      to the Licensor or its representatives, including but not limited to
+      communication on electronic mailing lists, source code control systems,
+      and issue tracking systems that are managed by, or on behalf of, the
+      Licensor for the purpose of discussing and improving the Work, but
+      excluding communication that is conspicuously marked or otherwise
+      designated in writing by the copyright owner as "Not a Contribution."
+
+      "Contributor" shall mean Licensor and any individual or Legal Entity
+      on behalf of whom a Contribution has been received by Licensor and
+      subsequently incorporated within the Work.
+
+   2. Grant of Copyright License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      copyright license to reproduce, prepare Derivative Works of,
+      publicly display, publicly perform, sublicense, and distribute the
+      Work and such Derivative Works in Source or Object form.
+
+   3. Grant of Patent License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      (except as stated in this section) patent license to make, have made,
+      use, offer to sell, sell, import, and otherwise transfer the Work,
+      where such license applies only to those patent claims licensable
+      by such Contributor that are necessarily infringed by their
+      Contribution(s) alone or by combination of their Contribution(s)
+      with the Work to which such Contribution(s) was submitted. If You
+      institute patent litigation against any entity (including a
+      cross-claim or counterclaim in a lawsuit) alleging that the Work
+      or a Contribution incorporated within the Work constitutes direct
+      or contributory patent infringement, then any patent licenses
+      granted to You under this License for that Work shall terminate
+      as of the date such litigation is filed.
+
+   4. Redistribution. You may reproduce and distribute copies of the
+      Work or Derivative Works thereof in any medium, with or without
+      modifications, and in Source or Object form, provided that You
+      meet the following conditions:
+
+      (a) You must give any other recipients of the Work or
+          Derivative Works a copy of this License; and
+
+      (b) You must cause any modified files to carry prominent notices
+          stating that You changed the files; and
+
+      (c) You must retain, in the Source form of any Derivative Works
+          that You distribute, all copyright, patent, trademark, and
+          attribution notices from the Source form of the Work,
+          excluding those notices that do not pertain to any part of
+          the Derivative Works; and
+
+      (d) If the Work includes a "NOTICE" text file as part of its
+          distribution, then any Derivative Works that You distribute must
+          include a readable copy of the attribution notices contained
+          within such NOTICE file, excluding those notices that do not
+          pertain to any part of the Derivative Works, in at least one
+          of the following places: within a NOTICE text file distributed
+          as part of the Derivative Works; within the Source form or
+          documentation, if provided along with the Derivative Works; or,
+          within a display generated by the Derivative Works, if and
+          wherever such third-party notices normally appear. The contents
+          of the NOTICE file are for informational purposes only and
+          do not modify the License. You may add Your own attribution
+          notices within Derivative Works that You distribute, alongside
+          or as an addendum to the NOTICE text from the Work, provided
+          that such additional attribution notices cannot be construed
+          as modifying the License.
+
+      You may add Your own copyright statement to Your modifications and
+      may provide additional or different license terms and conditions
+      for use, reproduction, or distribution of Your modifications, or
+      for any such Derivative Works as a whole, provided Your use,
+      reproduction, and distribution of the Work otherwise complies with
+      the conditions stated in this License.
+
+   5. Submission of Contributions. Unless You explicitly state otherwise,
+      any Contribution intentionally submitted for inclusion in the Work
+      by You to the Licensor shall be under the terms and conditions of
+      this License, without any additional terms or conditions.
+      Notwithstanding the above, nothing herein shall supersede or modify
+      the terms of any separate license agreement you may have executed
+      with Licensor regarding such Contributions.
+
+   6. Trademarks. This License does not grant permission to use the trade
+      names, trademarks, service marks, or product names of the Licensor,
+      except as required for reasonable and customary use in describing the
+      origin of the Work and reproducing the content of the NOTICE file.
+
+   7. Disclaimer of Warranty. Unless required by applicable law or
+      agreed to in writing, Licensor provides the Work (and each
+      Contributor provides its Contributions) on an "AS IS" BASIS,
+      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+      implied, including, without limitation, any warranties or conditions
+      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
+      PARTICULAR PURPOSE. You are solely responsible for determining the
+      appropriateness of using or redistributing the Work and assume any
+      risks associated with Your exercise of permissions under this License.
+
+   8. Limitation of Liability. In no event and under no legal theory,
+      whether in tort (including negligence), contract, or otherwise,
+      unless required by applicable law (such as deliberate and grossly
+      negligent acts) or agreed to in writing, shall any Contributor be
+      liable to You for damages, including any direct, indirect, special,
+      incidental, or consequential damages of any character arising as a
+      result of this License or out of the use or inability to use the
+      Work (including but not limited to damages for loss of goodwill,
+      work stoppage, computer failure or malfunction, or any and all
+      other commercial damages or losses), even if such Contributor
+      has been advised of the possibility of such damages.
+
+   9. Accepting Warranty or Additional Liability. While redistributing
+      the Work or Derivative Works thereof, You may choose to offer,
+      and charge a fee for, acceptance of support, warranty, indemnity,
+      or other liability obligations and/or rights consistent with this
+      License. However, in accepting such obligations, You may act only
+      on Your own behalf and on Your sole responsibility, not on behalf
+      of any other Contributor, and only if You agree to indemnify,
+      defend, and hold each Contributor harmless for any liability
+      incurred by, or claims asserted against, such Contributor by reason
+      of your accepting any such warranty or additional liability.
+
+   END OF TERMS AND CONDITIONS
+
+   Copyright 2020 NoobDevTv (Marcus Aurelius, susch19)
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+
+======================================================================================================================================================
+==================== Dependent packages sixlabors.imagesharp 2.1.3  ==================================================================================
+======================================================================================================================================================
+
+Apache License 
+Version 2.0, January 2004 
+http://www.apache.org/licenses/ 
+
+
+
+TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+
+
+*	1. Definitions. 
+*	
+"License" shall mean the terms and conditions for use, reproduction, and distribution as defined by Sections 1 through 9 of this document.
+
+*	
+"Licensor" shall mean the copyright owner or entity authorized by the copyright owner that is granting the License.
+
+*	
+"Legal Entity" shall mean the union of the acting entity and all other entities that control, are controlled by, or are under common control with that entity. For the purposes of this definition, "control" means (i) the power, direct or indirect, to cause the direction or management of such entity, whether by contract or otherwise, or (ii) ownership of fifty percent (50%) or more of the outstanding shares, or (iii) beneficial ownership of such entity.
+
+*	
+"You" (or "Your") shall mean an individual or Legal Entity exercising permissions granted by this License.
+
+*	
+"Source" form shall mean the preferred form for making modifications, including but not limited to software source code, documentation source, and configuration files.
+
+*	
+"Object" form shall mean any form resulting from mechanical transformation or translation of a Source form, including but not limited to compiled object code, generated documentation, and conversions to other media types.
+
+*	
+"Work" shall mean the work of authorship, whether in Source or Object form, made available under the License, as indicated by a copyright notice that is included in or attached to the work (an example is provided in the Appendix below).
+
+*	
+"Derivative Works" shall mean any work, whether in Source or Object form, that is based on (or derived from) the Work and for which the editorial revisions, annotations, elaborations, or other modifications represent, as a whole, an original work of authorship. For the purposes of this License, Derivative Works shall not include works that remain separable from, or merely link (or bind by name) to the interfaces of, the Work and Derivative Works thereof.
+
+*	
+"Contribution" shall mean any work of authorship, including the original version of the Work and any modifications or additions to that Work or Derivative Works thereof, that is intentionally submitted to Licensor for inclusion in the Work by the copyright owner or by an individual or Legal Entity authorized to submit on behalf of the copyright owner. For the purposes of this definition, "submitted" means any form of electronic, verbal, or written communication sent to the Licensor or its representatives, including but not limited to communication on electronic mailing lists, source code control systems, and issue tracking systems that are managed by, or on behalf of, the Licensor for the purpose of discussing and improving the Work, but excluding communication that is conspicuously marked or otherwise designated in writing by the copyright owner as "Not a Contribution."
+
+*	
+"Contributor" shall mean Licensor and any individual or Legal Entity on behalf of whom a Contribution has been received by Licensor and subsequently incorporated within the Work.
+
+
+*	2. Grant of Copyright License. Subject to the terms and conditions of this License, each Contributor hereby grants to You a perpetual, worldwide, non-exclusive, no-charge, royalty-free, irrevocable copyright license to reproduce, prepare Derivative Works of, publicly display, publicly perform, sublicense, and distribute the Work and such Derivative Works in Source or Object form. 
+*	3. Grant of Patent License. Subject to the terms and conditions of this License, each Contributor hereby grants to You a perpetual, worldwide, non-exclusive, no-charge, royalty-free, irrevocable (except as stated in this section) patent license to make, have made, use, offer to sell, sell, import, and otherwise transfer the Work, where such license applies only to those patent claims licensable by such Contributor that are necessarily infringed by their Contribution(s) alone or by combination of their Contribution(s) with the Work to which such Contribution(s) was submitted. If You institute patent litigation against any entity (including a cross-claim or counterclaim in a lawsuit) alleging that the Work or a Contribution incorporated within the Work constitutes direct or contributory patent infringement, then any patent licenses granted to You under this License for that Work shall terminate as of the date such litigation is filed. 
+*	4. Redistribution. You may reproduce and distribute copies of the Work or Derivative Works thereof in any medium, with or without modifications, and in Source or Object form, provided that You meet the following conditions: 
+*	(a) You must give any other recipients of the Work or Derivative Works a copy of this License; and 
+*	(b) You must cause any modified files to carry prominent notices stating that You changed the files; and 
+*	(c) You must retain, in the Source form of any Derivative Works that You distribute, all copyright, patent, trademark, and attribution notices from the Source form of the Work, excluding those notices that do not pertain to any part of the Derivative Works; and 
+*	(d) If the Work includes a "NOTICE" text file as part of its distribution, then any Derivative Works that You distribute must include a readable copy of the attribution notices contained within such NOTICE file, excluding those notices that do not pertain to any part of the Derivative Works, in at least one of the following places: within a NOTICE text file distributed as part of the Derivative Works; within the Source form or documentation, if provided along with the Derivative Works; or, within a display generated by the Derivative Works, if and wherever such third-party notices normally appear. The contents of the NOTICE file are for informational purposes only and do not modify the License. You may add Your own attribution notices within Derivative Works that You distribute, alongside or as an addendum to the NOTICE text from the Work, provided that such additional attribution notices cannot be construed as modifying the License. 
+You may add Your own copyright statement to Your modifications and may provide additional or different license terms and conditions for use, reproduction, or distribution of Your modifications, or for any such Derivative Works as a whole, provided Your use, reproduction, and distribution of the Work otherwise complies with the conditions stated in this License.
+
+
+*	5. Submission of Contributions. Unless You explicitly state otherwise, any Contribution intentionally submitted for inclusion in the Work by You to the Licensor shall be under the terms and conditions of this License, without any additional terms or conditions. Notwithstanding the above, nothing herein shall supersede or modify the terms of any separate license agreement you may have executed with Licensor regarding such Contributions. 
+*	6. Trademarks. This License does not grant permission to use the trade names, trademarks, service marks, or product names of the Licensor, except as required for reasonable and customary use in describing the origin of the Work and reproducing the content of the NOTICE file. 
+*	7. Disclaimer of Warranty. Unless required by applicable law or agreed to in writing, Licensor provides the Work (and each Contributor provides its Contributions) on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied, including, without limitation, any warranties or conditions of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A PARTICULAR PURPOSE. You are solely responsible for determining the appropriateness of using or redistributing the Work and assume any risks associated with Your exercise of permissions under this License. 
+*	8. Limitation of Liability. In no event and under no legal theory, whether in tort (including negligence), contract, or otherwise, unless required by applicable law (such as deliberate and grossly negligent acts) or agreed to in writing, shall any Contributor be liable to You for damages, including any direct, indirect, special, incidental, or consequential damages of any character arising as a result of this License or out of the use or inability to use the Work (including but not limited to damages for loss of goodwill, work stoppage, computer failure or malfunction, or any and all other commercial damages or losses), even if such Contributor has been advised of the possibility of such damages. 
+*	9. Accepting Warranty or Additional Liability. While redistributing the Work or Derivative Works thereof, You may choose to offer, and charge a fee for, acceptance of support, warranty, indemnity, or other liability obligations and/or rights consistent with this License. However, in accepting such obligations, You may act only on Your own behalf and on Your sole responsibility, not on behalf of any other Contributor, and only if You agree to indemnify, defend, and hold each Contributor harmless for any liability incurred by, or claims asserted against, such Contributor by reason of your accepting any such warranty or additional liability. 
+
+
+END OF TERMS AND CONDITIONS
+
+APPENDIX: How to apply the Apache License to your work.
+
+To apply the Apache License to your work, attach the following boilerplate notice, with the fields enclosed by brackets "[]" replaced with your own identifying information. (Don't include the brackets!) The text should be enclosed in the appropriate comment syntax for the file format. We also recommend that a file or class name and description of purpose be included on the same "printed page" as the copyright notice for easier identification within third-party archives.
+
+Copyright [yyyy] [name of copyright owner]
+
+Licensed under the Apache License, Version 2.0 (the "License"); 
+you may not use this file except in compliance with the License. 
+You may obtain a copy of the License at 
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software 
+distributed under the License is distributed on an "AS IS" BASIS, 
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+See the License for the specific language governing permissions and 
+limitations under the License. 
+
+
+
+
+
+
+======================================================================================================================================================
+==================== Dependent packages harfbuzzsharp 2.8.2.1-preview.108  ===========================================================================
+==================== Dependent packages harfbuzzsharp.nativeassets.win32 2.8.2.1-preview.108  ========================================================
+==================== Dependent packages harfbuzzsharp.nativeassets.macos 2.8.2.1-preview.108  ========================================================
+==================== Dependent packages harfbuzzsharp.nativeassets.android 2.8.2.1-preview.108  ======================================================
+==================== Dependent packages harfbuzzsharp.nativeassets.ios 2.8.2.1-preview.108  ==========================================================
+==================== Dependent packages harfbuzzsharp.nativeassets.tvos 2.8.2.1-preview.108  =========================================================
+==================== Dependent packages harfbuzzsharp.nativeassets.watchos 2.8.2.1-preview.108  ======================================================
+==================== Dependent packages harfbuzzsharp.nativeassets.uwp 2.8.2.1-preview.108  ==========================================================
+==================== Dependent packages harfbuzzsharp.nativeassets.tizen 2.8.2.1-preview.108  ========================================================
+==================== Dependent packages harfbuzzsharp.nativeassets.maccatalyst 2.8.2.1-preview.108  ==================================================
+==================== Dependent packages harfbuzzsharp.nativeassets.linux 2.8.2.1-preview.108  ========================================================
+==================== Dependent packages harfbuzzsharp.nativeassets.webassembly 2.8.2.1-preview.108  ==================================================
+==================== Dependent packages skiasharp 2.88.1-preview.108  ================================================================================
+==================== Dependent packages skiasharp.nativeassets.win32 2.88.1-preview.108  =============================================================
+==================== Dependent packages skiasharp.nativeassets.macos 2.88.1-preview.108  =============================================================
+==================== Dependent packages skiasharp.nativeassets.android 2.88.1-preview.108  ===========================================================
+==================== Dependent packages skiasharp.nativeassets.ios 2.88.1-preview.108  ===============================================================
+==================== Dependent packages skiasharp.nativeassets.tvos 2.88.1-preview.108  ==============================================================
+==================== Dependent packages skiasharp.nativeassets.watchos 2.88.1-preview.108  ===========================================================
+==================== Dependent packages skiasharp.nativeassets.uwp 2.88.1-preview.108  ===============================================================
+==================== Dependent packages skiasharp.nativeassets.tizen 2.88.1-preview.108  =============================================================
+==================== Dependent packages skiasharp.nativeassets.maccatalyst 2.88.1-preview.108  =======================================================
+==================== Dependent packages skiasharp.nativeassets.linux 2.88.1-preview.108  =============================================================
+==================== Dependent packages skiasharp.nativeassets.webassembly 2.88.1-preview.108  =======================================================
+======================================================================================================================================================
+
+SkiaSharp/LICENSE.md at main · mono/SkiaSharp · GitHub 
+
+Skip to content<#start-of-content> 
+Toggle navigation 
+
+<https://github.com/>
+Sign up </signup?ref_cta=Sign+up&amp;ref_loc=header+logged+out&amp;ref_page=%2F%3Cuser-name%3E%2F%3Crepo-name%3E%2Fblob%2Fshow&amp;source=header-repo>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+*	
+
+[<>]
+
+
+In this repository All GitHub ↵ 
+
+Jump to ↵ 
+
+
+*	No suggested jump to results 
+
+*	
+
+[<>]
+
+
+In this repository All GitHub ↵ 
+
+Jump to ↵ 
+
+*	
+
+[<>]
+
+
+In this organization All GitHub ↵ 
+
+Jump to ↵ 
+
+*	
+
+[<>]
+
+
+In this repository All GitHub ↵ 
+
+Jump to ↵ 
+
+
+
+
+
+
+Sign in </login?return_to=https%3A%2F%2Fgithub.com%2Fmono%2FSkiaSharp%2Fblob%2Fmain%2FLICENSE.md>
+Sign up </signup?ref_cta=Sign+up&amp;ref_loc=header+logged+out&amp;ref_page=%2F%3Cuser-name%3E%2F%3Crepo-name%3E%2Fblob%2Fshow&amp;source=header-repo&amp;source_repo=mono%2FSkiaSharp>
+
+
+
+
+
+
+
+
+
+
+
+{{ message }}
+
+
+
+
+
+
+
+
+
+
+mono</mono> / SkiaSharp</mono/SkiaSharp> Public 
+
+
+*	Notifications </login?return_to=%2Fmono%2FSkiaSharp>
+*	Fork 437 </login?return_to=%2Fmono%2FSkiaSharp>
+*	
+Star 2.9k </login?return_to=%2Fmono%2FSkiaSharp>
+
+
+
+
+
+
+
+
+Permalink</mono/SkiaSharp/blob/482e6ee2913a08a7cad76520ccf5fbce97c7c23b/LICENSE.md> 
+
+main 
+
+
+Switch branches/tags 
+
+
+
+Branches Tags 
+
+
+Could not load branches
+
+Nothing to show
+
+
+
+
+{{ refName }} default <https://github.com/mono/SkiaSharp/blob/{{ urlEncodedRefName }}/LICENSE.md>
+View all branches</mono/SkiaSharp/branches>
+
+
+
+Could not load tags
+
+Nothing to show
+{{ refName }} default <https://github.com/mono/SkiaSharp/blob/{{ urlEncodedRefName }}/LICENSE.md>
+
+
+
+
+View all tags</mono/SkiaSharp/tags>
+
+
+
+
+
+SkiaSharp</mono/SkiaSharp>/LICENSE.md 
+Go to file </mono/SkiaSharp/find/main>
+
+*	Go to file T </mono/SkiaSharp/find/main>
+*	Go to line L 
+*	
+*	Copy path 
+*	Copy permalink 
+
+
+
+
+
+
+mono/SkiaSharp is licensed under the 
+MIT License 
+A short and simple permissive license with conditions only requiring preservation of copyright and license notices. Licensed works, modifications, and larger works may be distributed under different terms and without source code.
+
+
+
+Permissions 
+*	Commercial use 
+*	Modification 
+*	Distribution 
+*	Private use 
+
+
+Limitations 
+*	Liability 
+*	Warranty 
+
+
+Conditions 
+*	License and copyright notice 
+
+
+
+
+This is not legal advice. Learn more about repository licenses<https://docs.github.com/articles/licensing-a-repository/#disclaimer>. 
+
+
+
+
+This commit does not belong to any branch on this repository, and may belong to a fork outside of the repository.
+
+
+
+
+
+[@mattleibow<https://avatars.githubusercontent.com/u/1096616?s=48&amp;v=4>]</mattleibow>
+
+mattleibow</mattleibow> updated the license</mono/SkiaSharp/commit/19d72a97f6f9076640639bcf643fee7f0cb75124> 
+
+
+Latest commit 19d72a9</mono/SkiaSharp/commit/19d72a97f6f9076640639bcf643fee7f0cb75124> Feb 23, 2018 History </mono/SkiaSharp/commits/main/LICENSE.md>
+
+
+
+2 contributors 
+Users who have contributed to this file 
+[@mattleibow<https://avatars.githubusercontent.com/u/1096616?s=48&amp;v=4>]</mono/SkiaSharp/commits/main/LICENSE.md?author=mattleibow>[@bholmes<https://avatars.githubusercontent.com/u/310715?s=48&amp;v=4>]</mono/SkiaSharp/commits/main/LICENSE.md?author=bholmes>
+
+
+
+
+8 lines (5 sloc) 1.08 KB 
+
+
+</mono/SkiaSharp/blob/main/LICENSE.md?plain=1></mono/SkiaSharp/blob/main/LICENSE.md>
+
+Raw </mono/SkiaSharp/raw/main/LICENSE.md>Blame </mono/SkiaSharp/blame/main/LICENSE.md>
+
+
+
+
+
+
+Edit this file
+
+E
+Open in GitHub Desktop <https://desktop.github.com>
+
+
+
+
+
+
+
+
+
+*	Open with Desktop <https://desktop.github.com>
+*	View raw </mono/SkiaSharp/raw/main/LICENSE.md>
+*	
+*	View blame </mono/SkiaSharp/blame/main/LICENSE.md>
+
+
+
+
+
+Copyright (c) 2015-2016 Xamarin, Inc.
+Copyright (c) 2017-2018 Microsoft Corporation.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+
+Go 
+
+
+
+
+
+
+
+Footer
+
+
+
+<https://github.com>© 2022 GitHub, Inc. 
+
+
+
+
+
+
+You can’t perform that action at this time. 
+
+You signed in with another tab or window. Reload to refresh your session. You signed out in another tab or window. Reload to refresh your session. 
+
+
+
+
+
+
+
+
+
+
+
+======================================================================================================================================================
+==================== Dependent packages avalonia.avaloniaedit 0.10.0  ================================================================================
+======================================================================================================================================================
+
+The MIT License | Open Source Initiative 
+
+Skip to main content<#main-content> 
+
+
+
+
+
+
+
+
+
+
+
+
+*	Home</>
+*	Contact</contact>
+*	Login</user/login>
+
+
+
+
+
+
+
+
+
+
+
+
+
+Search form
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[Home<https://opensource.org/sites/default/files/public/osi_keyhole_300X300_90ppi_0.png>]</>
+
+Open Source Initiative</> 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Deep Dive: AI<https://deepdive.opensource.org>
+Subscribe to the podcast now<https://deepdive.opensource.org/podcast> Deep Dive: AI is supported by GitHub<https://github.com> 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+The MIT License
+
+
+
+
+
+
+
+
+
+
+
+
+[OSI Approved License Logo<https://opensource.org/files/OSIApproved_1.png>]License Copyright: Unknown.
+License License: Unknown.
+License Contact: Unknown.
+
+SPDX short identifier: MIT
+
+Further resources...
+
+
+
+
+Begin license text.
+
+
+Copyright <YEAR> <COPYRIGHT HOLDER>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+End license text. 
+
+
+
+
+
+
+
+
+You must have JavaScript enabled to use this form. 
+
+
+User login
+
+
+
+Log in using OpenID 
+What is OpenID?<https://openid.net/>
+
+
+Username * 
+
+Password * 
+
+
+*	Log in using OpenID<#openid-login>
+*	Cancel OpenID login<#>
+
+
+
+*	Create new account</user/register>
+*	Request new password</user/password>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Keep up with Open Source
+
+
+You must have JavaScript enabled to use this form. 
+
+Sign up with your email to receive our newsletter — your resource for industry news, upcoming events, insights from Open Source thought leaders and more.
+
+
+
+
+Sign up with your email to receive OSI's newsletter — your resource for industry news, upcoming events, insights from open source thought leaders and more. 
+
+Email * 
+
+
+
+First Name 
+
+Last Name 
+
+
+Leave this field blank 
+
+CAPTCHA
+
+This question is for testing whether or not you are a human visitor and to prevent automated spam submissions.
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+To promote and protect open source software and communities...
+
+
+For over 20 years<https://opensource.org/history> the Open Source Initiative (OSI) has worked to raise awareness and adoption of open source software, and build bridges between open source communities<https://opensource.org/affiliates> of practice. As a global non-profit<https://opensource.org/sponsors#sponOps>, the OSI champions software freedom in society through education, collaboration, and infrastructure, stewarding the Open Source Definition<https://opensource.org/osd> (OSD), and preventing abuse of the ideals and ethos inherent to the open source movement.
+
+Open source software is made by many people<https://opensource.org/members> and distributed under an OSD-compliant license<https://opensource.org/licenses> which grants all the rights to use, study, change, and share the software in modified and unmodified form. Software freedom is essential to enabling community development of open source software.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[</files/twitterlogo.png>]<https://twitter.com/OpenSourceOrg>[</files/linkedin.png>]<https://www.linkedin.com/company/open-source-initiative-osi->[</files/ccby.png>]<https://creativecommons.org/licenses/by/4.0/>
+
+
+Sign-up for our newsletter</signup>!
+
+
+The content on this website, of which Opensource.org is the author, is licensed under a Creative Commons Attribution 4.0 International License<https://creativecommons.org/licenses/by/4.0/>.
+Opensource.org is not the author of any of the licenses reproduced on this site. Questions about the copyright in a license should be directed to the license steward.
+
+Hosting for Opensource.org is generously provided by DigitalOcean<https://www.digitalocean.com/>. Please see Terms of Service<../ToS>.
+For questions regarding the OSI website and contents please contact us</contact>.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
