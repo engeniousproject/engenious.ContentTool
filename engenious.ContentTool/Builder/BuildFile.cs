@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using engenious.Content;
-using engenious.Content.Serialization;
-using engenious.Pipeline;
+using NonSucking.Framework.Serialization;
 
 namespace engenious.ContentTool.Builder
 {
-    [Serializable]
-    public class BuildFile
+    [Nooson]
+    public partial class BuildFile
     {
         public string InputFilePath { get; }
         public string OutputFilePath { get; }
@@ -26,14 +25,23 @@ namespace engenious.ContentTool.Builder
 
         public uint ContentFileVersion { get; set; }
         public uint ContentVersion { get; set; }
-        
-        public BuildFile(Guid buildId, string inputFilePath, string outputFilePath, ContentManagerBase contentManager)
+
+
+        public BuildFile([NoosonParameter(nameof(BuildId))] Guid buildId,
+            [NoosonParameter(nameof(InputFilePath))] string inputFilePath,
+            [NoosonParameter(nameof(OutputFilePath))]
+            string outputFilePath)
         {
             InputFilePath = inputFilePath;
             OutputFilePath = outputFilePath;
             Dependencies = new List<string>();
             OutputTypes = new List<string>();
             ContentVersion = ContentManagerBase.ReaderVersion;
+        }
+        public BuildFile([NoosonParameter(nameof(BuildId))]Guid buildId, [NoosonParameter(nameof(InputFilePath))]string inputFilePath,
+            [NoosonParameter(nameof(OutputFilePath))]string outputFilePath, ContentManagerBase contentManager)
+            : this(buildId, inputFilePath, outputFilePath)
+        {
             RefreshBuildCache(buildId, contentManager);
         }
 

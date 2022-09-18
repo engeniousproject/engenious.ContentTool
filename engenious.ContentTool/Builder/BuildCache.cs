@@ -1,26 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 using engenious.Content;
 using engenious.Content.Pipeline;
+using NonSucking.Framework.Serialization;
 
 namespace engenious.ContentTool.Builder
 {
-    [Serializable]
-    public class BuildCache
+    [Nooson]
+    public partial class BuildCache
     {
+        public uint Magic
+        {
+            get => 0x45474f43;
+            set
+            {
+                if (value != Magic)
+                    throw new FormatException("Invalid magic header");
+            }
+        }
         public string CacheFilePath { get; private set; }
         
-        [field: NonSerialized]
+        [NoosonIgnore]
         public CreatedContentCode CreatedContentCode { get; set; }
-        public Dictionary<string, BuildFile> Files { get; } = new();
+        public Dictionary<string, BuildFile> Files { get; private init; } = new();
 
-        [field: NonSerialized]
         internal ContentManagerBase ContentManager;
-        protected BuildCache(string cacheFilePath, CreatedContentCode createdContentCode)
+
+        protected BuildCache()
         {
             ContentManager = new AggregateContentManager(null!, string.Empty);
+        }
+        protected BuildCache(string cacheFilePath, CreatedContentCode createdContentCode)
+            : this()
+        {
             CacheFilePath = cacheFilePath;
             CreatedContentCode = createdContentCode;
             //Files
@@ -114,11 +127,9 @@ namespace engenious.ContentTool.Builder
             
             try
             {
-                using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
-                {
-                    var formatter = new BinaryFormatter();
-                    formatter.Serialize(fs, this);
-                }
+                using var fs = new FileStream(path, FileMode.Create, FileAccess.Write);
+                using var bw = new BinaryWriter(fs);
+                Serialize(bw);
                 CacheFilePath = path;
             }
             catch
@@ -146,12 +157,10 @@ namespace engenious.ContentTool.Builder
             try
             {
                 using var fs = new FileStream(cacheFilePath, FileMode.Open, FileAccess.Read);
-                var formatter = new BinaryFormatter();
-                var cache = (BuildCache) formatter.Deserialize(fs);
-                //cache.CreatedContentCode = createdContentCode;
-
+                using var br = new BinaryReader(fs);
+                var cache = Deserialize(br);
+                cache.CacheFilePath = cacheFilePath;
                 cache.CreatedContentCode = contentCode;
-                    
                 cache.ContentManager = new AggregateContentManager(null!, string.Empty);
                 return cache;
             }
