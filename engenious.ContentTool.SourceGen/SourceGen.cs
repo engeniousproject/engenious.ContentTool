@@ -86,7 +86,7 @@ namespace engenious.ContentTool.SourceGen
             public AdditionalText? ContentData { get; set; }
         }
 
-        private readonly Dictionary<string, Matching> _refDataMatch = new();
+        private readonly Dictionary<PathKey, Matching> _refDataMatch = new();
         private void MatchRefToData(SourceProductionContext context, (AdditionalText text, string configuration) input)
         {
             var (text, configuration) = input;
