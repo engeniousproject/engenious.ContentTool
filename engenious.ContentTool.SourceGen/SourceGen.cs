@@ -71,8 +71,11 @@ namespace engenious.ContentTool.SourceGen
 
         public void Initialize(IncrementalGeneratorInitializationContext context)
         {
-            var cp = context.GetMSBuildItems((s) => s == "EngeniousContentReference" || s == "EngeniousContentData");
+            var cp = context.GetMSBuildItems(
+                (s) => s == "EngeniousContentReference" || s == "EngeniousContentData")
+                .Combine(context.GetMSBuildProperty("EngeniousContentConfiguration", "UNKNOWN"));
 
+            
             context.RegisterSourceOutput(cp, MatchRefToData);
         }
 
@@ -84,8 +87,9 @@ namespace engenious.ContentTool.SourceGen
         }
 
         private readonly Dictionary<string, Matching> _refDataMatch = new();
-        private void MatchRefToData(SourceProductionContext context, AdditionalText text)
+        private void MatchRefToData(SourceProductionContext context, (AdditionalText text, string configuration) input)
         {
+            var (text, configuration) = input;
             var cleanPath = text.Path;
 
 
@@ -100,6 +104,8 @@ namespace engenious.ContentTool.SourceGen
                 
                 var p = ContentProject.Load(text.Path);
 
+                p.Configuration = configuration;
+                
                 cleanPath = Path.Combine(Path.GetDirectoryName(p.ContentProjectPath), "obj", p.Configuration,
                     p.Name + ".CreatedCode.dat");
                 

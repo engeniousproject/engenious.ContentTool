@@ -10,13 +10,17 @@ namespace engenious.ContentTool.SourceGen
     {
         private const string SourceItemGroupMetadata = "build_metadata.AdditionalFiles.SourceItemGroup";
 
-        public static string GetMSBuildProperty(
-            this GeneratorExecutionContext context,
+        public static IncrementalValueProvider<string> GetMSBuildProperty(
+            this IncrementalGeneratorInitializationContext context,
             string name,
             string defaultValue = "")
         {
-            context.AnalyzerConfigOptions.GlobalOptions.TryGetValue($"build_property.{name}", out var value);
-            return value ?? defaultValue;
+            return context.AnalyzerConfigOptionsProvider.Select((x, _) =>
+                                                         {
+                                                             var res = x.GlobalOptions.TryGetValue(
+                                                                 $"build_property.{name}", out var value);
+                                                             return value ?? defaultValue;
+                                                         });
         }
 
         public static IEnumerable<string> GetMSBuildItems(this GeneratorExecutionContext context, string name)
