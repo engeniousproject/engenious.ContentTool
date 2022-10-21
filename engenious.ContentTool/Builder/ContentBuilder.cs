@@ -177,51 +177,51 @@ namespace engenious.ContentTool.Builder
 
         internal IGame Game { get; }
 
+        private static string GetFullOutputDirectory(ContentProject project)
+        {
+            return Path.Combine(GetProjectDirectory(project),
+                project.ConfiguredOutputDirectory);
+        }
+        private static string GetCacheFilePath(ContentProject project)
+        {
+            return Path.Combine(GetProjectDirectory(project), "obj",
+                project.Configuration, project.Name + ".dat");
+        }
+
+        private static string GetIntermediateOutputDirectory(ContentProject project)
+        {
+            return Path.Combine(GetProjectDirectory(project), "obj");
+        }
+
+        private static string GetProjectDirectory(ContentProject project)
+        {
+            return Path.GetDirectoryName(project.ContentProjectPath);
+        }
+
         protected void BuildThread(ContentItem item, CancellationToken cancellationToken)
         {
             FailedBuilds = 0;
             PipelineHelper.PreBuilt(Project);
 
-            var outputDestination = Path.Combine(Path.GetDirectoryName(Project.ContentProjectPath),
-                Project.ConfiguredOutputDirectory);
-
-            string moduleName = "engenious.CreatedContent." + Project.Name;
-
-            string createdContentAssemblyFile = Path.Combine(Path.GetDirectoryName(Project.ContentProjectPath),
-                moduleName + ".dll");
-            bool rewriteAssembly = File.Exists(createdContentAssemblyFile);
+            var outputDestination = GetFullOutputDirectory(Project);
 
             Guid buildId = Guid.NewGuid();
 
 
-            var cache = BuildCache.Load(Path.Combine(Path.GetDirectoryName(item.Project.ContentProjectPath), "obj",
-                item.Project.Configuration,
-                item.Project.Name + ".dat"), buildId);
+            var cache = BuildCache.Load(GetCacheFilePath(Project), buildId);
 
             var createdContentCode = cache.CreatedContentCode;
 
             Game.GraphicsDevice.SwitchUiThread();
             using (var iContext = new ContentImporterContext(buildId, createdContentCode, item.Project.FilePath))
             using (var pContext = new ContentProcessorContext(Game.GraphicsDevice.UiThread.SynchronizationContext, Game, buildId, createdContentCode,
-                Path.GetDirectoryName(Project.ContentProjectPath), item.Project.FilePath))
+                       GetProjectDirectory(Project), item.Project.FilePath))
             {
-                //Console.WriteLine($"GL Version: {pContext.GraphicsDevice.DriverVersion.ToString()}");
-                //Console.WriteLine($"GLSL Version: {pContext.GraphicsDevice.GlslVersion.ToString()}");
-
 
                 iContext.BuildMessage += RaiseBuildMessage;
                 pContext.BuildMessage += RaiseBuildMessage;
                 InternalBuildItem(item, outputDestination, iContext, pContext, cancellationToken, cache);
-                // try
-                // {
-                //     createdContentCode.WriteCode(Path.Combine(outputDestination, "GeneratedCode"));
-                // }
-                // catch (FileNotFoundException ex)
-                // {
-                //     pContext.RaiseBuildMessage("<Module>", ex.Message, BuildMessageEventArgs.BuildMessageType.Error);
-                // }
-                
-                
+
                 Game.GraphicsDevice.Context.MakeNoneCurrent();
             }
 
@@ -235,9 +235,7 @@ namespace engenious.ContentTool.Builder
         protected void CleanThread(CancellationToken cancellationToken)
         {
             Guid buildId = Guid.NewGuid();
-            var cache = BuildCache.Load(Path.Combine(Path.GetDirectoryName(Project.ContentProjectPath), "obj",
-                Project.Configuration,
-                Project.Name + ".dat"), buildId);
+            var cache = BuildCache.Load(GetCacheFilePath(Project), buildId);
             foreach (var item in cache.Files)
             {
                 if (cancellationToken.IsCancellationRequested)
@@ -250,7 +248,7 @@ namespace engenious.ContentTool.Builder
 
             try
             {
-                Directory.Delete(Path.Combine(Path.GetDirectoryName(Project.ContentProjectPath), "obj"), true);
+                Directory.Delete(GetIntermediateOutputDirectory(Project), true);
             }
             catch (Exception ex) //TODO perhaps other delete, to delete all possible files?
             {
@@ -259,29 +257,54 @@ namespace engenious.ContentTool.Builder
             RaiseBuildMessage(this, new BuildMessageEventArgs(string.Empty, "Cleaning done.", BuildMessageEventArgs.BuildMessageType.Information));
         }
 
-        private void InternalBuildItem(ContentItem item, string outputDestination,
+        private static string GetOutputDestination(string outputDestination, ContentItem item)
+        {
+            if (item is ContentFolder)
+            {
+                return item is ContentProject ? outputDestination : Path.Combine(outputDestination, item.Name);
+            }
+
+            return Path.Combine(outputDestination,
+                Path.GetFileNameWithoutExtension(item.Name) + FileExtension);
+        }
+
+
+        public static IEnumerable<(ContentItem item, string outputPath)> EnumerateContentFiles(ContentProject project)
+        {
+            var outputPath = GetFullOutputDirectory(project);
+            return EnumerateContentFiles(outputPath, project);
+        }
+
+        public static IEnumerable<(ContentItem item, string outputPath)> EnumerateContentFiles(string outputDestination, ContentItem item)
+        {
+            var outputPath = GetOutputDestination(outputDestination, item);
+            if (item is ContentFolder folder)
+            {
+                foreach (var child in folder.Content)
+                {
+                    foreach (var i in EnumerateContentFiles(outputPath, child))
+                    {
+                        yield return i;
+                    }
+                }
+                yield break;
+            }
+
+            yield return (item, outputPath);
+        }
+
+        private void InternalBuildItem(ContentItem buildItem, string outputDestination,
             ContentImporterContext importerContext, ContentProcessorContext processorContext, CancellationToken cancellationToken, BuildCache cache)
         {
             if (cancellationToken.IsCancellationRequested)
                 return;
 
-            if (!(item is ContentProject))
-                outputDestination = Path.Combine(outputDestination, item.Name);
-
-            if (item is ContentFolder folder)
-            {
-                foreach (var child in folder.Content)
-                {
-                    InternalBuildItem(child, outputDestination, importerContext, processorContext, cancellationToken, cache);
-                }
-            }
-            else
+            foreach(var (item, outputPath) in EnumerateContentFiles(outputDestination, buildItem))
             {
                 if (cache.NeedsRebuild(importerContext.GetRelativePathToContentDirectory(item.FilePath), item.FilePath))
                 {
                     var res = InternalBuildFile(item as ContentFile,
-                        Path.Combine(Path.GetDirectoryName(outputDestination),
-                            Path.GetFileNameWithoutExtension(item.Name) + FileExtension), importerContext,
+                        outputPath, importerContext,
                         processorContext, cancellationToken, cache);
                     if (res == null)
                     {
@@ -340,10 +363,23 @@ namespace engenious.ContentTool.Builder
             if (cancellationToken.IsCancellationRequested)
                 return null;
             var importer = item.Importer;
-            var importedFile = importer?.Import(item.FilePath, importerContext);
+
+            object dependencyImport;
+            if (item.DependencyImport is null)
+            {
+                item.Dependencies.Clear();
+                dependencyImport = importer?.DependencyImportBase(item.FilePath, importerContext, item.Dependencies);
+            }
+            else
+            {
+                dependencyImport = item.DependencyImport;
+            }
+
+            var importedFile = importer?.Import(item.FilePath, importerContext, dependencyImport);
             if (importedFile == null) return null;
             if (cancellationToken.IsCancellationRequested)
                 return null;
+            buildFile.Dependencies.AddRange(item.Dependencies);
             buildFile.Dependencies.AddRange(importerContext.Dependencies);
             cache?.AddDependencies(importerContext.BuildId, Path.GetDirectoryName(item.FilePath), importerContext.Dependencies);
 

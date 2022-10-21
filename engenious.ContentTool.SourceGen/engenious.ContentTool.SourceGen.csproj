@@ -20,11 +20,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="LitGit" Version="0.2.0.56-alpha" PrivateAssets="all" />
+        <PackageReference Include="LitGit" Version="0.2.0.58-alpha" PrivateAssets="all" />
 
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.4.0-2.final" />
-        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4-beta1.22403.2" PrivateAssets="all" />
-        <PackageReference Include="engenious.Pipeline.Core" Version="0.7.1-alpha" GeneratePathProperty="true" Condition="!Exists('..\..\engenious.Pipeline.Core\engenious.Pipeline.Core.csproj')" PrivateAssets="all" />
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.3.1" />
+        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.3" PrivateAssets="all" />
+        <PackageReference Include="engenious.Pipeline.Core" Version="0.7.1.1-alpha" GeneratePathProperty="true" Condition="!Exists('..\..\engenious.Pipeline.Core\engenious.Pipeline.Core.csproj')" PrivateAssets="all" />
         <ProjectReference Include="..\..\engenious.Pipeline.Core\engenious.Pipeline.Core.csproj" Condition="Exists('..\..\engenious.Pipeline.Core\engenious.Pipeline.Core.csproj')" PrivateAssets="all" />
 
         <None Include="..\LICENSE" Pack="true" PackagePath="" />
@@ -44,7 +44,7 @@
             <None Include="@(_ResolvedProjectReferencePaths)" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
             <None Include="$(Pkgengenious_Pipeline_Core)/lib/netstandard2.0/*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" Condition="!Exists('..\..\engenious.Pipeline.Core\engenious.Pipeline.Core.csproj')" />
 
-            <!--<None Include="@(_ResolvedProjectReferencePaths)" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />-->
+<!--            <None Include="@(_ResolvedProjectReferencePaths)" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />-->
 
             <!--<TargetPathWithTargetPlatformMoniker Include="@(_ResolvedProjectReferencePaths)" IncludeRuntimeDependency="false" />-->
         </ItemGroup>

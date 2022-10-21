@@ -9,6 +9,7 @@ namespace engenious.ContentTool
         public string OutputDirectory{get;private set;}
         public string ContentProject{get;private set;}
         public bool Hidden{get;private set;}
+        public bool DependencyAnalyse { get; private set; }
         public string ReadProjectProperty { get; private set; }
         public string Configuration{ get; set; }
         public BuildAction BuildAction { get; set; }
@@ -36,7 +37,11 @@ namespace engenious.ContentTool
         {
             foreach(var arg in args)
             {
-                if (arg.StartsWith("/hidden:"))
+                if (arg.StartsWith("/dependencyanalyse:"))
+                {
+                    if (bool.TryParse(arg.Substring("/dependencyanalyse:".Length),out var depAn))
+                        DependencyAnalyse = depAn;
+                }else if (arg.StartsWith("/hidden:"))
                 {
                     if (bool.TryParse(arg.Substring("/hidden:".Length),out var hidden))
                         Hidden = hidden;

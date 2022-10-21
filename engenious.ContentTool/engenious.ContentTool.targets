@@ -14,13 +14,15 @@
 
     <!-- This disables the IDE feature that skips executing msbuild in some build situations. -->
     <PropertyGroup>
-        <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
         <EngeniousContentConfiguration Condition="'$(EngeniousContentConfiguration)'==''">$(Configuration)</EngeniousContentConfiguration>
     </PropertyGroup>
     <ItemGroup>
         <CompilerVisibleProperty Include="EngeniousContentConfiguration" />
+        <CompilerVisibleProperty Include="EngeniousContentBuilderExe" />
+        <CompilerVisibleProperty Include="EngeniousBuildParameters" />
+        <CompilerVisibleProperty Include="EngeniousDotnetExe" />
     </ItemGroup>
-    <Target Name="PrepareEngeniousContent">
+    <Target Name="PrepareEngeniousContent" BeforeTargets="BeforeCompile">
         <PropertyGroup>
             <ContentRootDirectory>Content</ContentRootDirectory>
         </PropertyGroup>
@@ -29,6 +31,9 @@
             <ParentIntermediateDir>$(ProjectDir)$(ContentRootDirectory)\obj\$(EngeniousContentConfiguration)</ParentIntermediateDir>
         </PropertyGroup>
         <PropertyGroup>
+            <EngeniousDotnetExe Condition="'$(DOTNET_HOST_PATH)' != ''">$(DOTNET_HOST_PATH)</EngeniousDotnetExe>
+            <EngeniousDotnetExe Condition="'$(EngeniousDotnetExe)' == '' AND '$(DOTNET_ROOT)' != ''">$(DOTNET_ROOT)/dotnet</EngeniousDotnetExe>
+            <EngeniousDotnetExe Condition="'$(EngeniousDotnetExe)' == ''">dotnet</EngeniousDotnetExe>
 
             <ContentRootDirectory>Content</ContentRootDirectory>
 
@@ -37,17 +42,12 @@
 
             <EngeniousProjectConfiguration>$(EngeniousContentConfiguration)</EngeniousProjectConfiguration>
 
-            <Header>/configuration:$(EngeniousContentConfiguration) /outputDir:&quot;$(ParentOutputDir)&quot; /intermediateDir:&quot;$(ParentIntermediateDir)&quot; /projectDir:&quot;$(ProjectDir)/&quot; /hidden:true</Header>
+            <EngeniousBuildParameters>/configuration:$(EngeniousContentConfiguration) /outputDir:&quot;$(ParentOutputDir)&quot; /intermediateDir:&quot;$(ParentIntermediateDir)&quot; /projectDir:&quot;$(ProjectDir)/&quot; /hidden:true</EngeniousBuildParameters>
 
-            <DotnetExe>dotnet</DotnetExe>
         </PropertyGroup>
 
         <MakeDir Directories="$(ParentIntermediateDir)"/>
         <MakeDir Directories="$(ParentOutputDir)"/>
-        <ItemGroup>
-            <AdditionalFiles Include="@(EngeniousContentReference)" SourceItemGroup="EngeniousContentReference" />
-            <EngeniousObjFolders Include="%(ContentReferences.RootDir)%(ContentReferences.Directory)obj" />
-        </ItemGroup>
         <XmlPeek XmlInputPath="%(ContentReferences.FullPath)" Query="//Content/Configuration/text()" Condition="'$(EngeniousProjectConfiguration)'==''">
             <Output TaskParameter="Result" PropertyName="EngeniousProjectConfiguration" />
         </XmlPeek>
@@ -55,43 +55,39 @@
             <Output TaskParameter="Result" PropertyName="EngeniousProjectName" />
         </XmlPeek>
         <ItemGroup>
+            <AdditionalFiles Include="@(EngeniousContentReference)" SourceItemGroup="EngeniousContentReference" />
+            <EngeniousObjFolders Include="%(ContentReferences.RootDir)%(ContentReferences.Directory)obj" />
             <AdditionalFiles Include="%(EngeniousObjFolders.Identity)/$(EngeniousProjectConfiguration)/$(EngeniousProjectName).CreatedCode.dat" SourceItemGroup="EngeniousContentData" />
         </ItemGroup>
+
     </Target>
+    <Target Name="GetEngeniousContentDependencies" BeforeTargets="BeforeCompile" DependsOnTargets="PrepareEngeniousContent">
+        <Exec ConsoleToMsBuild="true" Command="$(EngeniousDotnetExe) &quot;$(EngeniousContentBuilderExe)&quot; /@:&quot;%(ContentReferences.FullPath)&quot; $(EngeniousBuildParameters) /dependencyanalyse:true"
+            WorkingDirectory="%(ContentReferences.RootDir)%(ContentReferences.Directory)" Condition="Exists('%(ContentReferences.FullPath)')" StandardErrorImportance="high" StandardOutputImportance="high">
+            <Output TaskParameter="ConsoleOutput" ItemName="EngeniousContentDependencyAnalysis" />
+        </Exec>
 
-    <PropertyGroup>
-        <CoreBuildDependsOn>
-            $(CoreBuildDependsOn);
-            BuildEngeniousContent;
-        </CoreBuildDependsOn>
-        <CleanDependsOn>
-            $(CleanDependsOn);
-            CleanEngeniousContent;
-        </CleanDependsOn>
-        <RebuildDependsOn>
-            $(RebuildDependsOn);
-            RebuildEngeniousContent;
-        </RebuildDependsOn>
-    </PropertyGroup>
+        <ItemGroup>
+            <EngeniousContentItemInput Include="$([System.String]::new('%(EngeniousContentDependencyAnalysis.Identity)').Split('#')[0])" Condition="'@(EngeniousContentDependencyAnalysis)' != ''"/>
+            <EngeniousContentItemOutput Include="$([System.String]::new('%(EngeniousContentDependencyAnalysis.Identity)').Split('#')[1])" Condition="'@(EngeniousContentDependencyAnalysis)' != ''"/>
+            <AdditionalFiles Include="@(EngeniousContentItemInput)" SourceItemGroup="EngeniousContentInput" />
+        </ItemGroup>
+    </Target>
+    <Target Name="BuildEngeniousContent" BeforeTargets="AfterBuild" DependsOnTargets="GetEngeniousContentDependencies">
 
-
-    <Target Name="BuildEngeniousContent"
-        BeforeTargets="BeforeBuild;PreBuildEvent"
-        DependsOnTargets="PrepareEngeniousContent">
-
-        <Exec Command="$(DotnetExe) &quot;$(EngeniousContentBuilderExe)&quot; /@:&quot;%(ContentReferences.FullPath)&quot; $(Header)"
-            WorkingDirectory="%(ContentReferences.RootDir)%(ContentReferences.Directory)" Condition="Exists('%(ContentReferences.FullPath)')" />
         <ItemGroup>
             <ExtraContent Include="$(ParentOutputDir)\**\*.*" />
+        </ItemGroup>
+        <ItemGroup>
             <None Include="@(ExtraContent->'%(Identity)')" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Visible="false" Link="$(ContentRootDirectory)\$([MSBuild]::MakeRelative($(ParentOutputDir), %(ExtraContent.Identity)))" />
         </ItemGroup>
     </Target>
     <Target Name="CleanEngeniousContent" BeforeTargets="BeforeClean;Clean" DependsOnTargets="PrepareEngeniousContent">
-        <Exec Command="$(DotnetExe) &quot;$(EngeniousContentBuilderExe)&quot; /@:&quot;%(ContentReferences.FullPath)&quot; $(Header) /clean"
+        <Exec Command="$(DotnetExe) &quot;$(EngeniousContentBuilderExe)&quot; /@:&quot;%(ContentReferences.FullPath)&quot; $(EngeniousBuildParameters) /clean"
             WorkingDirectory="%(ContentReferences.RootDir)%(ContentReferences.Directory)" Condition="Exists('%(ContentReferences.FullPath)')" />
     </Target>
     <Target Name="RebuildEngeniousContent" BeforeTargets="BeforeRebuild;Rebuild" DependsOnTargets="PrepareEngeniousContent">
-        <Exec Command="$(DotnetExe) &quot;$(EngeniousContentBuilderExe)&quot; /@:&quot;%(ContentReferences.FullPath)&quot; $(Header) /rebuild"
+        <Exec Command="$(DotnetExe) &quot;$(EngeniousContentBuilderExe)&quot; /@:&quot;%(ContentReferences.FullPath)&quot; $(EngeniousBuildParameters) /rebuild"
             WorkingDirectory="%(ContentReferences.RootDir)%(ContentReferences.Directory)" Condition="Exists('%(ContentReferences.FullPath)')" />
     </Target>
 </Project>

@@ -46,5 +46,17 @@ namespace engenious.ContentTool.SourceGen
                 tuple.Right.GetOptions(tuple.Left).TryGetValue(SourceItemGroupMetadata, out var sourceItemGroup)
                 && nameMatcher(sourceItemGroup)).Select((x, _) => x.Left);
         }
+        public static IncrementalValuesProvider<(string match, AdditionalText text)> GetMatchedMSBuildItems(this IncrementalGeneratorInitializationContext context,
+            Func<string, bool> nameMatcher)
+        {
+            return context.AdditionalTextsProvider.Combine(context.AnalyzerConfigOptionsProvider).Select((tuple, _) =>
+            {
+                if (tuple.Right.GetOptions(tuple.Left)
+                        .TryGetValue(SourceItemGroupMetadata, out var sourceItemGroup) &&
+                    nameMatcher(sourceItemGroup))
+                    return (isMatch: true, group: sourceItemGroup, tuple.Left);
+                return (isMatch: false, group: "", tuple.Left);
+            }).Where(x => x.isMatch).Select((x, _) => (x.group, x.Left));
+        }
     }
 }

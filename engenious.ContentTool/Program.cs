@@ -134,9 +134,23 @@ namespace engenious.ContentTool
                 
                 project.OutputDirectory = arguments.OutputDirectory ?? project.OutputDirectory;
                 project.Configuration = arguments.Configuration ?? project.Configuration;
-
+                if (arguments.DependencyAnalyse)
+                {
+                    foreach (var (item, output) in ContentBuilder.EnumerateContentFiles(project))
+                    {
+                        Console.WriteLine(item.FilePath + "#" + output);
+                        if (item is not ContentFile contentFile)
+                            continue;
+                        foreach (var d in contentFile.Dependencies)
+                        {
+                            Console.WriteLine(d + "#" + output);
+                        }
+                    }
+                    return 0;
+                }
                 using (var builder = new ContentBuilder(project))
                 {
+
                     builder.BuildMessage += eventArgs =>
                     {
                         if (eventArgs.MessageType != BuildMessageEventArgs.BuildMessageType.Information)
