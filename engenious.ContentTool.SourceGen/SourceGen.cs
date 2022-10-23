@@ -19,29 +19,6 @@ namespace engenious.ContentTool.SourceGen
     [Generator]
     public class SourceGen : IIncrementalGenerator
     {
-        public void Initialize(GeneratorInitializationContext context)
-        {
-            // if (!Debugger.IsAttached)
-            // {
-            //     Debugger.Launch();
-            // }
-            //
-            // SpinWait.SpinUntil(() => Debugger.IsAttached);
-
-            Console.WriteLine("Start building");
-        }
-
-        public void Execute(GeneratorExecutionContext context)
-        {
-            var cps = context.GetMSBuildItems("EngeniousContentReference");
-            var cpd = context.GetMSBuildItems("EngeniousContentData");
-            foreach (var cp in cps.Zip(cpd, (contentReference, contentData) => (contentReference, contentData)))
-            {
-                context.ReportDiagnostic(Diagnostic.Create("ECP01", "ContentSourceGen", $"Trying to build content project: {cp}", DiagnosticSeverity.Info, DiagnosticSeverity.Info, true,1 ));;
-                BuildContentProjectSources(context, cp.contentReference, cp.contentData);
-            }
-        }
-
         private static void BuildContentProjectSources(GeneratorExecutionContext context, string? cp, string? cpd)
         {
             if (cp == null || !File.Exists(cp))
@@ -106,7 +83,9 @@ namespace engenious.ContentTool.SourceGen
             }
             catch (Exception e)
             {
-                File.AppendAllText("/home/julian/Projects/engenious.Full/engenious.Sample/errors.log", $"{e.Message}\n{e.StackTrace}");
+                context.ReportDiagnostic(Diagnostic.Create("ECP09", "ContentSourceGen",
+                    $"{e.Message}\n{e.StackTrace}",
+                    DiagnosticSeverity.Error, DiagnosticSeverity.Error, true, 0));
             }
         }
 

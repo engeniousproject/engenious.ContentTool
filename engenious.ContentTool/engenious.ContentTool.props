@@ -7,11 +7,6 @@
         <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SourceItemGroup" />
     </ItemGroup>
 
-    <!-- Get all Engenious Game Content References and store them in a list -->
-    <ItemGroup>
-        <ContentReferences Include="@(EngeniousContentReference)"/>
-    </ItemGroup>
-
     <!-- This disables the IDE feature that skips executing msbuild in some build situations. -->
     <PropertyGroup>
         <EngeniousContentConfiguration Condition="'$(EngeniousContentConfiguration)'==''">$(Configuration)</EngeniousContentConfiguration>
@@ -23,6 +18,10 @@
         <CompilerVisibleProperty Include="EngeniousDotnetExe" />
     </ItemGroup>
     <Target Name="PrepareEngeniousContent" BeforeTargets="BeforeCompile">
+        <!-- Get all Engenious Game Content References and store them in a list -->
+        <ItemGroup>
+            <ContentReferences Include="@(EngeniousContentReference)"/>
+        </ItemGroup>
         <PropertyGroup>
             <ContentRootDirectory>Content</ContentRootDirectory>
         </PropertyGroup>

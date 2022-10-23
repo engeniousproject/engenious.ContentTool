@@ -15,7 +15,7 @@
     <files>
         <file src="..\\bin\\$configuration$\\net7.0\\*.config" target="content" />
         
-        <file src="engenious.ContentTool.targets" target="build" />
+        <file src="engenious.ContentTool.props" target="build" />
         
         <file src="..\\bin\\$configuration$\\$framework$\\publish\\runtimes\\osx-x64\\**" target="tools\\runtimes\\osx-x64" />
         <file src="..\\bin\\$configuration$\\$framework$\\publish\\runtimes\\linux-x64\\**" target="tools\\runtimes\\linux-x64" />
