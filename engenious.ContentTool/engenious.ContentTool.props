@@ -63,14 +63,16 @@
             <AdditionalFiles Include="@(EngeniousContentItemInput)" SourceItemGroup="EngeniousContentInput" />
         </ItemGroup>
     </Target>
-    <Target Name="BuildEngeniousContent" BeforeTargets="AfterBuild" DependsOnTargets="GetEngeniousContentDependencies">
+    <Target Name="CopyEngeniousContent" BeforeTargets="AfterBuild" DependsOnTargets="GetEngeniousContentDependencies">
 
         <ItemGroup>
             <ExtraContent Include="$(ParentOutputDir)\**\*.*" />
         </ItemGroup>
-        <ItemGroup>
-            <None Include="@(ExtraContent->'%(Identity)')" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Visible="false" Link="$(ContentRootDirectory)\$([MSBuild]::MakeRelative($(ParentOutputDir), %(ExtraContent.Identity)))" />
-        </ItemGroup>
+        <Copy Condition="'@(ExtraContent)' != ''" SourceFiles="@(ExtraContent->'%(Identity)')" DestinationFiles="$(OutDir)\$(ContentRootDirectory)\$([MSBuild]::MakeRelative($(ParentOutputDir), %(ExtraContent.Identity)))" SkipUnchangedFiles="true" />
+        <Copy Condition="'@(ExtraContent)' != '' And '$(PublishProtocol)' != ''" SourceFiles="@(ExtraContent->'%(Identity)')" DestinationFiles="$(PublishDir)\$(ContentRootDirectory)\$([MSBuild]::MakeRelative($(ParentOutputDir), %(ExtraContent.Identity)))" SkipUnchangedFiles="true" />
+    </Target>
+    <Target Name="PublishEngeniousContent" AfterTargets="Publish" DependsOnTargets="CopyEngeniousContent">
+        <Copy Condition="'@(ExtraContent)' != ''" SourceFiles="@(ExtraContent->'%(Identity)')" DestinationFiles="$(PublishDir)\$(ContentRootDirectory)\$([MSBuild]::MakeRelative($(ParentOutputDir), %(ExtraContent.Identity)))" SkipUnchangedFiles="true" />
     </Target>
     <!-- <Target Name="CleanEngeniousContent" BeforeTargets="BeforeClean;Clean" DependsOnTargets="PrepareEngeniousContent">
         <Exec Command="$(DotnetExe) &quot;$(EngeniousContentBuilderExe)&quot; /@:&quot;%(ContentReferences.FullPath)&quot; $(EngeniousBuildParameters) /clean"
