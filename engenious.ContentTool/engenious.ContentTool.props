@@ -6,11 +6,6 @@
         <AvailableItemName Include="EngeniousContentReference" />
         <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SourceItemGroup" />
     </ItemGroup>
-
-    <!-- This disables the IDE feature that skips executing msbuild in some build situations. -->
-    <PropertyGroup>
-        <EngeniousContentConfiguration Condition="'$(EngeniousContentConfiguration)'==''">$(Configuration)</EngeniousContentConfiguration>
-    </PropertyGroup>
     <ItemGroup>
         <CompilerVisibleProperty Include="EngeniousContentConfiguration" />
         <CompilerVisibleProperty Include="EngeniousContentBuilderExe" />
@@ -22,6 +17,9 @@
         <ItemGroup>
             <ContentReferences Include="@(EngeniousContentReference)"/>
         </ItemGroup>
+        <PropertyGroup>
+            <EngeniousContentConfiguration Condition="'$(EngeniousContentConfiguration)'==''">$(Configuration)</EngeniousContentConfiguration>
+        </PropertyGroup>
         <PropertyGroup>
             <ContentRootDirectory>Content</ContentRootDirectory>
         </PropertyGroup>
@@ -47,21 +45,14 @@
 
         <MakeDir Directories="$(ParentIntermediateDir)"/>
         <MakeDir Directories="$(ParentOutputDir)"/>
-        <XmlPeek XmlInputPath="%(ContentReferences.FullPath)" Query="//Content/Configuration/text()" Condition="'$(EngeniousProjectConfiguration)'==''">
-            <Output TaskParameter="Result" PropertyName="EngeniousProjectConfiguration" />
-        </XmlPeek>
-        <XmlPeek XmlInputPath="%(ContentReferences.FullPath)" Query="//Content/Name/text()">
-            <Output TaskParameter="Result" PropertyName="EngeniousProjectName" />
-        </XmlPeek>
         <ItemGroup>
             <AdditionalFiles Include="@(EngeniousContentReference)" SourceItemGroup="EngeniousContentReference" />
             <EngeniousObjFolders Include="%(ContentReferences.RootDir)%(ContentReferences.Directory)obj" />
-            <AdditionalFiles Include="%(EngeniousObjFolders.Identity)/$(EngeniousProjectConfiguration)/$(EngeniousProjectName).CreatedCode.dat" SourceItemGroup="EngeniousContentData" />
         </ItemGroup>
 
     </Target>
     <Target Name="GetEngeniousContentDependencies" BeforeTargets="BeforeCompile" DependsOnTargets="PrepareEngeniousContent">
-        <Exec ConsoleToMsBuild="true" Command="$(EngeniousDotnetExe) &quot;$(EngeniousContentBuilderExe)&quot; /@:&quot;%(ContentReferences.FullPath)&quot; $(EngeniousBuildParameters) /dependencyanalyse:true"
+        <Exec ConsoleToMsBuild="true" Command="&quot;$(EngeniousDotnetExe)&quot; &quot;$(EngeniousContentBuilderExe)&quot; /@:&quot;%(ContentReferences.FullPath)&quot; $(EngeniousBuildParameters) /dependencyanalyse:true"
             WorkingDirectory="%(ContentReferences.RootDir)%(ContentReferences.Directory)" Condition="Exists('%(ContentReferences.FullPath)')" StandardErrorImportance="high" StandardOutputImportance="high">
             <Output TaskParameter="ConsoleOutput" ItemName="EngeniousContentDependencyAnalysis" />
         </Exec>
@@ -81,12 +72,12 @@
             <None Include="@(ExtraContent->'%(Identity)')" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Visible="false" Link="$(ContentRootDirectory)\$([MSBuild]::MakeRelative($(ParentOutputDir), %(ExtraContent.Identity)))" />
         </ItemGroup>
     </Target>
-    <Target Name="CleanEngeniousContent" BeforeTargets="BeforeClean;Clean" DependsOnTargets="PrepareEngeniousContent">
+    <!-- <Target Name="CleanEngeniousContent" BeforeTargets="BeforeClean;Clean" DependsOnTargets="PrepareEngeniousContent">
         <Exec Command="$(DotnetExe) &quot;$(EngeniousContentBuilderExe)&quot; /@:&quot;%(ContentReferences.FullPath)&quot; $(EngeniousBuildParameters) /clean"
             WorkingDirectory="%(ContentReferences.RootDir)%(ContentReferences.Directory)" Condition="Exists('%(ContentReferences.FullPath)')" />
     </Target>
     <Target Name="RebuildEngeniousContent" BeforeTargets="BeforeRebuild;Rebuild" DependsOnTargets="PrepareEngeniousContent">
         <Exec Command="$(DotnetExe) &quot;$(EngeniousContentBuilderExe)&quot; /@:&quot;%(ContentReferences.FullPath)&quot; $(EngeniousBuildParameters) /rebuild"
             WorkingDirectory="%(ContentReferences.RootDir)%(ContentReferences.Directory)" Condition="Exists('%(ContentReferences.FullPath)')" />
-    </Target>
+    </Target> -->
 </Project>
