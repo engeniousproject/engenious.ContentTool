@@ -180,7 +180,7 @@ namespace engenious.ContentTool
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine(ex.Message);
+                Console.Error.WriteLine($"error: {ex.Message}");
                 return -1;
             }
         }

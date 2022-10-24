@@ -25,28 +25,31 @@ namespace engenious.ContentTool.SourceGen
             {
                 return;
             }
-            context.ReportDiagnostic(Diagnostic.Create("ECP02", "ContentSourceGen", $"Load content project: {cp} with content data ...", DiagnosticSeverity.Info, DiagnosticSeverity.Info, true,1 ));;
+            context.ReportDiagnostic(Diagnostic.Create("ECP02", "ContentSourceGen", $"Load content project: {cp} with content data ...", DiagnosticSeverity.Info, DiagnosticSeverity.Info, true, 1)); ;
 
-            
+
             var p = ContentProject.Load(cp);
 
             var cacheFile = cpd == null || !File.Exists(cpd) ? Path.Combine(Path.GetDirectoryName(p.ContentProjectPath), "obj", p.Configuration,
                 p.Name + ".CreatedCode.dat") : cpd;
 
             var contentCode = CreatedContentCode.Load(cacheFile, Guid.Empty);
-            
-            context.ReportDiagnostic(Diagnostic.Create("ECP03", "ContentSourceGen", $"Loaded content code: {cacheFile} with {contentCode.FileDefinitions.Count()} file definitions.", DiagnosticSeverity.Info, DiagnosticSeverity.Info, true,1 ));;
 
-            foreach(var f in contentCode.FileDefinitions)
+            context.ReportDiagnostic(Diagnostic.Create("ECP03", "ContentSourceGen", $"Loaded content code: {cacheFile} with {contentCode.FileDefinitions.Count()} file definitions.", DiagnosticSeverity.Info, DiagnosticSeverity.Info, true, 1)); ;
+
+            foreach (var f in contentCode.FileDefinitions)
             {
-                            
-                context.ReportDiagnostic(Diagnostic.Create("ECP04", "ContentSourceGen", $"Create code for file definition: {f.Name}", DiagnosticSeverity.Info, DiagnosticSeverity.Info, true,1 ));;
+
+                context.ReportDiagnostic(Diagnostic.Create("ECP04", "ContentSourceGen", $"Create code for file definition: {f.Name}", DiagnosticSeverity.Info, DiagnosticSeverity.Info, true, 1)); ;
 
                 var codeBuilder = new StringCodeBuilder();
                 f.WriteTo(codeBuilder);
                 context.AddSource(f.Name.Replace('/', '_'), codeBuilder.ToString());
             }
         }
+
+
+
 
         public void Initialize(IncrementalGeneratorInitializationContext context)
         {
@@ -55,30 +58,28 @@ namespace engenious.ContentTool.SourceGen
                 .Combine(context.GetMSBuildProperty("EngeniousDotnetExe"))
                 .Combine(context.GetMSBuildProperty("EngeniousContentConfiguration", "UNKNOWN"));
             var cp = context.GetMatchedMSBuildItems(
-                (s) => s is "EngeniousContentReference" or "EngeniousContentData" or "EngeniousContentInput" or "EngeniousContentOutput")
+                (s) => s is "EngeniousContentReference" or "EngeniousContentInput" or "EngeniousContentOutput")
                 .Combine(properties).Collect();
 
-            
             context.RegisterSourceOutput(cp, MatchRefToData);
         }
 
-        private class Matching
-        {
-            public AdditionalText? ContentReference { get; set; }
-            public ContentProject? Project { get; set; }
-            public AdditionalText? ContentData { get; set; }
-        }
+
+        private Dictionary<PathKey, AdditionalText> _additionalTexts = new();
 
         private void MatchRefToData(SourceProductionContext context, ImmutableArray<((string match, AdditionalText text) file, (((string contentBuilder, string header) content, string dotnet) exe, string configuration) properties)> inputs)
         {
             try
             {
-                var additionalTexts = CollectionFilesByPath(inputs);
+                if (!CollectionFilesByPath(_additionalTexts, inputs))
+                {
+                    return;
+                }
 
-                if (!BuildContent(context, inputs, additionalTexts))
+                if (!BuildContent(context, inputs, _additionalTexts))
                     return;
 
-            
+
                 CollectCodeToGenerate(context, inputs);
             }
             catch (Exception e)
@@ -91,15 +92,12 @@ namespace engenious.ContentTool.SourceGen
 
         private void CollectCodeToGenerate(SourceProductionContext context, ImmutableArray<((string match, AdditionalText text) file, (((string contentBuilder, string header) content, string dotnet) exe, string configuration) properties)> inputs)
         {
-            Dictionary<PathKey, Matching> _refDataMatch = new();
             foreach (var input in inputs)
             {
                 try
                 {
                     var ((match, text), properties) = input;
-                    var cleanPath = text.Path;
 
-                    Matching matching = null!;
                     switch (match)
                     {
                         case "EngeniousContentReference":
@@ -117,36 +115,11 @@ namespace engenious.ContentTool.SourceGen
 
                             p.Configuration = properties.configuration;
 
-                            cleanPath = Path.Combine(Path.GetDirectoryName(p.ContentProjectPath), "obj", p.Configuration,
-                                p.Name + ".CreatedCode.dat");
-
-                            if (!_refDataMatch.TryGetValue(cleanPath, out matching))
-                            {
-                                matching = new Matching();
-                                _refDataMatch.Add(cleanPath, matching);
-                            }
-
-                            matching.Project = p;
-                            matching.ContentReference = text;
+                            GenerateCode(context, p, text);
                             break;
-                        case "EngeniousContentData":
-                            if (!_refDataMatch.TryGetValue(cleanPath, out matching))
-                            {
-                                matching = new Matching();
-                                _refDataMatch.Add(cleanPath, matching);
-                            }
 
-                            matching.ContentData = text;
-                            break;
                         case "EngeniousContentInput" or "EngeniousContentOutput":
                             continue;
-                    }
-
-                    if (matching.ContentData is not null && matching.ContentReference is not null &&
-                        matching.Project is not null)
-                    {
-                        _refDataMatch.Remove(cleanPath);
-                        GenerateCode(context, matching.Project, matching.ContentReference, matching.ContentData);
                     }
                 }
                 catch (Exception e)
@@ -158,21 +131,40 @@ namespace engenious.ContentTool.SourceGen
             }
         }
 
-        private static Dictionary<string, AdditionalText> CollectionFilesByPath(ImmutableArray<((string match, AdditionalText text) file, (((string contentBuilder, string header) content, string dotnet) exe, string configuration) properties)> inputs)
+        private static bool CollectionFilesByPath(Dictionary<PathKey, AdditionalText> additionalTexts, ImmutableArray<((string match, AdditionalText text) file, (((string contentBuilder, string header) content, string dotnet) exe, string configuration) properties)> inputs)
         {
-            Dictionary<string, AdditionalText> additionalTexts = new();
+            bool hasChanges = false;
             foreach (var input in inputs)
             {
-                additionalTexts.Add(input.file.text.Path, input.file.text);
+                var path = (PathKey)input.file.text.Path;
+                var text = input.file.text;
+                if (additionalTexts.TryGetValue(path, out var previousText))
+                {
+                    //if (text != previousText)
+                    //{
+                    //    var textHash = text.GetText()?.GetChecksum();
+                    //    var previousTextHash = previousText.GetText()?.GetChecksum();
+                    //    hasChanges = !(textHash == null && previousTextHash == null || 
+                    //                textHash != null && previousTextHash != null && Enumerable.SequenceEqual<byte>(textHash, previousTextHash));
+                    //}
+                    additionalTexts[path] = text;
+                }
+                else
+                {
+                    additionalTexts.Add(path, text);
+                    hasChanges = true;
+                }
             }
 
-            return additionalTexts;
+            return true;
         }
 
         private static bool TryParseError(string line, string errorType, out string? file, out (int, int)? location,
             out string? message)
         {
-            var errorPos = line.IndexOf(errorType, StringComparison.Ordinal);
+            string errorWithFile = $": {errorType}: ";
+            string errorWithoutFile = $"{errorType}: ";
+            var errorPos = line.IndexOf(errorWithFile, StringComparison.Ordinal);
             if (errorPos != -1)
             {
                 location = null;
@@ -206,7 +198,14 @@ namespace engenious.ContentTool.SourceGen
                     }
                 }
 
-                message = line.Substring(errorPos + errorType.Length);
+                message = line.Substring(errorPos + errorWithFile.Length);
+                return true;
+            }
+            else if (line.StartsWith(errorWithoutFile))
+            {
+                file = null;
+                message = line.Substring(errorWithoutFile.Length);
+                location = null;
                 return true;
             }
 
@@ -223,7 +222,7 @@ namespace engenious.ContentTool.SourceGen
             if (text is null)
                 return null;
 
-            var (row, column) = location ?? (1, 0);
+            var (row, column) = location ?? (1, 1);
 
             if (row > 0 && row <= text.Lines.Count)
             {
@@ -234,8 +233,8 @@ namespace engenious.ContentTool.SourceGen
 
             return null;
         }
-        
-        private static bool BuildContent(SourceProductionContext context, ImmutableArray<((string match, AdditionalText text) file, (((string contentBuilder, string header) content, string dotnet) exe, string configuration) properties)> inputs, Dictionary<string, AdditionalText> additionalTexts)
+
+        private static bool BuildContent(SourceProductionContext context, ImmutableArray<((string match, AdditionalText text) file, (((string contentBuilder, string header) content, string dotnet) exe, string configuration) properties)> inputs, Dictionary<PathKey, AdditionalText> additionalTexts)
         {
             foreach (var input in inputs)
             {
@@ -263,7 +262,8 @@ namespace engenious.ContentTool.SourceGen
 
                             var pS = new ProcessStartInfo(exe.dotnet,
                                 $"\"{exe.content.contentBuilder}\" /@:\"{input.file.text.Path}\" {exe.content.header}");
-
+                            pS.UseShellExecute = false;
+                            pS.CreateNoWindow = true;
                             pS.RedirectStandardError = pS.RedirectStandardOutput = true;
 
                             var p = Process.Start(pS);
@@ -271,18 +271,22 @@ namespace engenious.ContentTool.SourceGen
                             var stdout = p.StandardOutput.ReadToEnd();
                             string? line;
 
-
                             while ((line = p.StandardError.ReadLine()) != null)
                             {
-                                if (TryParseError(line, ": error:", out var file, out var location, out var message))
+                                if (TryParseError(line, "error", out var file, out var location, out var message))
                                 {
-                                    if (additionalTexts.TryGetValue(file!, out var additionalText))
+                                    if (file is not null && additionalTexts.TryGetValue(file, out var additionalText))
                                     {
                                         var parsedLocation = CreateLocationForFile(additionalText, location);
                                         context.ReportDiagnostic(Diagnostic.Create("ECP06", "ContentSourceGen",
-                                            $"{message} {line}", DiagnosticSeverity.Error,
+                                            $"{message}", DiagnosticSeverity.Error,
                                             DiagnosticSeverity.Error, true, 0, location: parsedLocation));
-                                        ;
+                                    }
+                                    else
+                                    {
+                                        context.ReportDiagnostic(Diagnostic.Create("ECP06", "ContentSourceGen",
+                                            $"{message}", DiagnosticSeverity.Error
+                                            , DiagnosticSeverity.Error, true, 0));
                                     }
                                 }
                             }
@@ -294,25 +298,32 @@ namespace engenious.ContentTool.SourceGen
                 }
                 catch (Exception e)
                 {
+                    context.ReportDiagnostic(Diagnostic.Create("ECP06", "ContentSourceGen",
+                        $"Source generation failed: {e.Message}\n{e.StackTrace}", DiagnosticSeverity.Error
+                        , DiagnosticSeverity.Error, true, 0));
                 }
             }
 
             return true;
         }
 
-        private void GenerateCode(SourceProductionContext context, ContentProject p, AdditionalText cp, AdditionalText cpd)
+        private void GenerateCode(SourceProductionContext context, ContentProject p, AdditionalText cp)
         {
-            var cacheFile = !File.Exists(cpd.Path) ? Path.Combine(Path.GetDirectoryName(p.ContentProjectPath), "obj", p.Configuration,
-                p.Name + ".CreatedCode.dat") : cpd.Path;
+            
+            var cacheFile = Path.Combine(Path.GetDirectoryName(p.ContentProjectPath), "obj", p.Configuration,
+                                p.Name + ".CreatedCode.dat");
+
+            if (!File.Exists(cacheFile))
+                return;
 
             var contentCode = CreatedContentCode.Load(cacheFile, Guid.Empty);
-            
-            context.ReportDiagnostic(Diagnostic.Create("ECP03", "ContentSourceGen", $"Loaded content code: {cacheFile} with {contentCode.FileDefinitions.Count()} file definitions.", DiagnosticSeverity.Info, DiagnosticSeverity.Info, true,1 ));;
 
-            foreach(var f in contentCode.FileDefinitions)
+            context.ReportDiagnostic(Diagnostic.Create("ECP03", "ContentSourceGen", $"Loaded content code: {cacheFile} with {contentCode.FileDefinitions.Count()} file definitions.", DiagnosticSeverity.Info, DiagnosticSeverity.Info, true, 1)); ;
+
+            foreach (var f in contentCode.FileDefinitions)
             {
-                            
-                context.ReportDiagnostic(Diagnostic.Create("ECP04", "ContentSourceGen", $"Create code for file definition: {f.Name}", DiagnosticSeverity.Info, DiagnosticSeverity.Info, true,1 ));;
+
+                context.ReportDiagnostic(Diagnostic.Create("ECP04", "ContentSourceGen", $"Create code for file definition: {f.Name}", DiagnosticSeverity.Info, DiagnosticSeverity.Info, true, 1)); ;
 
                 var codeBuilder = new StringCodeBuilder();
                 f.WriteTo(codeBuilder);
