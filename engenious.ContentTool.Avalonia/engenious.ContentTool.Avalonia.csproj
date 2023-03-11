@@ -74,11 +74,14 @@
         <PackageReference Include="Dialogs.Avalonia" Version="0.1.29" />
         <PackageReference Include="MessageBox.Avalonia" Version="2.1.0" />
         <PackageReference Include="OpenTK" Version="4.5.0" />
+        <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
     </ItemGroup>
     <ItemGroup>
       <PackageReference Include="engenious.Avalonia" Version="0.7.1-alpha" Condition="!Exists('..\..\engenious.Avalonia\engenious.Avalonia.csproj')" />
         
       <ProjectReference Include="..\..\engenious.Avalonia\engenious.Avalonia.csproj" Condition="Exists('..\..\engenious.Avalonia\engenious.Avalonia.csproj')" />
+        
+      <ProjectReference Include="..\engenious.ContentTool.PluginBase\engenious.ContentTool.PluginBase.csproj" />
       <ProjectReference Include="..\engenious.ContentTool\engenious.ContentTool.csproj" />
     </ItemGroup>
     <ItemGroup>

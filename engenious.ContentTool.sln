@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "engenious.ContentTool.Avalo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "engenious.ContentTool.SourceGen", "engenious.ContentTool.SourceGen\engenious.ContentTool.SourceGen.csproj", "{27CC904C-58F1-4E66-BFE5-66671E422A13}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "engenious.ContentTool.PluginBase", "engenious.ContentTool.PluginBase\engenious.ContentTool.PluginBase.csproj", "{BBBF60C0-CC4B-423C-ACB7-446969C7D53E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{27CC904C-58F1-4E66-BFE5-66671E422A13}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27CC904C-58F1-4E66-BFE5-66671E422A13}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27CC904C-58F1-4E66-BFE5-66671E422A13}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBBF60C0-CC4B-423C-ACB7-446969C7D53E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBBF60C0-CC4B-423C-ACB7-446969C7D53E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBBF60C0-CC4B-423C-ACB7-446969C7D53E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBBF60C0-CC4B-423C-ACB7-446969C7D53E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
