@@ -4,13 +4,19 @@ using System.Runtime.Loader;
 
 namespace engenious.ContentTool;
 
-public class PluginLoadContext : AssemblyLoadContext
+public class PluginLoadContext : AssemblyLoadContext, IDisposable
 {
     private AssemblyDependencyResolver _resolver;
 
     public PluginLoadContext(string pluginPath)
     {
         _resolver = new AssemblyDependencyResolver(pluginPath);
+        AssemblyLoadContext.Default.Resolving += DefaultOnResolving;
+    }
+
+    private Assembly DefaultOnResolving(AssemblyLoadContext context, AssemblyName name)
+    {
+        return LoadFromAssemblyName(name);
     }
 
     protected override Assembly Load(AssemblyName assemblyName)
@@ -33,5 +39,10 @@ public class PluginLoadContext : AssemblyLoadContext
         }
 
         return IntPtr.Zero;
+    }
+
+    public void Dispose()
+    {
+        Default.Resolving -= DefaultOnResolving;
     }
 }
