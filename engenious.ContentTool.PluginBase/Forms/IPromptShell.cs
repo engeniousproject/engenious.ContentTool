@@ -31,7 +31,7 @@ namespace engenious.ContentTool.Forms
     public interface IPromptShell
     {
         Task<MessageBoxResult> ShowMessageBox(string text, string title, MessageBoxButtons buttons = MessageBoxButtons.Ok,
-            MessageBoxType type = MessageBoxType.None, object parent = null);
+            MessageBoxType type = MessageBoxType.None, object? parent = null);
         
         Task<FileAction> ShowOverwriteDialog(string fileName);
 

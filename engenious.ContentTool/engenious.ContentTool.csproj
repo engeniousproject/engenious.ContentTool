@@ -124,6 +124,8 @@
         <PackageReference Include="OpenTK.redist.glfw" Version="3.3.8.30" /> <!-- Patch glfw to newer version -->
 
         <PackageReference Include="LitGit" Version="0.2.0.58-alpha" PrivateAssets="all" />
+
+        <ProjectReference Include="..\engenious.ContentTool.PluginBase\engenious.ContentTool.PluginBase.csproj" />
     </ItemGroup>
     <ItemGroup>
         <None Include="../LICENSE" />

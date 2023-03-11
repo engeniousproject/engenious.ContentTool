@@ -54,15 +54,19 @@ namespace engenious.ContentTool
                 {
                     AssemblyLoadContext.Default.Resolving += (context, name) =>
                     {
-                        return AssemblyLoadContext.Default.LoadFromAssemblyPath(Path.Combine(execPath,
+                        var loadContext = new PluginLoadContext(Path.Combine(
+                            execPath,
                             name.Name + ".dll"));
+                        return loadContext.LoadFromAssemblyName(name);
                     };
                     foreach (var assemblyPath in Directory.EnumerateFiles(pluginsPath, "*.dll",
                         SearchOption.TopDirectoryOnly))
                     {
                         try
                         {
-                            var assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(assemblyPath);
+                            var pluginContext = new PluginLoadContext(assemblyPath);
+                            
+                            var assembly = pluginContext.LoadFromAssemblyName(new AssemblyName(Path.GetFileNameWithoutExtension(assemblyPath)));
                             var shellFactoryAttribute = assembly.GetCustomAttribute<ShellFactoryAttribute>();
                             if (shellFactoryAttribute == null)
                                 continue;
