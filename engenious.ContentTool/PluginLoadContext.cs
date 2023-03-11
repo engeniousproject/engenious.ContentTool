@@ -11,7 +11,7 @@ public class PluginLoadContext : AssemblyLoadContext, IDisposable
     public PluginLoadContext(string pluginPath)
     {
         _resolver = new AssemblyDependencyResolver(pluginPath);
-        AssemblyLoadContext.Default.Resolving += DefaultOnResolving;
+        Default.Resolving += DefaultOnResolving;
     }
 
     private Assembly DefaultOnResolving(AssemblyLoadContext context, AssemblyName name)
@@ -24,7 +24,7 @@ public class PluginLoadContext : AssemblyLoadContext, IDisposable
         string assemblyPath = _resolver.ResolveAssemblyToPath(assemblyName);
         if (assemblyPath != null)
         {
-            return AssemblyLoadContext.Default.LoadFromAssemblyPath(assemblyPath);
+            return Default.LoadFromAssemblyPath(assemblyPath);
         }
 
         return null;
