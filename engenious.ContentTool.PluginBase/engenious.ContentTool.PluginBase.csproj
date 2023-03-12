@@ -14,6 +14,6 @@
     <ItemGroup>
 
         <ProjectReference Include="..\..\engenious.Pipeline\engenious.Pipeline.csproj" Condition="Exists('..\..\engenious.Pipeline\engenious.Pipeline.csproj')" />
-        <PackageReference Include="engenious.Pipeline" Version="0.7.1.2-alpha" Condition="!Exists('..\..\engenious.Pipeline\engenious.Pipeline.csproj')" />
+        <PackageReference Include="engenious.Pipeline" Version="0.7.1.4-alpha" Condition="!Exists('..\..\engenious.Pipeline\engenious.Pipeline.csproj')" />
     </ItemGroup>
 </Project>

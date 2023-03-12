@@ -77,7 +77,7 @@
         <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
     </ItemGroup>
     <ItemGroup>
-      <PackageReference Include="engenious.Avalonia" Version="0.7.1-alpha" Condition="!Exists('..\..\engenious.Avalonia\engenious.Avalonia.csproj')" />
+      <PackageReference Include="engenious.Avalonia" Version="0.7.1.2-alpha" Condition="!Exists('..\..\engenious.Avalonia\engenious.Avalonia.csproj')" />
         
       <ProjectReference Include="..\..\engenious.Avalonia\engenious.Avalonia.csproj" Condition="Exists('..\..\engenious.Avalonia\engenious.Avalonia.csproj')" />
         
